@@ -81,3 +81,13 @@ esptool.exe --chip esp32 --port "COM8" --baud 921600 read_flash 0 0x400000 flash
 ```
 
 The resulting file can be found in the "backup" folder (I created two additional backups, just to be sure ;)).
+
+### Restoring a Backup
+
+Then, I tried to restore the backup. This is done via this command:
+
+```
+esptool.exe --chip esp32 --port "COM8" --baud 921600  --before default_reset --after hard_reset write_flash  -z --flash_mode dio --flash_freq 40m --flash_size detect 0x0 flash_contents.bin
+```
+
+This worked for me, the display seems to work as before. Hence, I am now safe to run another software on the system I just need to start implementing :)
