@@ -24,7 +24,7 @@ The controller features 8 buttons, one micro-SD card slot, a 1.8" 128x160 RGB TF
 
 I first idea was to maybe use the cable connection to connect to the board. However, there is another connector on the board named P3 that features 5 pins. I soldered some metal pins to the conenctor to be able to use them. After that, I tried to connect a USB connector directly to the pins. For that I tested which bpin is GND (left-most pin is GND, right-most is nost likely 5V, I guessed). When connected to a PC, the device starts, but no device is recognized on the PC. My theory at this point: the board does not have an integrated USB-to-serial converter.
 
-I measured that one of the pins is connected to the TXD 0 pin of the ESP chip ([see pinout here](https://mischianti.org/2021/05/26/esp32-wroom-32-high-resolution-pinout-and-specs/)). This seemed to confirm my guess. This now leaves me with several options that I think I could try:
+I measured that one of the pins is connected to the TXD 0 pin of the ESP chip ([see pinout here](https://mischianti.org/2021/05/26/esp32-wroom-32-high-resolution-pinout-and-specs/) and [data sheet here](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf)). This seemed to confirm my guess. This now leaves me with several options that I think I could try:
 
 * use an USB-to-serial converter I bought a while ago to debug serial connections
 * try use an USB ASP/ISP device (would that work?)
@@ -96,12 +96,15 @@ This worked for me, the display seems to work as before. Hence, I am now safe to
 
 To configure the connection to the display correctly, I need to figure out the connections of the pins first. Then, I also need to understand how the configuration of the display libraries work. I measured the pins of the display and this is the result and added the pin descriptions that are very hard to read from the LCD board (LCD1 pins from top to bottom seen from the top of the controller board):
 
-1. BL? -> via R19 to pin 27
-2. CS? -> via R8 to pin 21
-3. DC? -> via R7 to pin 18
-4. RES -> via R6 to pin 22
-5. SDA? -> via R5 to pin 17
-6. SCL? -> via R4 to pin 20
+1. BLK -> via R19 to pin 28 -> GPIO 17 (Backlight)
+2. CS  -> via R8 to pin 23  -> GPIO 15 (Chip Select/Slave Select)
+3. D/C -> via R7 to pin 14  -> GPIO 12 (Data/Command; =RS Register Select?)
+4. RES -> via R6 to pin 24  -> GPIO  2
+5. SDA -> via R5 to pin 13  -> GPIO 14 (SPI Data; connect to MOSI?)
+6. SCL -> via R4 to pin 16  -> GPIO 13 (SPI Clock)
 7. VCC
 8. GND
 
+## Programming the ESP32
+
+I created a simple "Hello World!" example for the ESP32 in basically no time and it was running sucessfully. While uploading the program to the ESP32 worked, I couldn't see any output when connecting the serial monitor. A little googeling helped me to figure out the correct settings in the PlatformIO ini file.
