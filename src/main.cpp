@@ -32,10 +32,12 @@
   MIT license, all text above must be included in any redistribution
  **************************************************************************/
 
+#include "Arduino.h"
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
 #include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 #include <SPI.h>
+#include "audio/pitches.h"
 
 #if defined(ARDUINO_FEATHER_ESP32) // Feather Huzzah32
   #define TFT_CS         14
@@ -273,6 +275,10 @@ void mediabuttons() {
 void setup(void) {
   Serial.begin(115200);
   Serial.print(F("Hello! ST77xx TFT Test"));
+
+  tone(SPEAKER, NOTE_C5, 100);
+  tone(SPEAKER, NOTE_E5, 100);
+  tone(SPEAKER, NOTE_G5, 100);
 
   // Use this initializer if using a 1.8" TFT screen:
   //tft.initR(INITR_BLACKTAB);      // Init ST7735S chip, black tab

@@ -133,4 +133,17 @@ Next steps:
 
 ### Controling the Speaker
 
-There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low haning fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts it is connected to GPIO 21. Maybe this is good starting point.
+There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low hanging fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts it is connected to GPIO 21. Maybe this is good starting point.
+
+Actually, implementing the speaker was really easy. With some googeling I found a nice `pitches.h` file that can be used with the standard Arduino `tones()` function. Now, I can also give audio feedback.
+
+Next steps:
+
+1. ~~make the speaker work~~
+2. make the SD card reader work
+3. make the buttons work
+4. make the Wifi (and Bluetooth?) work
+5. connect to the GRBL board via serial connection
+6. implement nice menus etc.
+
+### Accessing the microSD card

@@ -26,6 +26,8 @@ static const uint8_t MOSI  = 14; // Master Out Slave In
 static const uint8_t MISO  = 19; // Master In Slave Out
 static const uint8_t SCK   = 13; // Slave Clock =SCL
 
+static const uint8_t SPEAKER = 21;
+
 /*
 static const uint8_t A0 = 36;
 static const uint8_t A3 = 39;
