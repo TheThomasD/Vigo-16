@@ -108,3 +108,29 @@ To configure the connection to the display correctly, I need to figure out the c
 ## Programming the ESP32
 
 I created a simple "Hello World!" example for the ESP32 in basically no time and it was running sucessfully. While uploading the program to the ESP32 worked, I couldn't see any output when connecting the serial monitor. A little googeling helped me to figure out the correct settings in the PlatformIO ini file.
+
+### Controling the Display
+
+My next goal then was to show some output on the display to give me some feedback (beside the serial monitor that I can use for this). However, I had a steep learning curve to tackle at this point. I tried to simply use the pin numbers from the sites linked above. No luck. The numbers in the black squares in the picture from `mischianti.org` didn't work and neither did the pin numbers from the data sheet. Sometimes the display flickered and I heard something coming from the speaker, but the display did not show anything. This led me to two ideas:
+
+1. the pins could be incorrect (but I verified them again with my multimeter)
+2. maybe the default pin settings of the ESP32 variant I am using are conflicting with my setup
+
+First, I introduced my own variant of the ESP32 so I would be able to define all the pins to my requirements. Figuring out how this works was not that easy, but my default program worked even after using my own variant. Then, I tried to connect to the display again, again with now luck.
+
+This lead me to read something about the different communication methods of an ESP32: I2C and SPI. After understanding the difference and seeing that the display was basically connected to one of the SPI interfaces, I was rather sure that I have to configure the SPI correctly to communicate with the display.
+
+While trying to set the correct pins in the `pins_arduino.h` of my variant, I recognized that the pins that are mentioned there are actually not pins, but GPIO numbers. That one was a hard learning for me. The default RX/TX settings finally lead me to this idea and after setting the correct GPIOs for the SPI and also setting the right GPIOs for the display in the library I use, the display finally works!
+
+Next steps:
+
+1. make the speaker work
+2. make the SD card reader work
+3. make the buttons work
+4. make the Wifi (and Bluetooth?) work
+5. connect to the GRBL board via serial connection
+6. implement nice menus etc.
+
+### Controling the Speaker
+
+There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low haning fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts it is connected to GPIO 21. Maybe this is good starting point.
