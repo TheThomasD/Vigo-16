@@ -99,7 +99,7 @@ To configure the connection to the display correctly, I need to figure out the c
 1. BL? -> via R19 to pin 27
 2. CS? -> via R8 to pin 21
 3. DC? -> via R7 to pin 18
-4. RES -> via R6 (ignored vor now)
+4. RES -> via R6 to pin 22
 5. SDA? -> via R5 to pin 17
 6. SCL? -> via R4 to pin 20
 7. VCC
