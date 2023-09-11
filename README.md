@@ -20,7 +20,7 @@ For now, I have uploaded the latest GRBL firmware and configured it in the way I
 
 The controller features 8 buttons, one micro-SD card slot, a 1.8" 128x160 RGB TFT LCD and an [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) chip. The display shows "Driver IC:ST7735" and "SW-M35 V2.0 210506" printed on its back ([this](https://techoverflow.net/2023/05/30/minimal-esp32-platformio-128x160px-tft-display-example-using-adafruit-st7735/) might be helpful in the future). The controller board shows the print "VIGO-16 V3.3 211105". There is also another connecter that is usally used for powering devices, but I haven't figured out yet what it is for.
 
-### Connection the controller
+### Connecting the controller
 
 I first idea was to maybe use the cable connection to connect to the board. However, there is another connector on the board named P3 that features 5 pins. I soldered some metal pins to the conenctor to be able to use them. After that, I tried to connect a USB connector directly to the pins. For that I tested which bpin is GND (left-most pin is GND, right-most is nost likely 5V, I guessed). When connected to a PC, the device starts, but no device is recognized on the PC. My theory at this point: the board does not have an integrated USB-to-serial converter.
 
@@ -91,3 +91,17 @@ esptool.exe --chip esp32 --port "COM8" --baud 921600  --before default_reset --a
 ```
 
 This worked for me, the display seems to work as before. Hence, I am now safe to run another software on the system I just need to start implementing :)
+
+## Display connection
+
+To configure the connection to the display correctly, I need to figure out the connections of the pins first. Then, I also need to understand how the configuration of the display libraries work. I measured the pins of the display and this is the result and added the pin descriptions that are very hard to read from the LCD board (LCD1 pins from top to bottom seen from the top of the controller board):
+
+1. BL? -> via R19 to pin 27
+2. CS? -> via R8 to pin 21
+3. DC? -> via R7 to pin 18
+4. RES -> via R6 (ignored vor now)
+5. SDA? -> via R5 to pin 17
+6. SCL? -> via R4 to pin 20
+7. VCC
+8. GND
+
