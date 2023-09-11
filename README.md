@@ -109,7 +109,7 @@ To configure the connection to the display correctly, I need to figure out the c
 
 I created a simple "Hello World!" example for the ESP32 in basically no time and it was running sucessfully. While uploading the program to the ESP32 worked, I couldn't see any output when connecting the serial monitor. A little googeling helped me to figure out the correct settings in the PlatformIO ini file.
 
-### Controling the Display
+### Controlling the Display
 
 My next goal then was to show some output on the display to give me some feedback (beside the serial monitor that I can use for this). However, I had a steep learning curve to tackle at this point. I tried to simply use the pin numbers from the sites linked above. No luck. The numbers in the black squares in the picture from `mischianti.org` didn't work and neither did the pin numbers from the data sheet. Sometimes the display flickered and I heard something coming from the speaker, but the display did not show anything. This led me to two ideas:
 
@@ -131,7 +131,7 @@ Next steps:
 5. connect to the GRBL board via serial connection
 6. implement nice menus etc.
 
-### Controling the Speaker
+### Controlling the Speaker
 
 There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low hanging fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts it is connected to GPIO 21. Maybe this is good starting point.
 
