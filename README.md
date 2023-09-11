@@ -1,4 +1,4 @@
-# Vigo-16 GRBL Offline Controller Info &amp; Custom Firmware (if I have the time to do it ;))
+# Vevor CNC 3018 PRO Vigo-16 GRBL Offline Controller Info &amp; Custom Firmware (if I have the time to do it ;))
 
 *Note: if you want to reach me, feel free to create an issue on this repo. I can then open a Telegram channel where we can exchange.*
 
