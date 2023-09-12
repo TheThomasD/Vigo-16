@@ -26,14 +26,60 @@ static const uint8_t MOSI  = 23; // Master Out Slave In
 static const uint8_t MISO  = 19; // Master In Slave Out
 static const uint8_t SCK   = 18; // Slave Clock =SCL
 
-// SPI Communication (HSPI) for TFT (defaults for HSPI)
-static const uint8_t HSPI_SS    = 15; // Slave Select =CS Chip Select
-static const uint8_t HSPI_MOSI  = 14; // Master Out Slave In
-static const uint8_t HSPI_MISO  = 12; // Master In Slave Out
-static const uint8_t HSPI_SCK   = 13; // Slave Clock =SCL
+// SPI Communication (HSPI) for TFT
+#define HSPI_SS    15 // Slave Select =CS Chip Select
+#define HSPI_MOSI  14 // Master Out Slave In
+#define HSPI_MISO  12 // Master In Slave Out
+#define HSPI_SCK   13 // Slave Clock =SCL
 
-// speaker
-static const uint8_t SPEAKER = 21;
+// Speaker
+#define SPEAKER 21
+
+// Buttons
+#define BUTTON_X_UP   36
+#define BUTTON_X_DOWN 39
+#define BUTTON_Y_UP   34
+#define BUTTON_Y_DOWN 35
+#define BUTTON_SET    32
+#define BUTTON_Z_UP   25
+#define BUTTON_Z_DOWN 26
+#define BUTTON_ESC     0
+
+#define FOREACH_BUTTON(COMMAND)  \
+  COMMAND(BUTTON_X_UP) \
+  COMMAND(BUTTON_X_DOWN) \
+  COMMAND(BUTTON_Y_UP) \
+  COMMAND(BUTTON_Y_DOWN) \
+  COMMAND(BUTTON_SET) \
+  COMMAND(BUTTON_Z_UP) \
+  COMMAND(BUTTON_Z_DOWN) \
+  COMMAND(BUTTON_ESC)
+
+#define CREATE_BUTTON(BUTTON) \
+  EasyButton b_##BUTTON(BUTTON); \
+  void shortPress_##BUTTON(){shortPress(BUTTON);}; \
+  void longPress_##BUTTON(){longPress(BUTTON);}; \
+  void doublePress_##BUTTON(){doublePress(BUTTON);}; \
+  void interrupt_##BUTTON(){b_##BUTTON.read();};
+
+#define INIT_BUTTON(BUTTON) \
+  b_##BUTTON.begin(); \
+  b_##BUTTON.onPressed(shortPress_##BUTTON); \
+  b_##BUTTON.onPressedFor(2000, longPress_##BUTTON); \
+  b_##BUTTON.onSequence(2, 1500, doublePress_##BUTTON); \
+  b_##BUTTON.enableInterrupt(interrupt_##BUTTON);
+
+#define UPDATE_BUTTON(BUTTON) \
+  b_##BUTTON.update();
+
+#define BUTTON_TO_STRING(BUTTON) \
+  if (button == BUTTON) return #BUTTON;
+
+#define CREATE_BUTTON_TO_STRING \
+  String buttonToString(uint8_t button) { \
+    FOREACH_BUTTON(BUTTON_TO_STRING) \
+    return "UNKOWN"; \
+  }
 
 /*
 static const uint8_t A0 = 36;

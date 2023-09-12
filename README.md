@@ -177,5 +177,29 @@ Next steps:
 
 ### Reading the buttons
 
+The button pins are as follows:
+
+* +X  -> pin  4 -> GPIO 36
+* -X  -> pin  5 -> GPIO 39
+* +Y  -> pin  6 -> GPIO 34
+* -Y  -> pin  7 -> GPIO 35
+* SET -> pin  8 -> GPIO 32
+* +Z  -> pin 10 -> GPIO 25
+* -Z  -> pin 11 -> GPIO 26
+* ESC -> pin 25 -> GPIO  0
+
+With this information I tried to figure out how to react to button presses wihtout having to regularly poll the button state. This is possible with external interrupts as shown [here](https://microcontrollerslab.com/esp32-external-interrupts-tutorial-arduino-ide/). With some macro-magic and a debouncing library I added all the button code. This currently supports single, double and long press. There is another example [here](https://forum.arduino.cc/t/adding-a-double-click-case-statement/283504) that does not use interrupts. Maybe I have to look at this later.
+
+Next steps:
+
+1. ~~make the speaker work~~
+2. ~~make the SD card reader work~~
+3. ~~make the buttons work~~
+4. make the Wifi (and Bluetooth?) work
+5. connect to the GRBL board via serial connection
+6. implement nice menus etc.
+
+### Wifi Connection
+
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2)

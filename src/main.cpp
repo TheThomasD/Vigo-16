@@ -39,6 +39,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include "audio/pitches.h"
+#include <EasyButton.h>
 
 #if defined(ARDUINO_FEATHER_ESP32) // Feather Huzzah32
   #define TFT_CS         14
@@ -302,14 +303,34 @@ void printDirectory(File dir, int numTabs) {
   }
 }
 
+CREATE_BUTTON_TO_STRING
+
+void shortPress(uint8_t button) {
+  Serial.print("Short press: ");
+  Serial.println(buttonToString(button));
+}
+
+void longPress(uint8_t button) {
+  Serial.print("Long press: ");
+  Serial.println(buttonToString(button));
+}
+
+void doublePress(uint8_t button) {
+  Serial.print("Double press: ");
+  Serial.println(buttonToString(button));
+}
+
+FOREACH_BUTTON(CREATE_BUTTON)
+
 void setup(void) {
   Serial.begin(115200);
-  delay(3000);
-  Serial.print(F("Hello! ST77xx TFT Test"));
 
   tone(SPEAKER, NOTE_C5, 100);
   tone(SPEAKER, NOTE_E5, 100);
   tone(SPEAKER, NOTE_G5, 100);
+
+  delay(2000);
+  Serial.print(F("Hello! ST77xx TFT Test"));
 
   if (!SD.begin())
     Serial.println("Error initializing SD card!");
@@ -435,11 +456,14 @@ void setup(void) {
   mediabuttons();
   delay(500);
 
-  Serial.println("done");
-  delay(1000);
+  FOREACH_BUTTON(INIT_BUTTON)
+
+  Serial.println("done, buttons enabled");
+  //delay(1000);
 }
 
 void loop() {
+  FOREACH_BUTTON(UPDATE_BUTTON)
   tft->invertDisplay(true);
   delay(500);
   tft->invertDisplay(false);
