@@ -20,12 +20,19 @@ static const uint8_t RX = 3;
 static const uint8_t SDA = 21;
 static const uint8_t SCL = 22;
 
-// SPI Communication
-static const uint8_t SS    = 15; // Slave Select =CS Chip Select
-static const uint8_t MOSI  = 14; // Master Out Slave In
+// SPI Communication (VSPI) for SD card (defaults for VSPI)
+static const uint8_t SS    =  5; // Slave Select =CS Chip Select
+static const uint8_t MOSI  = 23; // Master Out Slave In
 static const uint8_t MISO  = 19; // Master In Slave Out
-static const uint8_t SCK   = 13; // Slave Clock =SCL
+static const uint8_t SCK   = 18; // Slave Clock =SCL
 
+// SPI Communication (HSPI) for TFT (defaults for HSPI)
+static const uint8_t HSPI_SS    = 15; // Slave Select =CS Chip Select
+static const uint8_t HSPI_MOSI  = 14; // Master Out Slave In
+static const uint8_t HSPI_MISO  = 12; // Master In Slave Out
+static const uint8_t HSPI_SCK   = 13; // Slave Clock =SCL
+
+// speaker
 static const uint8_t SPEAKER = 21;
 
 /*

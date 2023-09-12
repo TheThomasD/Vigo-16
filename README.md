@@ -118,7 +118,7 @@ My next goal then was to show some output on the display to give me some feedbac
 
 First, I introduced my own variant of the ESP32 so I would be able to define all the pins to my requirements. Figuring out how this works was not that easy, but my default program worked even after using my own variant. Then, I tried to connect to the display again, again with no luck.
 
-This led me to read something about the different communication methods of an ESP32: I2C and SPI. After understanding the difference and seeing that the display was basically connected to one of the SPI interfaces, I was rather sure that I have to configure the SPI correctly to communicate with the display.
+This led me to read something about the different communication methods of an ESP32: I2C and SPI. After understanding the difference and seeing that the display was basically connected to one of the SPI interfaces (HSPI), I was rather sure that I have to configure the SPI correctly to communicate with the display.
 
 While trying to set the correct pins in the `pins_arduino.h` of my variant, I recognized that the pins that are mentioned there are actually not pins, but GPIO numbers. That one was a hard learning for me. The default RX/TX settings finally lead me to this idea and after setting the correct GPIOs for the SPI and also setting the right GPIOs for the display in the library I use, the display finally works!
 
@@ -147,3 +147,35 @@ Next steps:
 6. implement nice menus etc.
 
 ### Accessing the microSD card
+
+As always, figuring out the pin connections (from left to right):
+
+1. unused? (SD: Card Inserted = GND)
+2. unused            (SD pin 8) 
+3. pin 31 -> GPIO 19 (SD pin 7: Data Out)
+4. GND               (SD pin 6)
+5. pin 30 -> GPIO 18 (SD pin 5: Serial Clock)
+6. VCC               (SD pin 4)
+7. pin 37 -> GPIO 23 (SD pin 3: Data In)
+8. pin 29 -> GPIO  5 (SD pin 2: Chip Select)
+9. unused            (SD pin 1)
+
+The pins (in reverse order, pin 1 is the "card in" signal, which is pulled to GND if card is inserted) correspond the different microSD contacts as shown [here](https://mischianti.org/2021/03/28/how-to-use-sd-card-with-esp32-2/). The pin connections seem to indicate that the second SPI interface (VSPI) is used for the SD card access.
+
+I had the feeling that I should be using the VSPI as the default and set up the HSPI specifically of the TFT. I had to figure out how to set up the second SPI as I didn't find any indication that two SPIs are instantiated by default.
+
+After I got the HSPI for the SPI switched over to manual setup, I followed the abovementioned guide to run some basic SD card access steps. All worked well as now the default SPI is VSPI (to wich the SD card reader is attached). Listing the files worked flawlessly.
+
+Next steps:
+
+1. ~~make the speaker work~~
+2. ~~make the SD card reader work~~
+3. make the buttons work
+4. make the Wifi (and Bluetooth?) work
+5. connect to the GRBL board via serial connection
+6. implement nice menus etc.
+
+### Reading the buttons
+
+## Later
+* [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2)
