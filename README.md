@@ -133,7 +133,7 @@ Next steps:
 
 ### Controlling the Speaker
 
-There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low hanging fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts it is connected to GPIO 21. Maybe this is good starting point.
+There is a small speaker that could provide some feedback as well. And after connecting the display maybe this a simpler task with a "low hanging fruit" :) I knew there was a speaker, but I didn't know where it was located and I did not know how the component looked like. Nevertheless, I found the speaker and via some electronic parts (Q3 and R25) it is connected to pin 33 (GPIO 21). Maybe this is good starting point.
 
 Actually, implementing the speaker was really easy. With some googeling I found a nice `pitches.h` file that can be used with the standard Arduino `tones()` function. Now, I can also give audio feedback.
 
@@ -207,11 +207,11 @@ I didn't bother about Bluetooth right now, as I currently don't see any real req
 
 #### Intermezzo: Web Server
 
-I definitely want to run a webserver on the ESP32 to be able to upload files through the server to the SD card and ideally to directly communicate with the server via a simulated COM port.
+I definitely want to run a webserver on the ESP32 to be able to upload files through the server to the SD card and ideally to directly communicate with the server via a simulated COM port. On the client side I might be able to use the software from [this](https://tibbo.com/soi/software.html) page for the connection with Windows and Linux.
 
 For the an asynchronous server I found [this page](https://myhomethings.eu/de/esp32-asynchroner-webserver/) with a simple introduction. However, I think I'll have to implement a more capable system that is comparable to the [ESP3D project](https://github.com/luc-github/ESP3D). I think I might have to borrow some of the code from there to speed up my project. While looking at that project, I also found the [FludiNC](https://github.com/bdring/FluidNC) project, which sounds also very interesting (although I'm not going to switch my CNC and laser controller boards for an ESP32 anytime soon).
 
-No implementation as of yet...
+No implementation as of yet... But I recognized that the size of the image is already 805177 bytes of 1310720. I guess I will have to resize the partitions or store some data somewhere else to make use of the 4MB size of the ESP32 flash. Or maybe this is actually the limit?
 
 Next steps:
 
@@ -223,6 +223,26 @@ Next steps:
 6. implement nice menus etc.
 
 ### Connecting to the GRBL board
+
+I have a spare GRBL board that can be used for my laser cutter. I think the Vevor CNC board will have a similar serial connection. Hence, I tried to derive the correct pins of the connector from the [board details](https://github.com/makerbase-mks/MKS-DLC/tree/master/hardware/MKS%20DLC%20V2.1_001), which show the pinout.
+
+Based on this and looking at the connection cable, I would assume the following pin connection setup (looking at the port from the front):
+
+```
+1 3 5 7
+2 4 6 8
+```
+
+* 1 ???
+* 2 ??? -> via R38 to pin 12 -> GPIO 27 (RX?)
+* 3 ??? -> via Q1 and R1 to pin 36 -> GPIO 22
+* 4 ??? -> via R37 to pin 9 -> GPIO 33 (TX?)
+* 5+6 GND
+* 7+8 5V
+
+I didn't find any connection to pin 1, but if these pin connections are correct, then the pinout from the offline controller board should be exactly the same as on the GRBL board (with TX being pin 4 and RX being pin 2).
+
+I am not sure why pin 3 is connected to Q1, but I would expect that this allows for e.g. a reset of the GRBL board or similar. Indeed, if I pull up GPIO 22, pin 3 of the connector is connected to GND. I will have to test with the Vevor board whether this pull-down has any effect.
 
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2)
