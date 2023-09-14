@@ -40,6 +40,7 @@
 #include <SD.h>
 #include "audio/pitches.h"
 #include <EasyButton.h>
+#include <WiFi.h>
 
 #if defined(ARDUINO_FEATHER_ESP32) // Feather Huzzah32
   #define TFT_CS         14
@@ -328,6 +329,12 @@ void setup(void) {
   tone(SPEAKER, NOTE_C5, 100);
   tone(SPEAKER, NOTE_E5, 100);
   tone(SPEAKER, NOTE_G5, 100);
+
+  WiFi.mode(WIFI_AP_STA);
+  WiFi.printDiag(Serial);
+  WiFi.softAP("Vevor","12345678");
+  Serial.println(WiFi.softAPIP());
+  WiFi.printDiag(Serial);
 
   delay(2000);
   Serial.print(F("Hello! ST77xx TFT Test"));

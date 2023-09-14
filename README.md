@@ -201,5 +201,28 @@ Next steps:
 
 ### Wifi Connection
 
+For connecting the WiFi I used [this tutorial](https://randomnerdtutorials.com/esp32-useful-wi-fi-functions-arduino/). AP mode as well as STA mode work like a charm. There is also some information about reacting to WiFi events, which seems quite useful. I also saw that if I want to use both the AP and the STA mode at the same time [I need to determine the channel of the WiFi STA I want to use first and then prepare the AP with that channel for it to be able to work](https://forum.arduino.cc/t/esp8266-wifi_ap_sta-mode-wie-richtig-benutzen/556529/9).
+
+I didn't bother about Bluetooth right now, as I currently don't see any real requirement apart from mobile app development (which I currently don't want to dig into).
+
+#### Intermezzo: Web Server
+
+I definitely want to run a webserver on the ESP32 to be able to upload files through the server to the SD card and ideally to directly communicate with the server via a simulated COM port.
+
+For the an asynchronous server I found [this page](https://myhomethings.eu/de/esp32-asynchroner-webserver/) with a simple introduction. However, I think I'll have to implement a more capable system that is comparable to the [ESP3D project](https://github.com/luc-github/ESP3D). I think I might have to borrow some of the code from there to speed up my project. While looking at that project, I also found the [FludiNC](https://github.com/bdring/FluidNC) project, which sounds also very interesting (although I'm not going to switch my CNC and laser controller boards for an ESP32 anytime soon).
+
+No implementation as of yet...
+
+Next steps:
+
+1. ~~make the speaker work~~
+2. ~~make the SD card reader work~~
+3. ~~make the buttons work~~
+4. ~~make the Wifi (and Bluetooth?) work~~
+5. connect to the GRBL board via serial connection
+6. implement nice menus etc.
+
+### Connecting to the GRBL board
+
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2)
