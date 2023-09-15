@@ -18,7 +18,11 @@ For now, I have uploaded the latest GRBL firmware and configured it in the way I
 
 ## The Controller
 
-The controller features 8 buttons, one micro-SD card slot, a 1.8" 128x160 RGB TFT LCD and an [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) chip. The display shows "Driver IC:ST7735" and "SW-M35 V2.0 210506" printed on its back ([this](https://techoverflow.net/2023/05/30/minimal-esp32-platformio-128x160px-tft-display-example-using-adafruit-st7735/) might be helpful in the future). The controller board shows the print "VIGO-16 V3.3 211105". There is also another connecter that is usally used for powering devices, but I haven't figured out yet what it is for.
+The controller features 8 buttons, one micro-SD card slot, a 1.8" 128x160 RGB TFT LCD and an [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) chip. The display shows "Driver IC:ST7735" and "SW-M35 V2.0 210506" printed on its back ([this](https://techoverflow.net/2023/05/30/minimal-esp32-platformio-128x160px-tft-display-example-using-adafruit-st7735/) might be helpful in the future). The controller board shows the print "VIGO-16 V3.3 211105". There is also another connecter that is usally used for powering devices, but I haven't figured out yet what it is for (I think it is just another way to power the device ;)).
+
+![Board with Display](images/Board-with-Display.jpg)
+![Board and Display back](images/Board-with-Display-Back.jpg)
+![Board with ESP32-WROOM-32E](images/Board-with-ESP32-WROOM-32E.jpg)
 
 ### Connecting the controller
 
@@ -30,7 +34,9 @@ I measured that one of the pins is connected to the TXD 0 pin of the ESP chip ([
 * try use an USB ASP/ISP device (would that work?)
 * try to use the ESP32-CAM-MB board that came with my ESP32-CAM devices
 
-I went for the last option as I thought this setup was already very close to the setup I found.
+I went for the last option as I thought this setup was already very close to the setup I expected to work.
+
+![ESP32-CAM-MB](images/ESP32-CAM-MB.jpg)
 
 The first thing I want to do is store a backup of the flash on the chip so I can restore the original firmware (so I don't end up with an unsable display during the development process). On [Youtube](https://www.youtube.com/watch?v=2GwzbBn7uRw) I found a video on how to backup an ESP32. However, I only used the first few minutes to start my work. In there he basically explains on how to find the right commands via ArduinoIDE to use the `esptool` to dump the flash. This is done by configuring the ArduinoIDE correctly for an ESP32 board and run the upload with the USB-to-serial device connected, but without an ESP32 board connected.
 
@@ -41,6 +47,9 @@ Next, I had to figure out which pins are connected to what. The ESP32-CAM-MB con
 3. TX -> second pin from bottom right
 4. RX -> third pin from bottom right
 5. 5V -> top left pin
+
+![USB Connector Display](images/USB-Connector-Display.jpg)
+![USB Connector ESP32-CAM-MB](images/USB-Connector-ESP32-CAM-MB.jpg)
 
 This connection allows for automatic reset via the ESP32-CAM-MB. Now I tried to determine the ESP32 system info for the connected board, but the `esptool` reported that the device was in the wrong boot mode. From the ESP32-CAM modules I know that a specific button has to be pressed to put the board into upload mode. With my multimeter I could find that the ESC button on the VIGO-16 board is connected to `GPIO0`. After keeping the ESC button pressed during conenction, the `esptool` can finally connect to the chip.
 
@@ -245,6 +254,27 @@ I didn't find any connection to pin 1, but if these pin connections are correct,
 I am not sure why pin 3 is connected to Q1, but I would expect that this allows for e.g. a reset of the GRBL board or similar. Indeed, if I pull up GPIO 22, pin 3 of the connector is connected to GND. I will have to test with the Vevor board whether this pull-down has any effect.
 
 I checked the behavior of the CNC if I pull the pin to GND manually. Indeed, the CNC is reset. Also, if one of the CNC endstops is hit during the CNC process, the display shows an alarm and offers to reset the GRBL board. I guess this is the functionality that they implemented.
+
+## Current Display and Web Views
+
+### Display Views
+![Boot](images/Display-Boot.jpg)
+![Home](images/Display-Home.jpg)
+![Move](images/Display-Move.jpg)
+![Spindle](images/Display-SPN.jpg)
+![Alarm](images/Display-Alarm.jpg)
+![Files](images/Display-Files.jpg)
+![Run](images/Display-Run.jpg)
+![Settings](images/Display-Settings.jpg)
+![About](images/Display-About.jpg)
+
+### Web Views
+![Control](images/Web-Control.jpg)
+![Files](images/Web-Files.jpg)
+![Print](images/Web-Print.jpg)
+![Running](images/Web-Running.jpg)
+![Settings](images/Web-Settings.jpg)
+![About](images/Web-About.jpg)
 
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
