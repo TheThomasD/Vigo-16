@@ -276,9 +276,18 @@ I checked the behavior of the CNC if I pull the pin to GND manually. Indeed, the
 <image src="images/Web-Settings.jpg" width="30%" />
 <image src="images/Web-About.jpg" width="30%" />
 
+## Implementation
+
+### First Steps
+
+After preparing the knowledge I needed about the offline controller, I wanted to start implementing the boot screen. For doing that, I took a Vevor image from the internet, altered it a little bit to look similar to the old image and then converted it to an `.h` file to be able to draw it. I used [this online converter](http://www.rinkydinkelectronics.com/t_imageconverter565.php) and [this software](https://sourceforge.net/projects/lcd-image-converter/) to convert the image into the required format.
+
+While doing so I recognized that the display didn't show the right colors, but inverted some of them. According to my Google search, this is caused by the incorrect setup of the graphics library. The bad thing: if I configured the library to show the colors correctly, the column and row offsets of the pixels where incorrect. Setting the column and row offset, however, is done via a protected method on the library class. So I had to derive my own class of the graphics library that acually does what I want: correct colors AND correct offsets.
+
+After fixing this, I was able to show the bitmap as I wanted. I also had to fix the initialization of the speaker stuff, as it produced an error message.
+
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
 * [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
 * [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
-* [displaying images on tft](https://thesolaruniverse.wordpress.com/2021/11/05/displaying-color-pictures-on-a-240x240-tft-screen-with-st7789-controller-with-an-esp32-wroom-32/) and [online converter for bitmap files](https://lvgl.io/tools/imageconverter)
 * [LVGL on esp32](https://docs.lvgl.io/latest/en/html/get-started/espressif.html)
