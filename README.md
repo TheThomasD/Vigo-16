@@ -244,6 +244,8 @@ I didn't find any connection to pin 1, but if these pin connections are correct,
 
 I am not sure why pin 3 is connected to Q1, but I would expect that this allows for e.g. a reset of the GRBL board or similar. Indeed, if I pull up GPIO 22, pin 3 of the connector is connected to GND. I will have to test with the Vevor board whether this pull-down has any effect.
 
+I checked the behavior of the CNC if I pull the pin to GND manually. Indeed, the CNC is reset. Also, if one of the CNC endstops is hit during the CNC process, the display shows an alarm and offers to reset the GRBL board. I guess this is the functionality that they implemented.
+
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
 * [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
