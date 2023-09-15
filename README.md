@@ -245,4 +245,8 @@ I didn't find any connection to pin 1, but if these pin connections are correct,
 I am not sure why pin 3 is connected to Q1, but I would expect that this allows for e.g. a reset of the GRBL board or similar. Indeed, if I pull up GPIO 22, pin 3 of the connector is connected to GND. I will have to test with the Vevor board whether this pull-down has any effect.
 
 ## Later
-* [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2)
+* [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
+* [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
+* [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
+* [displaying images on tft](https://thesolaruniverse.wordpress.com/2021/11/05/displaying-color-pictures-on-a-240x240-tft-screen-with-st7789-controller-with-an-esp32-wroom-32/) and [online converter for bitmap files](https://lvgl.io/tools/imageconverter)
+* [LVGL on esp32](https://docs.lvgl.io/latest/en/html/get-started/espressif.html)
