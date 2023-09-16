@@ -38,9 +38,10 @@
 
 Vevor_ST7735 tft = Vevor_ST7735();
 
-void setup(void) {
+void setup(void)
+{
   Serial.begin(115200);
-  
+
   Vevor_Speaker::playTone(NOTE_C5, 100);
   Vevor_Speaker::playTone(NOTE_E5, 100);
   Vevor_Speaker::playTone(NOTE_G5, 100);
@@ -49,15 +50,20 @@ void setup(void) {
   Serial.print(F("Hello! ST77xx TFT Test"));
 
   Serial1.begin(115200);
-
+ 
   tft.init();
   delay(2000);
 
-  tft.demo();
+  //tft.demo();
 
   Serial.println(F("Initialized"));
 }
 
-void loop() {
-  delay(500);
+void loop()
+{
+  if (Serial1.available())
+    Serial.write((char) Serial1.read());
+  if (Serial.available())
+    Serial1.write((char) Serial.read());
+  delay(10);
 }

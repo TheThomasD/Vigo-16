@@ -242,18 +242,18 @@ Based on this and looking at the connection cable, I would assume the following 
 2 4 6 8
 ```
 
-* 1 ???
-* 2 ??? -> via R38 to pin 12 -> GPIO 27 (RX?)
-* 3 ??? -> via Q1 and R1 to pin 36 -> GPIO 22
-* 4 ??? -> via R37 to pin 9 -> GPIO 33 (TX?)
+* 1 (not connected)
+* 2 TX  -> via R38 to pin 12       -> GPIO 27
+* 3 RST -> via Q1 and R1 to pin 36 -> GPIO 22
+* 4 RX  -> via R37 to pin 9        -> GPIO 33
 * 5+6 GND
 * 7+8 5V
 
-I didn't find any connection to pin 1, but if these pin connections are correct, then the pinout from the offline controller board should be exactly the same as on the GRBL board (with TX being pin 4 and RX being pin 2).
+I didn't find any connection to pin 1, but if these pin connections are correct, then the pinout from the offline controller board should be exactly the same as on the GRBL board (with TX and RX being switched).
 
 I am not sure why pin 3 is connected to Q1, but I would expect that this allows for e.g. a reset of the GRBL board or similar. Indeed, if I pull up GPIO 22, pin 3 of the connector is connected to GND. I will have to test with the Vevor board whether this pull-down has any effect.
 
-I checked the behavior of the CNC if I pull the pin to GND manually. Indeed, the CNC is reset. Also, if one of the CNC endstops is hit during the CNC process, the display shows an alarm and offers to reset the GRBL board. I guess this is the functionality that they implemented.
+I checked the behavior of the CNC if I pull the pin to GND manually. Indeed, the CNC is reset. Also, if one of the CNC endstops is hit during the CNC process, the display (with the original firmware) shows an alarm and offers to reset the GRBL board. I guess this is the functionality that they implemented.
 
 ## Current Display and Web Views
 
@@ -286,8 +286,12 @@ While doing so I recognized that the display didn't show the right colors, but i
 
 After fixing this, I was able to show the bitmap as I wanted. I also had to fix the initialization of the speaker stuff, as it produced an error message.
 
+### Connection to the GRBL Board
+
+After setting the correct RX/TX pins for the second serial, I am able to connect my serial monitor via the display to the GRBL contoller. By just pushing everything that is received via one serial to the other, I am able to controle the GRBL board directly. During my tests I also checked whether it is possible to use the USB connection in parallel to the display connection. As soon as the display is connected, the USB connection does not work anymore. No commands are accepted. It seems to me that I need to alter the [GRBL firmware](https://github.com/gnea/grbl) to make use of two ports in parallel (which would be my aim). However, I also read that on some boards the RX/TX pins of the display connector and the USB connector on the GRBL board are actually the same, which would not allow for parallel use.
+
 ## Later
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
 * [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
 * [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
-* [LVGL on esp32](https://docs.lvgl.io/latest/en/html/get-started/espressif.html)
+* [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)

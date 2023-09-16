@@ -18,8 +18,8 @@
 #define SOC_RX0 3;
 
 // remapped Serial1
-#define TX1 33;
-#define RX1 27;
+#define TX1 27;
+#define RX1 33;
 
 // I2C Communication
 static const uint8_t SDA = 21;
@@ -30,11 +30,6 @@ static const uint8_t SS    =  5; // Slave Select =CS Chip Select
 static const uint8_t MOSI  = 23; // Master Out Slave In
 static const uint8_t MISO  = 19; // Master In Slave Out
 static const uint8_t SCK   = 18; // Slave Clock =SCL
-
-
-
-
-
 
 /*
 static const uint8_t A0 = 36;
