@@ -3,7 +3,7 @@
 
 #define SPEAKER_PIN 21
 
-static bool initialized = false;
+bool Vevor_Speaker::initialized = false;
 
 void Vevor_Speaker::init()
 {

@@ -13,8 +13,13 @@
 
 // NOTE: these are not pin numbers, but GPIO numbers!
 
-static const uint8_t TX = 1;
-static const uint8_t RX = 3;
+// default Serial0
+#define SOC_TX0 1;
+#define SOC_RX0 3;
+
+// remapped Serial1
+#define TX1 33;
+#define RX1 27;
 
 // I2C Communication
 static const uint8_t SDA = 21;

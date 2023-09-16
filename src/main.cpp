@@ -48,6 +48,8 @@ void setup(void) {
   delay(2000);
   Serial.print(F("Hello! ST77xx TFT Test"));
 
+  Serial1.begin(115200);
+
   tft.init();
   delay(2000);
 
@@ -57,8 +59,5 @@ void setup(void) {
 }
 
 void loop() {
-  tft.invertDisplay(true);
-  delay(500);
-  tft.invertDisplay(false);
   delay(500);
 }

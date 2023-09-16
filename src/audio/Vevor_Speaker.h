@@ -8,4 +8,7 @@ public:
 
 protected:
     static void init();
+
+private:
+    static bool initialized;
 };
