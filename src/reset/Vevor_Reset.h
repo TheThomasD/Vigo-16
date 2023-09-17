@@ -1,3 +1,5 @@
+#pragma once
+
 class Vevor_Reset
 {
 public:

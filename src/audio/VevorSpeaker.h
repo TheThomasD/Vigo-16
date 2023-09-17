@@ -1,4 +1,5 @@
-// Speaker
+#pragma once
+
 #include "Pitches.h"
 
 class VevorSpeaker

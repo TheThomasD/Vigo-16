@@ -1,6 +1,10 @@
 #include "VevorST7735.h"
 #include "../bmp/Vevor.h"
 
+#define TFT_CS 15
+#define TFT_RST 2
+#define TFT_DC 12
+
 // TFT SPI (HSPI)
 VevorSPI VevorST7735::tftSpi = VevorSPI();
 
