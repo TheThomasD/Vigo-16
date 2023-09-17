@@ -1,7 +1,7 @@
 // Speaker
 #include "Pitches.h"
 
-class Vevor_Speaker
+class VevorSpeaker
 {
 public:
     static void playTone(unsigned int frequency, unsigned long duration);

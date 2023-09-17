@@ -1,11 +1,11 @@
-#include "Vevor_Speaker.h"
+#include "VevorSpeaker.h"
 #include <Arduino.h>
 
 #define SPEAKER_PIN 21
 
-bool Vevor_Speaker::initialized = false;
+bool VevorSpeaker::initialized = false;
 
-void Vevor_Speaker::init()
+void VevorSpeaker::init()
 {
   if (!initialized)
   {
@@ -17,7 +17,7 @@ void Vevor_Speaker::init()
   }
 }
 
-void Vevor_Speaker::playTone(unsigned int frequency, unsigned long duration)
+void VevorSpeaker::playTone(unsigned int frequency, unsigned long duration)
 {
   init();
   tone(SPEAKER_PIN, frequency, duration);

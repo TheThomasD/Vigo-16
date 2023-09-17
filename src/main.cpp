@@ -33,18 +33,18 @@
  **************************************************************************/
 
 #include "Arduino.h"
-#include <tft/Vevor_ST7735.h>
-#include "audio/Vevor_Speaker.h"
+#include <tft/VevorST7735.h>
+#include <audio/VevorSpeaker.h>
 
-Vevor_ST7735 tft = Vevor_ST7735();
+VevorST7735 tft = VevorST7735();
 
 void setup(void)
 {
   Serial.begin(115200);
 
-  Vevor_Speaker::playTone(NOTE_C5, 100);
-  Vevor_Speaker::playTone(NOTE_E5, 100);
-  Vevor_Speaker::playTone(NOTE_G5, 100);
+  VevorSpeaker::playTone(NOTE_C5, 100);
+  VevorSpeaker::playTone(NOTE_E5, 100);
+  VevorSpeaker::playTone(NOTE_G5, 100);
 
   delay(2000);
   Serial.print(F("Hello! ST77xx TFT Test"));

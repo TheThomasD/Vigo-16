@@ -1,4 +1,4 @@
-#include "Vevor_SPI.h"
+#include "VevorSPI.h"
 
 // SPI Communication (HSPI) for TFT
 #define HSPI_SS 15   // Slave Select =CS Chip Select
@@ -6,7 +6,7 @@
 #define HSPI_MISO 12 // Master In Slave Out
 #define HSPI_SCK 13  // Slave Clock =SCL
 
-Vevor_SPI::Vevor_SPI() : SPIClass(HSPI)
+VevorSPI::VevorSPI() : SPIClass(HSPI)
 {
     begin(HSPI_SCK, HSPI_MISO, HSPI_MOSI, HSPI_SS);
 }

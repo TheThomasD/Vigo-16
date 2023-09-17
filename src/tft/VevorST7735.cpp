@@ -1,13 +1,12 @@
-#include "Vevor_ST7735.h"
-#include "Vevor_SPI.h"
+#include "VevorST7735.h"
 #include "../bmp/Vevor.h"
 
 // TFT SPI (HSPI)
-static Vevor_SPI tftSpi = Vevor_SPI();
+VevorSPI VevorST7735::tftSpi = VevorSPI();
 
-Vevor_ST7735::Vevor_ST7735() : Adafruit_ST7735(&tftSpi, TFT_CS, TFT_DC, TFT_RST){};
+VevorST7735::VevorST7735() : Adafruit_ST7735(&tftSpi, TFT_CS, TFT_DC, TFT_RST){};
 
-void Vevor_ST7735::init()
+void VevorST7735::init()
 {
     initR(INITR_18BLACKTAB);
     setColRowStart(2, 1);
@@ -18,7 +17,7 @@ void Vevor_ST7735::init()
 
 float p = 3.1415926;
 
-void testlines(uint16_t color, Vevor_ST7735* tft)
+void testlines(uint16_t color, VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     for (int16_t x = 0; x < tft->width(); x += 6)
@@ -69,7 +68,7 @@ void testlines(uint16_t color, Vevor_ST7735* tft)
     }
 }
 
-void testdrawtext(char *text, uint16_t color, Vevor_ST7735* tft)
+void testdrawtext(char *text, uint16_t color, VevorST7735* tft)
 {
     tft->setCursor(0, 0);
     tft->setTextColor(color);
@@ -77,7 +76,7 @@ void testdrawtext(char *text, uint16_t color, Vevor_ST7735* tft)
     tft->print(text);
 }
 
-void testfastlines(uint16_t color1, uint16_t color2, Vevor_ST7735* tft)
+void testfastlines(uint16_t color1, uint16_t color2, VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     for (int16_t y = 0; y < tft->height(); y += 5)
@@ -90,7 +89,7 @@ void testfastlines(uint16_t color1, uint16_t color2, Vevor_ST7735* tft)
     }
 }
 
-void testdrawrects(uint16_t color, Vevor_ST7735* tft)
+void testdrawrects(uint16_t color, VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     for (int16_t x = 0; x < tft->width(); x += 6)
@@ -99,7 +98,7 @@ void testdrawrects(uint16_t color, Vevor_ST7735* tft)
     }
 }
 
-void testfillrects(uint16_t color1, uint16_t color2, Vevor_ST7735* tft)
+void testfillrects(uint16_t color1, uint16_t color2, VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     for (int16_t x = tft->width() - 1; x > 6; x -= 6)
@@ -109,7 +108,7 @@ void testfillrects(uint16_t color1, uint16_t color2, Vevor_ST7735* tft)
     }
 }
 
-void testfillcircles(uint8_t radius, uint16_t color, Vevor_ST7735* tft)
+void testfillcircles(uint8_t radius, uint16_t color, VevorST7735* tft)
 {
     for (int16_t x = radius; x < tft->width(); x += radius * 2)
     {
@@ -120,7 +119,7 @@ void testfillcircles(uint8_t radius, uint16_t color, Vevor_ST7735* tft)
     }
 }
 
-void testdrawcircles(uint8_t radius, uint16_t color, Vevor_ST7735* tft)
+void testdrawcircles(uint8_t radius, uint16_t color, VevorST7735* tft)
 {
     for (int16_t x = 0; x < tft->width() + radius; x += radius * 2)
     {
@@ -131,7 +130,7 @@ void testdrawcircles(uint8_t radius, uint16_t color, Vevor_ST7735* tft)
     }
 }
 
-void testtriangles(Vevor_ST7735* tft)
+void testtriangles(VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     uint16_t color = 0xF800;
@@ -150,7 +149,7 @@ void testtriangles(Vevor_ST7735* tft)
     }
 }
 
-void testroundrects(Vevor_ST7735* tft)
+void testroundrects(VevorST7735* tft)
 {
     tft->fillScreen(ST77XX_BLACK);
     uint16_t color = 100;
@@ -175,7 +174,7 @@ void testroundrects(Vevor_ST7735* tft)
     }
 }
 
-void tftPrintTest(Vevor_ST7735* tft)
+void tftPrintTest(VevorST7735* tft)
 {
     tft->setTextWrap(false);
     tft->fillScreen(ST77XX_BLACK);
@@ -215,7 +214,7 @@ void tftPrintTest(Vevor_ST7735* tft)
     tft->print(" seconds.");
 }
 
-void mediabuttons(Vevor_ST7735* tft)
+void mediabuttons(VevorST7735* tft)
 {
     // play
     tft->fillScreen(ST77XX_BLACK);
@@ -237,7 +236,7 @@ void mediabuttons(Vevor_ST7735* tft)
     tft->fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_GREEN);
 }
 
-void Vevor_ST7735::demo()
+void VevorST7735::demo()
 {
     uint16_t time = millis();
     fillScreen(ST77XX_BLACK);
