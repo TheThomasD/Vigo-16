@@ -218,7 +218,7 @@ I didn't bother about Bluetooth right now, as I currently don't see any real req
 
 I definitely want to run a webserver on the ESP32 to be able to upload files through the server to the SD card and ideally to directly communicate with the server via a simulated COM port. On the client side I might be able to use the software from [this](https://tibbo.com/soi/software.html) page for the connection with Windows and Linux.
 
-For the an asynchronous server I found [this page](https://myhomethings.eu/de/esp32-asynchroner-webserver/) with a simple introduction. However, I think I'll have to implement a more capable system that is comparable to the [ESP3D project](https://github.com/luc-github/ESP3D). I think I might have to borrow some of the code from there to speed up my project. While looking at that project, I also found the [FludiNC](https://github.com/bdring/FluidNC) project, which sounds also very interesting (although I'm not going to switch my CNC and laser controller boards for an ESP32 anytime soon).
+For the an asynchronous server I found [this page](https://myhomethings.eu/de/esp32-asynchroner-webserver/) with a simple introduction. However, I think I'll have to implement a more capable system that is comparable to the [ESP3D project](https://github.com/luc-github/ESP3D). I think I might have to borrow some of the ideas from there to speed up my project. While looking at that project, I also found the [FludiNC](https://github.com/bdring/FluidNC) project, which sounds also very interesting (although I'm not going to switch my CNC and laser controller boards for an ESP32 anytime soon).
 
 No implementation as of yet... But I recognized that the size of the image is already 805177 bytes of 1310720. I guess I will have to resize the partitions or store some data somewhere else to make use of the 4MB size of the ESP32 flash. Or maybe this is actually the limit?
 
@@ -286,11 +286,37 @@ While doing so I recognized that the display didn't show the right colors, but i
 
 After fixing this, I was able to show the bitmap as I wanted. I also had to fix the initialization of the speaker stuff, as it produced an error message.
 
-### Connection to the GRBL Board
+### Basic Connection to the GRBL Board
 
 After setting the correct RX/TX pins for the second serial, I am able to connect my serial monitor via the display to the GRBL contoller. By just pushing everything that is received via one serial to the other, I am able to controle the GRBL board directly. During my tests I also checked whether it is possible to use the USB connection in parallel to the display connection. As soon as the display is connected, the USB connection does not work anymore. No commands are accepted. It seems to me that I need to alter the [GRBL firmware](https://github.com/gnea/grbl) to make use of two ports in parallel (which would be my aim). However, I also read that on some boards the RX/TX pins of the display connector and the USB connector on the GRBL board are actually the same, which would not allow for parallel use.
 
+Next steps:
+
+1. ~~make the speaker work~~
+2. ~~make the SD card reader work~~
+3. ~~make the buttons work~~
+4. ~~make the Wifi (and Bluetooth?) work~~
+5. ~~connect to the GRBL board via serial connection~~
+6. implement nice menus etc.
+
+### Implementation Planning
+
+Now I am at the point where I need to sketch out how to move forward. There are a lot of things I want to achieve, but of course I don't want to do everything by myself. I'll rather crawl through some implementations from others, think of what I need and integrate the ideas into my own firmware (hoping that it all fits into the 4MB flash size of the chip). I would like to have the following points, and I think I am going to implement them in the following order:
+
+1. WiFi STA and AP in parallel
+    * if STA is not connected, start AP anayway
+2. configure STA and AP mode over a web interface
+3. allow for OTA updates via a web interface
+
+After those, I want the following things in addiotion (unordered for now):
+
+* Web interface for control, files, printing and serial terminal (wifi config and update is ideally already there, see above)
+* Web serial connection
+* Display implementation for control, files, printing and network info
+* (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
+
 ## Later
+
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
 * [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
 * [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
