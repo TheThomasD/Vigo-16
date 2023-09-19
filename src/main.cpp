@@ -25,7 +25,7 @@ void setup(void)
  
   tft.init();
 
-  wifi.startWifi(&config);
+  wifi.startWifi(&config, &tft);
 
   Serial.println(F("Initialized"));
 }
