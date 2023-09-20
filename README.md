@@ -315,6 +315,19 @@ After those, I want the following things in addiotion (unordered for now):
 * Display implementation for control, files, printing and network info
 * (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
 
+### Implementation Planning - revised
+
+I fiddled around a little bit with the SPIFFS storage for files and it works really well and easy. While I was implementing that, I decided to change my plan:
+
+1. ~~WiFi STA and AP in parallel~~
+    * ~~if STA is not connected, start AP anyway~~ (both already done)
+2. implement OTA updates via the web interface
+3. configure STA and AP mode over a web interface
+
+I want to switch the two points because of "bootstrapping" reasons. With the OTA update, I will be able to exchange the current app image on the ESP32 easily via the web interface. In the initial phase, I will just create a simple web site (non-compressed html; possibly without CSS) stored on the SPIFFS partition to upload the new image. With that done, I can upload a new app image OTA any time (and I will potentially reduce wear by using a different partition on every update). I expect that the upload process is quite similar for OTA and SPIFFS files.
+
+When this is done, I will create a new web page and a new firmware, that also allows for uploading the web file for the SPIFFS partition. With this, I can exchange the image or the web part whenever I want via the web interface. That sounds very convenient to me.
+
 ## Later
 
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)

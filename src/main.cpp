@@ -4,6 +4,7 @@
 #include <audio/VevorSpeaker.h>
 #include <config/VevorConfig.h>
 #include <wifi/VevorWifi.h>
+#include <SPIFFS.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
@@ -22,12 +23,20 @@ void setup(void)
 
   config.load();
   config.print();
- 
+
   tft.init();
 
   wifi.startWifi(&config, &tft);
 
   Serial.println(F("Initialized"));
+
+  if (!SPIFFS.begin(true))
+  {
+      Serial.println("SPIFFS error!");
+  }
+
+  File index = SPIFFS.open("/index.html");
+  Serial.println(index.readString());
 }
 
 void loop()
