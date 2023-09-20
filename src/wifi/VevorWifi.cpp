@@ -1,6 +1,6 @@
 #include "VevorWifi.h"
 #include <WiFi.h>
-#include "../logging/Logger.h"
+#include "../log/Logger.h"
 #include <ESPmDNS.h>
 
 void VevorWifi::startWifi(VevorConfig *config, VevorST7735 *tft)

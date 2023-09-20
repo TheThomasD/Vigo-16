@@ -326,11 +326,14 @@ I fiddled around a little bit with the SPIFFS storage for files and it works rea
 
 I want to switch the two points because of "bootstrapping" reasons. With the OTA update, I will be able to exchange the current app image on the ESP32 easily via the web interface. In the initial phase, I will just create a simple web site (non-compressed html; possibly without CSS) stored on the SPIFFS partition to upload the new image. With that done, I can upload a new app image OTA any time (and I will potentially reduce wear by using a different partition on every update). I expect that the upload process is quite similar for OTA and SPIFFS files.
 
-When this is done, I will create a new web page and a new firmware, that also allows for uploading the web file for the SPIFFS partition. With this, I can exchange the image or the web part whenever I want via the web interface. That sounds very convenient to me.
+When this is done, I will create a new web page and a new firmware, that also allows for uploading the web file for the SPIFFS partition. With this, I can exchange the image or the web part whenever I want via the web interface. That sounds very convenient to me. After reading [this](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/) solution, I feel I can just use the suggested library and I can be done with mostly everything for the webserver I need in now time. It does not allow for single file upload to SPIFFS, but I can generate the SPIFFS binary file from my VS Code project just fine, so the upload of a bin file is totally sufficient for me.
+
+And wow, this was a quick one. With the [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/) library, the updates are already working. Looking at the library, the code isn't really that complicated, but I don't mind the small "buy me a coffee" icon on the page for now ;).
 
 ## Later
 
 * [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
-* [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/)
+* [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)
 * [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
 * [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)
+* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/)

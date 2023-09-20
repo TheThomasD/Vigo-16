@@ -4,11 +4,16 @@
 #include <audio/VevorSpeaker.h>
 #include <config/VevorConfig.h>
 #include <wifi/VevorWifi.h>
-#include <SPIFFS.h>
+#include <ESPAsyncWebServer.h>
+#include "log/Logger.h"
+#include <server/VevorServer.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi();
+
+AsyncWebServer webServer(80);
+VevorServer server;
 
 void setup(void)
 {
@@ -28,15 +33,9 @@ void setup(void)
 
   wifi.startWifi(&config, &tft);
 
+  server.init(&webServer);
+
   Serial.println(F("Initialized"));
-
-  if (!SPIFFS.begin(true))
-  {
-      Serial.println("SPIFFS error!");
-  }
-
-  File index = SPIFFS.open("/index.html");
-  Serial.println(index.readString());
 }
 
 void loop()
