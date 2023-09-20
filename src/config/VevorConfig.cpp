@@ -7,6 +7,7 @@ void VevorConfig::load()
     apPassword = prefs.getString(nameApPassword, "12345678");
     staSsid = prefs.getString(nameStaSsid, "");
     staPassword = prefs.getString(nameStaPassword, "");
+    hostName = prefs.getString(nameHostName, "Vevor-CNC");
     prefs.end();
 }
 
@@ -17,6 +18,7 @@ void VevorConfig::save()
     prefs.putString(nameApPassword, apPassword);
     prefs.putString(nameStaSsid, staSsid);
     prefs.putString(nameStaPassword, staPassword);
+    prefs.putString(nameHostName, hostName);
     prefs.end();
 }
 
@@ -33,6 +35,7 @@ void VevorConfig::print()
     printPair(nameApPassword, apPassword);
     printPair(nameStaSsid, staSsid);
     printPair(nameStaPassword, staPassword);
+    printPair(nameHostName, hostName);
 }
 
 void VevorConfig::setApSsid(String ssid)
@@ -73,4 +76,14 @@ void VevorConfig::setStaPassword(String password)
 String VevorConfig::getStaPassword()
 {
     return staPassword;
+}
+
+void VevorConfig::setHostName(String name)
+{
+    hostName = name;
+}
+
+String VevorConfig::getHostName()
+{
+    return hostName;
 }

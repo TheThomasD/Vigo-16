@@ -18,21 +18,25 @@ public:
     String getStaSsid();
     void setStaPassword(String password);
     String getStaPassword();
+    void setHostName(String hostname);
+    String getHostName();
 
 protected:
     Preferences prefs;
 
-    void printPair(const char* name, String value);
+    void printPair(const char *name, String value);
 
 private:
     String apSsid;
     String apPassword;
     String staSsid;
     String staPassword;
+    String hostName;
 
     const char *storageNamespace = "vigo-16";
     const char *nameApSsid = "apSsid";
     const char *nameApPassword = "apPw";
     const char *nameStaSsid = "staSsid";
     const char *nameStaPassword = "staPw";
+    const char *nameHostName = "host";
 };
