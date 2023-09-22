@@ -11,10 +11,8 @@ public:
     void startWifi(VevorConfig* config);
 
 protected:
-    static void onWiFiEventStatic(WiFiEvent_t event, WiFiEventInfo_t info);
     void onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info);
 
 private:
-    static VevorWifi *instance;
     VevorST7735 *tft;
 };

@@ -2,12 +2,9 @@
 #include "../log/Logger.h"
 #include <ESPmDNS.h>
 
-VevorWifi *VevorWifi::instance = nullptr;
-
 VevorWifi::VevorWifi(VevorST7735 *tft)
 {
     this->tft = tft;
-    instance = this;
 }
 
 void VevorWifi::startWifi(VevorConfig *config)
@@ -17,7 +14,9 @@ void VevorWifi::startWifi(VevorConfig *config)
     WiFi.disconnect();
     WiFi.softAPdisconnect();
 
-    WiFi.onEvent(VevorWifi::onWiFiEventStatic, ARDUINO_EVENT_MAX);
+    WiFi.onEvent([this](WiFiEvent_t event, WiFiEventInfo_t info)
+                 { this->onWiFiEvent(event, info); },
+                 ARDUINO_EVENT_MAX);
 
     if (WiFi.setHostname(config->getHostName().c_str()))
     {
@@ -87,15 +86,16 @@ void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     switch (event)
     {
-    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
         tft->setStaStatus(CONNECTED);
         break;
     case ARDUINO_EVENT_WIFI_STA_STOP:
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_LOST_IP:
         tft->setStaStatus(DISCONNECTED);
         break;
     case ARDUINO_EVENT_WIFI_STA_START:
-    case ARDUINO_EVENT_WIFI_STA_LOST_IP:
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
         tft->setStaStatus(UNKNOWN);
         break;
     case ARDUINO_EVENT_WIFI_AP_START:
@@ -110,9 +110,4 @@ void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
     default:
         break;
     }
-}
-
-void VevorWifi::onWiFiEventStatic(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-    instance->onWiFiEvent(event, info);
 }
