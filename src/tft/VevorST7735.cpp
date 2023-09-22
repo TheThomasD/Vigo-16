@@ -21,9 +21,62 @@ void VevorST7735::init()
     setRotation(1);
     fillScreen(ST7735_BLACK);
     drawRGBBitmap(0, 20, image_data_Vevor, 160, 60);
+    redrawStatus();
 }
 
-void VevorST7735::addStatusLine(String line)
+void VevorST7735::setStaStatus(const Status status)
+{
+    staStatus = status;
+    redrawStatus();
+}
+
+void VevorST7735::setApStatus(const Status status, uint8_t numberOfClients)
+{
+    apStatus = status;
+    apClients = numberOfClients;
+    redrawStatus();
+}
+
+void VevorST7735::setSerialStatus(const Status status)
+{
+    serialStatus = status;
+    redrawStatus();
+}
+
+uint16_t VevorST7735::getColor(const Status status)
+{
+    switch (status)
+    {
+    case CONNECTED:
+        return ST7735_GREEN;
+    case DISCONNECTED:
+        return ST7735_RED;
+    default:
+        return ST7735_ORANGE;
+    }
+}
+
+void VevorST7735::redrawStatus()
+{
+    const uint8_t statusWidth = 3 * 6 + 1;
+    fillRect(0, 0, width(), 10, ST7735_BLACK);
+    fillRect(0, 0, statusWidth, 10, getColor(staStatus));
+    fillRect(statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
+    fillRect(2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
+    
+    setTextSize(1);
+    setTextColor(ST7735_BLACK);
+
+    setCursor(1,1);
+    print("STA");
+    setCursor(statusWidth + 1 + 1, 1);
+    print("AP");
+    print(apClients);
+    setCursor(2 * statusWidth + 2 + 1, 1);
+    print("SER");
+}
+
+void VevorST7735::addBootStatusLine(String line)
 {
 
     int16_t currentY = height() - 5 * 9;
@@ -43,7 +96,7 @@ void VevorST7735::addStatusLine(String line)
     if (line.length() > 26)
     {
         status[0] = line.substring(0, 25);
-        addStatusLine(" " + line.substring(25));
+        addBootStatusLine(" " + line.substring(25));
     }
     else
     {

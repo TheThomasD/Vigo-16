@@ -10,7 +10,7 @@
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
-VevorWifi wifi = VevorWifi();
+VevorWifi wifi = VevorWifi(&tft);
 
 AsyncWebServer webServer(80);
 VevorServer server;
@@ -31,7 +31,7 @@ void setup(void)
 
   tft.init();
 
-  wifi.startWifi(&config, &tft);
+  wifi.startWifi(&config);
 
   server.init(&webServer);
 
@@ -40,5 +40,4 @@ void setup(void)
 
 void loop()
 {
-  delay(10);
 }
