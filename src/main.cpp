@@ -8,10 +8,12 @@
 #include "log/Logger.h"
 #include <server/VevorServer.h>
 #include <arduino-timer.h>
+#include <screens/VevorScreens.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
+VevorScreens screens = VevorScreens(&tft);
 
 AsyncWebServer webServer(80);
 VevorServer server;
@@ -34,7 +36,9 @@ void setup(void)
 
   tft.init();
 
-  wifi.startWifi(&config, &timer);
+  screens.showBootScreen();
+
+  wifi.startWifi(&config, &timer, &screens);
 
   server.init(&webServer);
 
@@ -42,7 +46,7 @@ void setup(void)
 
   delay(1000);
 
-  tft.showMenuScreen();
+  //screens.showControlScreen();
 }
 
 void loop()

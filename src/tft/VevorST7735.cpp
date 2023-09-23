@@ -1,5 +1,4 @@
 #include "VevorST7735.h"
-#include "../bmp/Vevor.h"
 
 #define TFT_CS 15
 #define TFT_RST 2
@@ -10,60 +9,13 @@
 // TFT SPI (HSPI)
 VevorSPI VevorST7735::tftSpi = VevorSPI();
 
-VevorST7735::VevorST7735() : Adafruit_ST7735(&tftSpi, TFT_CS, TFT_DC, TFT_RST)
-{
-    for (uint8_t i = 0; i < 5; i++)
-        status[i] = "";
-};
+VevorST7735::VevorST7735() : Adafruit_ST7735(&tftSpi, TFT_CS, TFT_DC, TFT_RST){};
 
 void VevorST7735::init()
 {
     initR(INITR_18BLACKTAB);
     setColRowStart(2, 1);
     setRotation(1);
-    clear();
-    showBootScreen();
-}
-
-void VevorST7735::showMenuScreen()
-{
-    clear();
-
-    setTextColor(ST7735_WHITE);
-    setTextSize(1); // 6x8
-
-    drawButton(10, 20, ST7735_BLUE, "Z+");
-    drawButton(10, 80, ST7735_BLUE, "Z-");
-    drawButton(95, 20, ST7735_BLUE, "Y+");
-    drawButton(65, 50, ST7735_BLUE, "X-");
-    // Spindle
-    drawButton(95, 50, ST7735_RED, "SET");
-    drawButton(125, 50, ST7735_BLUE, "X+");
-    drawButton(95, 80, ST7735_BLUE, "Y-");
-    // Step
-    drawButton(125, 80, ST7735_RED, "ESC");
-}
-
-void VevorST7735::drawButton(uint8_t x, uint8_t y, uint16_t color, String caption) {
-    #define BUTTON_WIDTH 24
-    #define BUTTON_HEIGHT 24
-    #define TEXT_START_Y (BUTTON_HEIGHT - 8) / 2
-
-    this->fillRoundRect(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, 12, color);
-    setCursor(x + (BUTTON_WIDTH - caption.length() * 6) / 2, y + TEXT_START_Y + (color == ST7735_BLUE ? 1 : 0));
-    print(caption);
-}
-
-void VevorST7735::showBootScreen()
-{
-    clear();
-    drawRGBBitmap(0, 20, image_data_Vevor, 160, 60);
-}
-
-void VevorST7735::clear()
-{
-    fillScreen(ST7735_BLACK);
-    redrawStatus();
 }
 
 void VevorST7735::setStaStatus(const Status status)
@@ -118,34 +70,10 @@ void VevorST7735::redrawStatus()
     print("SER");
 }
 
-void VevorST7735::addBootStatusLine(String line)
+void VevorST7735::clear()
 {
-
-    int16_t currentY = height() - 5 * 9;
-    fillRect(0, currentY, width(), 5 * 9, ST7735_BLACK);
-
-    setTextSize(1);
-    setTextWrap(false);
-    setTextColor(ST7735_WHITE);
-
-    for (uint8_t i = 4; i > 0; i--)
-    {
-        status[i] = status[i - 1];
-        setCursor(1, currentY);
-        print(status[i]);
-        currentY += 9;
-    }
-    if (line.length() > 26)
-    {
-        status[0] = line.substring(0, 25);
-        addBootStatusLine(" " + line.substring(25));
-    }
-    else
-    {
-        status[0] = line;
-        setCursor(1, currentY);
-        print(line);
-    }
+    fillScreen(ST7735_BLACK);
+    redrawStatus();
 }
 
 /*
@@ -154,129 +82,129 @@ float p = 3.1415926;
 
 void testlines(uint16_t color, VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = 0; x < tft->width(); x += 6)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = 0; x < width(); x += 6)
     {
-        tft->drawLine(0, 0, x, tft->height() - 1, color);
+        drawLine(0, 0, x, height() - 1, color);
         delay(0);
     }
-    for (int16_t y = 0; y < tft->height(); y += 6)
+    for (int16_t y = 0; y < height(); y += 6)
     {
-        tft->drawLine(0, 0, tft->width() - 1, y, color);
-        delay(0);
-    }
-
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = 0; x < tft->width(); x += 6)
-    {
-        tft->drawLine(tft->width() - 1, 0, x, tft->height() - 1, color);
-        delay(0);
-    }
-    for (int16_t y = 0; y < tft->height(); y += 6)
-    {
-        tft->drawLine(tft->width() - 1, 0, 0, y, color);
+        drawLine(0, 0, width() - 1, y, color);
         delay(0);
     }
 
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = 0; x < tft->width(); x += 6)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = 0; x < width(); x += 6)
     {
-        tft->drawLine(0, tft->height() - 1, x, 0, color);
+        drawLine(width() - 1, 0, x, height() - 1, color);
         delay(0);
     }
-    for (int16_t y = 0; y < tft->height(); y += 6)
+    for (int16_t y = 0; y < height(); y += 6)
     {
-        tft->drawLine(0, tft->height() - 1, tft->width() - 1, y, color);
+        drawLine(width() - 1, 0, 0, y, color);
         delay(0);
     }
 
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = 0; x < tft->width(); x += 6)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = 0; x < width(); x += 6)
     {
-        tft->drawLine(tft->width() - 1, tft->height() - 1, x, 0, color);
+        drawLine(0, height() - 1, x, 0, color);
         delay(0);
     }
-    for (int16_t y = 0; y < tft->height(); y += 6)
+    for (int16_t y = 0; y < height(); y += 6)
     {
-        tft->drawLine(tft->width() - 1, tft->height() - 1, 0, y, color);
+        drawLine(0, height() - 1, width() - 1, y, color);
+        delay(0);
+    }
+
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = 0; x < width(); x += 6)
+    {
+        drawLine(width() - 1, height() - 1, x, 0, color);
+        delay(0);
+    }
+    for (int16_t y = 0; y < height(); y += 6)
+    {
+        drawLine(width() - 1, height() - 1, 0, y, color);
         delay(0);
     }
 }
 
 void testdrawtext(char *text, uint16_t color, VevorST7735 *tft)
 {
-    tft->setCursor(0, 0);
-    tft->setTextColor(color);
-    tft->setTextWrap(true);
-    tft->print(text);
+    setCursor(0, 0);
+    setTextColor(color);
+    setTextWrap(true);
+    print(text);
 }
 
 void testfastlines(uint16_t color1, uint16_t color2, VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t y = 0; y < tft->height(); y += 5)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t y = 0; y < height(); y += 5)
     {
-        tft->drawFastHLine(0, y, tft->width(), color1);
+        drawFastHLine(0, y, width(), color1);
     }
-    for (int16_t x = 0; x < tft->width(); x += 5)
+    for (int16_t x = 0; x < width(); x += 5)
     {
-        tft->drawFastVLine(x, 0, tft->height(), color2);
+        drawFastVLine(x, 0, height(), color2);
     }
 }
 
 void testdrawrects(uint16_t color, VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = 0; x < tft->width(); x += 6)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = 0; x < width(); x += 6)
     {
-        tft->drawRect(tft->width() / 2 - x / 2, tft->height() / 2 - x / 2, x, x, color);
+        drawRect(width() / 2 - x / 2, height() / 2 - x / 2, x, x, color);
     }
 }
 
 void testfillrects(uint16_t color1, uint16_t color2, VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
-    for (int16_t x = tft->width() - 1; x > 6; x -= 6)
+    fillScreen(ST77XX_BLACK);
+    for (int16_t x = width() - 1; x > 6; x -= 6)
     {
-        tft->fillRect(tft->width() / 2 - x / 2, tft->height() / 2 - x / 2, x, x, color1);
-        tft->drawRect(tft->width() / 2 - x / 2, tft->height() / 2 - x / 2, x, x, color2);
+        fillRect(width() / 2 - x / 2, height() / 2 - x / 2, x, x, color1);
+        drawRect(width() / 2 - x / 2, height() / 2 - x / 2, x, x, color2);
     }
 }
 
 void testfillcircles(uint8_t radius, uint16_t color, VevorST7735 *tft)
 {
-    for (int16_t x = radius; x < tft->width(); x += radius * 2)
+    for (int16_t x = radius; x < width(); x += radius * 2)
     {
-        for (int16_t y = radius; y < tft->height(); y += radius * 2)
+        for (int16_t y = radius; y < height(); y += radius * 2)
         {
-            tft->fillCircle(x, y, radius, color);
+            fillCircle(x, y, radius, color);
         }
     }
 }
 
 void testdrawcircles(uint8_t radius, uint16_t color, VevorST7735 *tft)
 {
-    for (int16_t x = 0; x < tft->width() + radius; x += radius * 2)
+    for (int16_t x = 0; x < width() + radius; x += radius * 2)
     {
-        for (int16_t y = 0; y < tft->height() + radius; y += radius * 2)
+        for (int16_t y = 0; y < height() + radius; y += radius * 2)
         {
-            tft->drawCircle(x, y, radius, color);
+            drawCircle(x, y, radius, color);
         }
     }
 }
 
 void testtriangles(VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
+    fillScreen(ST77XX_BLACK);
     uint16_t color = 0xF800;
     int t;
-    int w = tft->width() / 2;
-    int x = tft->height() - 1;
+    int w = width() / 2;
+    int x = height() - 1;
     int y = 0;
-    int z = tft->width();
+    int z = width();
     for (t = 0; t <= 15; t++)
     {
-        tft->drawTriangle(w, y, y, x, z, x, color);
+        drawTriangle(w, y, y, x, z, x, color);
         x -= 4;
         y += 4;
         z -= 4;
@@ -286,7 +214,7 @@ void testtriangles(VevorST7735 *tft)
 
 void testroundrects(VevorST7735 *tft)
 {
-    tft->fillScreen(ST77XX_BLACK);
+    fillScreen(ST77XX_BLACK);
     uint16_t color = 100;
     int i;
     int t;
@@ -294,11 +222,11 @@ void testroundrects(VevorST7735 *tft)
     {
         int x = 0;
         int y = 0;
-        int w = tft->width() - 2;
-        int h = tft->height() - 2;
+        int w = width() - 2;
+        int h = height() - 2;
         for (i = 0; i <= 16; i += 1)
         {
-            tft->drawRoundRect(x, y, w, h, 5, color);
+            drawRoundRect(x, y, w, h, 5, color);
             x += 2;
             y += 3;
             w -= 4;
@@ -311,64 +239,64 @@ void testroundrects(VevorST7735 *tft)
 
 void tftPrintTest(VevorST7735 *tft)
 {
-    tft->setTextWrap(false);
-    tft->fillScreen(ST77XX_BLACK);
-    tft->setCursor(0, 30);
-    tft->setTextColor(ST77XX_RED);
-    tft->setTextSize(1);
-    tft->println("Hello World!");
-    tft->setTextColor(ST77XX_YELLOW);
-    tft->setTextSize(2);
-    tft->println("Hello World!");
-    tft->setTextColor(ST77XX_GREEN);
-    tft->setTextSize(3);
-    tft->println("Hello World!");
-    tft->setTextColor(ST77XX_BLUE);
-    tft->setTextSize(4);
-    tft->print(1234.567);
+    setTextWrap(false);
+    fillScreen(ST77XX_BLACK);
+    setCursor(0, 30);
+    setTextColor(ST77XX_RED);
+    setTextSize(1);
+    println("Hello World!");
+    setTextColor(ST77XX_YELLOW);
+    setTextSize(2);
+    println("Hello World!");
+    setTextColor(ST77XX_GREEN);
+    setTextSize(3);
+    println("Hello World!");
+    setTextColor(ST77XX_BLUE);
+    setTextSize(4);
+    print(1234.567);
     delay(1500);
-    tft->setCursor(0, 0);
-    tft->fillScreen(ST77XX_BLACK);
-    tft->setTextColor(ST77XX_WHITE);
-    tft->setTextSize(0);
-    tft->println("Hello World!");
-    tft->setTextSize(1);
-    tft->setTextColor(ST77XX_GREEN);
-    tft->print(p, 6);
-    tft->println(" Want pi?");
-    tft->println(" ");
-    tft->print(8675309, HEX); // print 8,675,309 out in HEX!
-    tft->println(" Print HEX!");
-    tft->println(" ");
-    tft->setTextColor(ST77XX_WHITE);
-    tft->println("Sketch has been");
-    tft->println("running for: ");
-    tft->setTextColor(ST77XX_MAGENTA);
-    tft->print(millis() / 1000);
-    tft->setTextColor(ST77XX_WHITE);
-    tft->print(" seconds.");
+    setCursor(0, 0);
+    fillScreen(ST77XX_BLACK);
+    setTextColor(ST77XX_WHITE);
+    setTextSize(0);
+    println("Hello World!");
+    setTextSize(1);
+    setTextColor(ST77XX_GREEN);
+    print(p, 6);
+    println(" Want pi?");
+    println(" ");
+    print(8675309, HEX); // print 8,675,309 out in HEX!
+    println(" Print HEX!");
+    println(" ");
+    setTextColor(ST77XX_WHITE);
+    println("Sketch has been");
+    println("running for: ");
+    setTextColor(ST77XX_MAGENTA);
+    print(millis() / 1000);
+    setTextColor(ST77XX_WHITE);
+    print(" seconds.");
 }
 
 void mediabuttons(VevorST7735 *tft)
 {
     // play
-    tft->fillScreen(ST77XX_BLACK);
-    tft->fillRoundRect(25, 10, 78, 60, 8, ST77XX_WHITE);
-    tft->fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_RED);
+    fillScreen(ST77XX_BLACK);
+    fillRoundRect(25, 10, 78, 60, 8, ST77XX_WHITE);
+    fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_RED);
     delay(500);
     // pause
-    tft->fillRoundRect(25, 90, 78, 60, 8, ST77XX_WHITE);
-    tft->fillRoundRect(39, 98, 20, 45, 5, ST77XX_GREEN);
-    tft->fillRoundRect(69, 98, 20, 45, 5, ST77XX_GREEN);
+    fillRoundRect(25, 90, 78, 60, 8, ST77XX_WHITE);
+    fillRoundRect(39, 98, 20, 45, 5, ST77XX_GREEN);
+    fillRoundRect(69, 98, 20, 45, 5, ST77XX_GREEN);
     delay(500);
     // play color
-    tft->fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_BLUE);
+    fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_BLUE);
     delay(50);
     // pause color
-    tft->fillRoundRect(39, 98, 20, 45, 5, ST77XX_RED);
-    tft->fillRoundRect(69, 98, 20, 45, 5, ST77XX_RED);
+    fillRoundRect(39, 98, 20, 45, 5, ST77XX_RED);
+    fillRoundRect(69, 98, 20, 45, 5, ST77XX_RED);
     // play color
-    tft->fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_GREEN);
+    fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_GREEN);
 }
 
 void VevorST7735::demo()
