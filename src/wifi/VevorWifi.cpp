@@ -7,7 +7,7 @@ VevorWifi::VevorWifi(VevorST7735 *tft)
     this->tft = tft;
 }
 
-void VevorWifi::startWifi(VevorConfig *config)
+void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer)
 {
     tft->addBootStatusLine("Connecting Wifi...");
     WiFi.mode(WIFI_MODE_APSTA);
@@ -80,6 +80,13 @@ void VevorWifi::startWifi(VevorConfig *config)
         log_println("Could not start MDNS: " + config->getHostName() + ".local");
         tft->addBootStatusLine("MDNS: could not enable!");
     }
+
+    timer->every(5000, [](void *)
+                 {
+                     if (!WiFi.isConnected())
+                         WiFi.reconnect();
+                     return true;
+                 });
 }
 
 void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)

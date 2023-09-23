@@ -19,8 +19,19 @@ void VevorST7735::init()
     initR(INITR_18BLACKTAB);
     setColRowStart(2, 1);
     setRotation(1);
-    fillScreen(ST7735_BLACK);
+    clear();
+    showBootScreen();
+}
+
+void VevorST7735::showBootScreen()
+{
+    clear();
     drawRGBBitmap(0, 20, image_data_Vevor, 160, 60);
+}
+
+void VevorST7735::clear()
+{
+    fillScreen(ST7735_BLACK);
     redrawStatus();
 }
 
@@ -63,11 +74,11 @@ void VevorST7735::redrawStatus()
     fillRect(0, 0, statusWidth, 10, getColor(staStatus));
     fillRect(statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
     fillRect(2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
-    
+
     setTextSize(1);
     setTextColor(ST7735_BLACK);
 
-    setCursor(1,1);
+    setCursor(1, 1);
     print("STA");
     setCursor(statusWidth + 1 + 1, 1);
     print("AP");

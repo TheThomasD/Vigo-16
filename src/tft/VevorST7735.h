@@ -16,11 +16,15 @@ public:
     void setApStatus(Status status, uint8_t numberOfClients);
     void setSerialStatus(Status status);
 
+    void showBootScreen();
+
     void demo();
 
 protected:
   void redrawStatus();
   uint16_t getColor(Status status);
+  void clear();
+
   static VevorSPI tftSpi;
   String status[5];
   Status staStatus = UNKNOWN;

@@ -7,6 +7,7 @@
 #include <ESPAsyncWebServer.h>
 #include "log/Logger.h"
 #include <server/VevorServer.h>
+#include <arduino-timer.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
@@ -14,6 +15,8 @@ VevorWifi wifi = VevorWifi(&tft);
 
 AsyncWebServer webServer(80);
 VevorServer server;
+
+Timer<> timer = timer_create_default();
 
 void setup(void)
 {
@@ -31,13 +34,14 @@ void setup(void)
 
   tft.init();
 
-  wifi.startWifi(&config);
+  wifi.startWifi(&config, &timer);
 
   server.init(&webServer);
 
-  Serial.println(F("Initialized"));
+ log_println(F("Initialized"));
 }
 
 void loop()
 {
+  timer.tick();
 }

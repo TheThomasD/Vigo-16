@@ -336,4 +336,5 @@ And wow, this was a quick one. With the [AsyncElegantOTA](https://randomnerdtuto
 * [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)
 * [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
 * [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)
-* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/)
+* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) nad [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)
+* [onReceive for Serial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Serial/OnReceive_Demo/OnReceive_Demo.ino)
