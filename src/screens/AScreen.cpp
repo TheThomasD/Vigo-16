@@ -1,8 +1,10 @@
 #include "AScreen.h"
 
-AScreen::AScreen(VevorST7735 *tft)
+AScreen::AScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen)
 {
     this->tft = tft;
+    this->buttons = buttons;
+    this->switchScreen = switchScreen;
 }
 
 void AScreen::show()
@@ -14,6 +16,7 @@ void AScreen::show()
 
 void AScreen::hide()
 {
+    buttons->clearAll();
     hideHook();
     active = false;
 }

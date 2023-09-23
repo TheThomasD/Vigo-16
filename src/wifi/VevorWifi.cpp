@@ -15,7 +15,7 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
     WiFi.softAPdisconnect();
 
     WiFi.onEvent([this](WiFiEvent_t event, WiFiEventInfo_t info)
-                 { this->onWiFiEvent(event, info); },
+                 { onWiFiEvent(event, info); },
                  ARDUINO_EVENT_MAX);
 
     if (WiFi.setHostname(config->getHostName().c_str()))

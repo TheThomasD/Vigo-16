@@ -1,10 +1,22 @@
 #pragma once
 #include "../tft/VevorST7735.h"
+#include "../buttons/VevorButtons.h"
+
+enum Screen
+{
+    SCREEN_MENU,
+    SCREEN_CONTROL,
+    SCREEN_FILE,
+    SCREEN_SETTINGS,
+    SCREEN_INFO
+};
+
+typedef std::function<void(Screen)> SwitchScreen;
 
 class AScreen
 {
 public:
-    AScreen(VevorST7735 *tft);
+    AScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen);
     virtual void show() final;
     virtual void hide() final;
     virtual bool isActive() final;
@@ -13,6 +25,8 @@ public:
 
 protected:
     VevorST7735 *tft;
+    SwitchScreen switchScreen;
+    VevorButtons *buttons;
 
 private:
     bool active = false;

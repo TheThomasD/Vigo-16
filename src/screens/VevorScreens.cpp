@@ -1,10 +1,39 @@
 #include "VevorScreens.h"
 
-VevorScreens::VevorScreens(VevorST7735 *tft)
+VevorScreens::VevorScreens(VevorST7735 *tft, VevorButtons *buttons)
 {
-    this->tft = tft;
-    bootScreen = new BootScreen(tft);
-    controlScreen = new ControlScreen(tft);
+    SwitchScreen func = [this](Screen screen)
+    {
+        this->switchScreen(screen);
+    };
+    bootScreen = new BootScreen(tft, buttons, func);
+    controlScreen = new ControlScreen(tft, buttons, func);
+    menuScreen = new MenuScreen(tft, buttons, func);
+}
+
+void VevorScreens::switchScreen(Screen screen)
+{
+    switch (screen)
+    {
+    case SCREEN_MENU:
+        showMenuScreen();
+        break;
+    case SCREEN_CONTROL:
+        showControlScreen();
+        break;
+    case SCREEN_FILE:
+        /* code */
+        break;
+    case SCREEN_SETTINGS:
+        /* code */
+        break;
+    case SCREEN_INFO:
+        /* code */
+        break;
+
+    default:
+        break;
+    }
 }
 
 void VevorScreens::showControlScreen()
@@ -17,14 +46,21 @@ void VevorScreens::showBootScreen()
     switchToScreen(bootScreen);
 }
 
-void VevorScreens::switchToScreen(AScreen *screen) {
+void VevorScreens::showMenuScreen()
+{
+    switchToScreen(menuScreen);
+}
+
+void VevorScreens::switchToScreen(AScreen *screen)
+{
     if (currentScreen != nullptr)
         currentScreen->hide();
     currentScreen = screen;
     screen->show();
 }
 
-void VevorScreens::addBootStatusLine(String line) {
+void VevorScreens::addBootStatusLine(String line)
+{
     if (bootScreen->isActive())
         bootScreen->addStatusLine(line);
 }

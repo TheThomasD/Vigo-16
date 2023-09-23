@@ -4,8 +4,6 @@
 #define TFT_RST 2
 #define TFT_DC 12
 
-#define VEVOR_YELLOW 0xfea5
-
 // TFT SPI (HSPI)
 VevorSPI VevorST7735::tftSpi = VevorSPI();
 

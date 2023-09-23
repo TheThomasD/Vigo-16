@@ -1,7 +1,7 @@
 #include "BootScreen.h"
 #include "../bmp/Vevor.h"
 
-BootScreen::BootScreen(VevorST7735 *tft) : AScreen(tft)
+BootScreen::BootScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen) : AScreen(tft, buttons, switchScreen)
 {
     for (uint8_t i = 0; i < 5; i++)
         status[i] = "";
@@ -9,6 +9,7 @@ BootScreen::BootScreen(VevorST7735 *tft) : AScreen(tft)
 
 void BootScreen::showHook()
 {
+    tft->clear();
     tft->drawRGBBitmap(0, 17, image_data_Vevor, 160, 60);
 }
 

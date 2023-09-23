@@ -1,5 +1,4 @@
-#include "Arduino.h"
-
+#include <Arduino.h>
 #include <tft/VevorST7735.h>
 #include <audio/VevorSpeaker.h>
 #include <config/VevorConfig.h>
@@ -9,11 +8,13 @@
 #include <server/VevorServer.h>
 #include <arduino-timer.h>
 #include <screens/VevorScreens.h>
+#include <buttons/VevorButtons.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
-VevorScreens screens = VevorScreens(&tft);
+VevorButtons buttons = VevorButtons();
+VevorScreens screens = VevorScreens(&tft, &buttons);
 
 AsyncWebServer webServer(80);
 VevorServer server;
@@ -36,6 +37,8 @@ void setup(void)
 
   tft.init();
 
+  buttons.init();
+
   screens.showBootScreen();
 
   wifi.startWifi(&config, &timer, &screens);
@@ -46,7 +49,7 @@ void setup(void)
 
   delay(1000);
 
-  //screens.showControlScreen();
+  screens.showMenuScreen();
 }
 
 void loop()
