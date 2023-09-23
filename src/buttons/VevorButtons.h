@@ -39,8 +39,8 @@ public:
     void onButton(Button button, PressType pressType, OnButtonCb callback);
 
     void init();
-    void updateAll();
     void clearAll();
+    void updateAll();
 
 protected:
 #define COMMAND_CREATE_BUTTON(BUTTON) \

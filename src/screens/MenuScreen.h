@@ -11,6 +11,7 @@ public:
 protected:
     void createMenuItem(uint8_t y, String caption, bool selected);
     void changeMenuEntry(bool up);
+    void selectEntry();
     void redraw();
 
     enum MenuEntry

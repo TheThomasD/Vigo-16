@@ -2,6 +2,9 @@
 
 void ControlScreen::showHook()
 {
+    buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
+                      { switchScreen(SCREEN_MENU); });
+
     tft->clear();
 
     tft->setTextColor(ST7735_WHITE);

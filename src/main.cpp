@@ -38,6 +38,8 @@ void setup(void)
   tft.init();
 
   buttons.init();
+  timer.every(100, [](void *)
+              {buttons.updateAll(); return true; }); // update buttons for long press
 
   screens.showBootScreen();
 

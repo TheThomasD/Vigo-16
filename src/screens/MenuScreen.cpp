@@ -6,8 +6,31 @@ void MenuScreen::showHook()
 {
     redraw();
 
-    buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this](){changeMenuEntry(true);});
-    buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this](){changeMenuEntry(false);});
+    buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this]()
+                      { changeMenuEntry(true); });
+    buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
+                      { changeMenuEntry(false); });
+    buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
+                      { selectEntry(); });
+}
+
+void MenuScreen::selectEntry()
+{
+    switch (selectedEntry)
+    {
+    case Control:
+        switchScreen(SCREEN_CONTROL);
+        break;
+    case File:
+        switchScreen(SCREEN_FILE);
+        break;
+    case Settings:
+        switchScreen(SCREEN_SETTINGS);
+        break;
+
+    default:
+        break;
+    }
 }
 
 void MenuScreen::redraw()
