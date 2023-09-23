@@ -17,13 +17,15 @@ public:
     void setSerialStatus(Status status);
 
     void showBootScreen();
+    void showMenuScreen();
 
-    void demo();
+//    void demo();
 
 protected:
   void redrawStatus();
   uint16_t getColor(Status status);
   void clear();
+  void drawButton(uint8_t x, uint8_t y, uint16_t color, String caption);
 
   static VevorSPI tftSpi;
   String status[5];

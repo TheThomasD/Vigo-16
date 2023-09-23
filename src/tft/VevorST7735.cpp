@@ -5,6 +5,8 @@
 #define TFT_RST 2
 #define TFT_DC 12
 
+#define VEVOR_YELLOW 0xfea5
+
 // TFT SPI (HSPI)
 VevorSPI VevorST7735::tftSpi = VevorSPI();
 
@@ -21,6 +23,35 @@ void VevorST7735::init()
     setRotation(1);
     clear();
     showBootScreen();
+}
+
+void VevorST7735::showMenuScreen()
+{
+    clear();
+
+    setTextColor(ST7735_WHITE);
+    setTextSize(1); // 6x8
+
+    drawButton(10, 20, ST7735_BLUE, "Z+");
+    drawButton(10, 80, ST7735_BLUE, "Z-");
+    drawButton(95, 20, ST7735_BLUE, "Y+");
+    drawButton(65, 50, ST7735_BLUE, "X-");
+    // Spindle
+    drawButton(95, 50, ST7735_RED, "SET");
+    drawButton(125, 50, ST7735_BLUE, "X+");
+    drawButton(95, 80, ST7735_BLUE, "Y-");
+    // Step
+    drawButton(125, 80, ST7735_RED, "ESC");
+}
+
+void VevorST7735::drawButton(uint8_t x, uint8_t y, uint16_t color, String caption) {
+    #define BUTTON_WIDTH 24
+    #define BUTTON_HEIGHT 24
+    #define TEXT_START_Y (BUTTON_HEIGHT - 8) / 2
+
+    this->fillRoundRect(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, 12, color);
+    setCursor(x + (BUTTON_WIDTH - caption.length() * 6) / 2, y + TEXT_START_Y + (color == ST7735_BLUE ? 1 : 0));
+    print(caption);
 }
 
 void VevorST7735::showBootScreen()
@@ -116,6 +147,8 @@ void VevorST7735::addBootStatusLine(String line)
         print(line);
     }
 }
+
+/*
 
 float p = 3.1415926;
 
@@ -388,3 +421,4 @@ void VevorST7735::demo()
     mediabuttons(this);
     delay(500);
 }
+*/

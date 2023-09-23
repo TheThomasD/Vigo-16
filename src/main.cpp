@@ -38,7 +38,11 @@ void setup(void)
 
   server.init(&webServer);
 
- log_println(F("Initialized"));
+  log_println(F("Initialized"));
+
+  delay(1000);
+
+  tft.showMenuScreen();
 }
 
 void loop()
