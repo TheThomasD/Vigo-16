@@ -13,13 +13,13 @@
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
-VevorButtons buttons = VevorButtons();
+Timer<> timer = timer_create_default();
+VevorButtons buttons = VevorButtons(&timer);
 VevorScreens screens = VevorScreens(&tft, &buttons);
 
 AsyncWebServer webServer(80);
 VevorServer server;
 
-Timer<> timer = timer_create_default();
 
 void setup(void)
 {
@@ -38,8 +38,6 @@ void setup(void)
   tft.init();
 
   buttons.init();
-  timer.every(100, [](void *)
-              {buttons.updateAll(); return true; }); // update buttons for long press
 
   screens.showBootScreen();
 

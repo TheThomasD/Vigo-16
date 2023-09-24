@@ -72,6 +72,7 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
 
     if (MDNS.begin(config->getHostName().c_str()))
     {
+        MDNS.addService("http", "tcp", 80);
         log_println("MDNS: " + config->getHostName() + ".local");
         screens->addBootStatusLine("MDNS: " + config->getHostName() + ".local");
     }
@@ -81,11 +82,8 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
         screens->addBootStatusLine("MDNS: could not enable!");
     }
 
-    timer->every(5000, [](void *)
-                 {
-                     if (!WiFi.isConnected())
-                         WiFi.reconnect();
-                     return true; });
+    timer->every(3000, [](void *)
+                 {if (!WiFi.isConnected())WiFi.reconnect(); return true; });
 }
 
 void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)

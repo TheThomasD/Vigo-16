@@ -3,8 +3,8 @@
 #include "../config/VevorConfig.h"
 #include "../tft/VevorST7735.h"
 #include <WiFi.h>
-#include <arduino-timer.h>
 #include "../screens/VevorScreens.h"
+#include <arduino-timer.h>
 
 class VevorWifi
 {
@@ -17,4 +17,5 @@ protected:
 
 private:
     VevorST7735 *tft;
+    
 };

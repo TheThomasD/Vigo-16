@@ -1,5 +1,6 @@
 #pragma once
 #include <EasyButton.h>
+#include <arduino-timer.h>
 
 #define BUTTON_X_UP 36
 #define BUTTON_X_DOWN 39
@@ -35,20 +36,21 @@ public:
     {
         FOREACH_BUTTON(COMMAND_ENUM_ENTRY)
     };
-
+    VevorButtons(Timer<> *timer);
     void onButton(Button button, PressType pressType, OnButtonCb callback);
 
     void init();
     void clearAll();
-    void updateAll();
+    bool isPressed(Button button);
 
 protected:
 #define COMMAND_CREATE_BUTTON(BUTTON) \
     EasyButton b_##BUTTON = EasyButton(BUTTON);
 
     FOREACH_BUTTON(COMMAND_CREATE_BUTTON)
-
     void pressed(Button button, PressType pressType);
+    void updateAll();
 
     OnButtonCb callbacks[8][3];
+    Timer<> *timer;
 };

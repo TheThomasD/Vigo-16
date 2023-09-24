@@ -9,5 +9,6 @@ public:
     void hideHook();
 
 protected:
-    void drawButton(uint8_t x, uint8_t y, uint16_t color, String caption);
+    void redraw();
+    void drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, bool pressed);
 };
