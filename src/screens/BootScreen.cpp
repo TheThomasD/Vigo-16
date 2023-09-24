@@ -10,7 +10,7 @@ BootScreen::BootScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, 
 void BootScreen::showHook()
 {
     tft->clear();
-    tft->drawRGBBitmap(0, 19, image_data_Vevor, 160, 60);
+    tft->drawRGBBitmap(0, 18, image_data_Vevor, 160, 60);
 }
 
 void BootScreen::addStatusLine(String line)

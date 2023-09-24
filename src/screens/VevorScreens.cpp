@@ -1,6 +1,6 @@
 #include "VevorScreens.h"
 
-VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons)
+VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config)
 {
     AScreen::SwitchScreenCb func = [this](AScreen::Screen screen)
     {
@@ -9,7 +9,7 @@ VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *butto
     bootScreen = new BootScreen(tft, timer, buttons, func);
     controlScreen = new ControlScreen(tft, timer, buttons, func);
     menuScreen = new MenuScreen(tft, timer, buttons, func);
-    infoScreen = new InfoScreen(tft, timer, buttons, func);
+    infoScreen = new InfoScreen(tft, timer, buttons, func, config);
 }
 
 void VevorScreens::switchScreen(AScreen::Screen screen)

@@ -15,7 +15,7 @@ VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
 Timer<> timer = timer_create_default();
 VevorButtons buttons = VevorButtons(&timer);
-VevorScreens screens = VevorScreens(&tft, &timer, &buttons);
+VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config);
 
 AsyncWebServer webServer(80);
 VevorServer server;

@@ -40,7 +40,7 @@ void ControlScreen::registerButtons(Mode mode)
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
                       { switchScreenCb(AScreen::Menu); });
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
-                      { switchFeedrate(); });
+                      { switchMoveDistance(); });
     buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
                       { switchMode(); });
 
@@ -71,12 +71,12 @@ void ControlScreen::changeSpeed(int8_t change)
     redraw(false, currentMode, true);
 }
 
-void ControlScreen::switchFeedrate()
+void ControlScreen::switchMoveDistance()
 {
-    if (currentFeedrate == Hundred)
-        currentFeedrate = Point5;
+    if (currentMoveDistance == Hundred)
+        currentMoveDistance = Point5;
     else
-        currentFeedrate = (Feedrate)(currentFeedrate + 1);
+        currentMoveDistance = (MoveDistance)(currentMoveDistance + 1);
     redraw(false, currentMode, true);
 }
 
@@ -110,7 +110,7 @@ void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
     drawButton(125, 60, ST7735_BLUE, mode == Move ? "X+" : "+1", VevorButtons::BT_BUTTON_X_UP, forceDraw);
     drawButton(95, 90, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
     // Step
-    drawButton(125, 90, ST7735_RED, getFeedrateString(currentFeedrate), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
+    drawButton(125, 90, ST7735_RED, getMoveDistanceString(currentMoveDistance), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
 }
 
 void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, VevorButtons::Button button, bool forceDraw)
@@ -135,11 +135,20 @@ void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String capt
     }
 }
 
-String ControlScreen::getFeedrateString(Feedrate feedrate)
+String ControlScreen::getMoveDistanceString(MoveDistance moveDistance)
 {
-#define COMMAND_FEEDRATRE_STRING(ENUM, STRING) \
-    if (feedrate == ENUM)                      \
+#define COMMAND_MOVE_DISTANCE_STRING(ENUM, STRING, FLOAT) \
+    if (moveDistance == ENUM)                             \
         return STRING;
-    FOREACH_FEEDRATE(COMMAND_FEEDRATRE_STRING)
+    FOREACH_MOVE_DISTANCE(COMMAND_MOVE_DISTANCE_STRING)
     return "??";
+}
+
+float_t ControlScreen::getMoveDistance(MoveDistance moveDistance)
+{
+#define COMMAND_MOVE_DISTANCE_FLOAT(ENUM, STRING, FLOAT) \
+    if (moveDistance == ENUM)                            \
+        return FLOAT;
+    FOREACH_MOVE_DISTANCE(COMMAND_MOVE_DISTANCE_FLOAT)
+    return 0.0f;
 }

@@ -6,11 +6,12 @@
 #include "MenuScreen.h"
 #include "InfoScreen.h"
 #include <arduino-timer.h>
+#include "../config/VevorConfig.h"
 
 class VevorScreens
 {
 public:
-    VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons);
+    VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config);
     void showBootScreen();
     void showMenuScreen();
     void addBootStatusLine(String line);

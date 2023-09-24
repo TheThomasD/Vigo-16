@@ -330,11 +330,31 @@ When this is done, I will create a new web page and a new firmware, that also al
 
 And wow, this was a quick one. With the [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/) library, the updates are already working. Looking at the library, the code isn't really that complicated, but I don't mind the small "buy me a coffee" icon on the page for now ;).
 
+### Implementation next steps
+
+Again, I changed my plans a little bit. I'm working very agile ;). I added the menu screen, the control screen and the info screen to the display already. Buttons work on the screens, but not all of them have some logic behind them that has an effect. OTA is working nicely so far. However, sometimes I still need to connect the device to the serial port to flash and monitor it when I run into errors. Didn't happen to often, though, so for now I run the display off an USB charger.
+
+The next steps for me are now:
+1. ~~WiFi STA and AP in parallel~~
+    * ~~if STA is not connected, start AP anyway~~ (both already done)
+2. ~~implement OTA updates via the web interface~~
+3. Display implementation for settings (only feed rate and baud rate?)
+4. configure STA and AP mode over a web interface
+
+and after that (most likely in this order):
+
+* GRBL board connection
+* Web serial connection
+* Web interface for control, files, printing and serial terminal (wifi config and update is ideally already there, see above)
+* Display implementation for files and printing
+* (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
+
 ## Later
 
-* [partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)
-* [OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)
-* [Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)
+* ~~[partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)~~
+* ~~[OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)~~
+* ~~[Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)~~
 * [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)
 * [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) nad [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)
 * [onReceive for Serial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Serial/OnReceive_Demo/OnReceive_Demo.ino)
+* [RGB565 Color Picker](https://barth-dev.de/online/rgb565-color-picker/)
