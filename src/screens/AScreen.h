@@ -1,6 +1,7 @@
 #pragma once
 #include "../tft/VevorST7735.h"
 #include "../buttons/VevorButtons.h"
+#include <arduino-timer.h>
 
 enum Screen
 {
@@ -16,7 +17,7 @@ typedef std::function<void(Screen)> SwitchScreen;
 class AScreen
 {
 public:
-    AScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen);
+    AScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen);
     virtual void show() final;
     virtual void hide() final;
     virtual bool isActive() final;
@@ -27,6 +28,7 @@ protected:
     VevorST7735 *tft;
     SwitchScreen switchScreen;
     VevorButtons *buttons;
+    Timer<> *timer;
 
 private:
     bool active = false;

@@ -43,6 +43,23 @@ public:
     void clearAll();
     bool isPressed(Button button);
 
+    struct ButtonStatus
+    {
+        bool status[8];
+        ButtonStatus()
+        {
+            for (uint8_t i = 0; i < 8; i++)
+                status[i] = false;
+        }
+        bool stateChanged(Button button, bool currentStatus)
+        {
+            if (status[button] == currentStatus)
+                return false;
+            status[button] = currentStatus;
+            return true;
+        }
+    };
+
 protected:
 #define COMMAND_CREATE_BUTTON(BUTTON) \
     EasyButton b_##BUTTON = EasyButton(BUTTON);

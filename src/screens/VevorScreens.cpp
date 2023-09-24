@@ -1,14 +1,14 @@
 #include "VevorScreens.h"
 
-VevorScreens::VevorScreens(VevorST7735 *tft, VevorButtons *buttons)
+VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons)
 {
     SwitchScreen func = [this](Screen screen)
     {
         this->switchScreen(screen);
     };
-    bootScreen = new BootScreen(tft, buttons, func);
-    controlScreen = new ControlScreen(tft, buttons, func);
-    menuScreen = new MenuScreen(tft, buttons, func);
+    bootScreen = new BootScreen(tft, timer, buttons, func);
+    controlScreen = new ControlScreen(tft, timer, buttons, func);
+    menuScreen = new MenuScreen(tft, timer, buttons, func);
 }
 
 void VevorScreens::switchScreen(Screen screen)

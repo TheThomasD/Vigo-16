@@ -4,7 +4,7 @@
 class MenuScreen : public AScreen
 {
 public:
-    MenuScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen) : AScreen(tft, buttons, switchScreen){};
+    MenuScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen) : AScreen(tft, timer, buttons, switchScreen){};
     void showHook();
     void hideHook();
 

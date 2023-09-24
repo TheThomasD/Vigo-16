@@ -1,7 +1,7 @@
 #include "BootScreen.h"
 #include "../bmp/Vevor.h"
 
-BootScreen::BootScreen(VevorST7735 *tft, VevorButtons *buttons, SwitchScreen switchScreen) : AScreen(tft, buttons, switchScreen)
+BootScreen::BootScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen) : AScreen(tft, timer, buttons, switchScreen)
 {
     for (uint8_t i = 0; i < 5; i++)
         status[i] = "";

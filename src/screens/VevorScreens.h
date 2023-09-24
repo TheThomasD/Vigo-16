@@ -4,11 +4,12 @@
 #include "BootScreen.h"
 #include "ControlScreen.h"
 #include "MenuScreen.h"
+#include <arduino-timer.h>
 
 class VevorScreens
 {
 public:
-    VevorScreens(VevorST7735 *tft, VevorButtons *buttons);
+    VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons);
     void showBootScreen();
     void showControlScreen();
     void showMenuScreen();
@@ -22,4 +23,5 @@ private:
     ControlScreen *controlScreen;
     MenuScreen *menuScreen;
     AScreen *currentScreen;
+    Timer<> *timer;
 };
