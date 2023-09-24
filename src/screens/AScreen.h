@@ -3,30 +3,30 @@
 #include "../buttons/VevorButtons.h"
 #include <arduino-timer.h>
 
-enum Screen
-{
-    SCREEN_MENU,
-    SCREEN_CONTROL,
-    SCREEN_FILE,
-    SCREEN_SETTINGS,
-    SCREEN_INFO
-};
-
-typedef std::function<void(Screen)> SwitchScreen;
-
 class AScreen
 {
 public:
-    AScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen);
+    enum Screen
+    {
+        Menu,
+        Control,
+        File,
+        Settings,
+        Info
+    };
+
+    typedef std::function<void(Screen)> SwitchScreenCb;
+
+    AScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreenCb switchScreenCb);
     virtual void show() final;
     virtual void hide() final;
     virtual bool isActive() final;
     virtual void showHook() = 0;
-    virtual void hideHook() = 0;
+    virtual void hideHook(){};
 
 protected:
     VevorST7735 *tft;
-    SwitchScreen switchScreen;
+    SwitchScreenCb switchScreenCb;
     VevorButtons *buttons;
     Timer<> *timer;
 

@@ -2,43 +2,37 @@
 
 VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons)
 {
-    SwitchScreen func = [this](Screen screen)
+    AScreen::SwitchScreenCb func = [this](AScreen::Screen screen)
     {
         this->switchScreen(screen);
     };
     bootScreen = new BootScreen(tft, timer, buttons, func);
     controlScreen = new ControlScreen(tft, timer, buttons, func);
     menuScreen = new MenuScreen(tft, timer, buttons, func);
+    infoScreen = new InfoScreen(tft, timer, buttons, func);
 }
 
-void VevorScreens::switchScreen(Screen screen)
+void VevorScreens::switchScreen(AScreen::Screen screen)
 {
     switch (screen)
     {
-    case SCREEN_MENU:
+    case AScreen::Screen::Menu:
         showMenuScreen();
         break;
-    case SCREEN_CONTROL:
-        showControlScreen();
+    case AScreen::Screen::Control:
+        switchToScreen(controlScreen);
         break;
-    case SCREEN_FILE:
+    case AScreen::Screen::File:
         /* code */
         break;
-    case SCREEN_SETTINGS:
+    case AScreen::Screen::Settings:
         /* code */
         break;
-    case SCREEN_INFO:
-        /* code */
-        break;
-
+    case AScreen::Screen::Info:
     default:
+        switchToScreen(infoScreen);
         break;
     }
-}
-
-void VevorScreens::showControlScreen()
-{
-    switchToScreen(controlScreen);
 }
 
 void VevorScreens::showBootScreen()

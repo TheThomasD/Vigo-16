@@ -1,11 +1,11 @@
 #include "AScreen.h"
 
-AScreen::AScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen)
+AScreen::AScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreenCb switchScreenCb)
 {
     this->tft = tft;
     this->timer = timer;
     this->buttons = buttons;
-    this->switchScreen = switchScreen;
+    this->switchScreenCb = switchScreenCb;
 }
 
 void AScreen::show()

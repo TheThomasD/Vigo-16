@@ -38,7 +38,7 @@ void ControlScreen::registerButtons(Mode mode)
 {
     buttons->clearAll();
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
-                      { switchScreen(SCREEN_MENU); });
+                      { switchScreenCb(AScreen::Menu); });
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
                       { switchFeedrate(); });
     buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
@@ -111,10 +111,6 @@ void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
     drawButton(95, 90, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
     // Step
     drawButton(125, 90, ST7735_RED, getFeedrateString(currentFeedrate), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
-}
-
-void ControlScreen::hideHook()
-{
 }
 
 void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, VevorButtons::Button button, bool forceDraw)

@@ -19,16 +19,18 @@ void MenuScreen::selectEntry()
     switch (selectedEntry)
     {
     case Control:
-        switchScreen(SCREEN_CONTROL);
+        switchScreenCb(AScreen::Control);
         break;
     case File:
-        switchScreen(SCREEN_FILE);
+        switchScreenCb(AScreen::File);
         break;
     case Settings:
-        switchScreen(SCREEN_SETTINGS);
+        switchScreenCb(AScreen::Settings);
         break;
 
+    case Info:
     default:
+        switchScreenCb(AScreen::Info);
         break;
     }
 }
@@ -51,10 +53,6 @@ void MenuScreen::changeMenuEntry(bool up)
 
     selectedEntry = (MenuEntry)(selectedEntry + (up ? -1 : 1));
     redraw();
-}
-
-void MenuScreen::hideHook()
-{
 }
 
 void MenuScreen::createMenuItem(uint8_t y, String caption, bool selected)

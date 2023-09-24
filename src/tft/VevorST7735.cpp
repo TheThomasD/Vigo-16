@@ -79,8 +79,8 @@ void VevorST7735::redrawStatus()
 void VevorST7735::clear()
 {
     fillScreen(ST7735_BLACK);
-    drawFastHLine(0, 12, width(), ST7735_RED);
     drawFastHLine(0, 13, width(), ST7735_RED);
+    drawFastHLine(0, 14, width(), ST7735_RED);
     redrawStatus();
 }
 

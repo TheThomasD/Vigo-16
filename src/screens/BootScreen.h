@@ -4,9 +4,8 @@
 class BootScreen : public AScreen
 {
 public:
-    BootScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreen switchScreen);
+    BootScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreenCb switchScreenCb);
     void showHook();
-    void hideHook();
     void addStatusLine(String line);
 
 private:
