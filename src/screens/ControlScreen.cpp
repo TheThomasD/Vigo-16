@@ -2,36 +2,97 @@
 
 void ControlScreen::showHook()
 {
-    buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
-                      { switchScreen(SCREEN_MENU); });
-
     tft->clear();
-    tft->setTextColor(ST7735_WHITE);
-    tft->setTextSize(1); // 6x8
-    redraw(true);
+    currentMode = Move;
+    redraw(true, currentMode, true);
 
     timer->every(
         50, [](void *controlScreen)
         { 
             ControlScreen *cs = (ControlScreen*) controlScreen;
             if (cs->isActive())
-                cs->redraw(false);
+                cs->redraw(false, cs->currentMode, false);
             return cs->isActive(); },
         this);
+    
+    registerButtons(currentMode);
 }
 
-void ControlScreen::redraw(bool forceDraw)
+void ControlScreen::switchMode()
 {
-    drawButton(10, 20, ST7735_BLUE, "Z+", VevorButtons::BT_BUTTON_Z_UP, forceDraw);
-    drawButton(10, 80, ST7735_BLUE, "Z-", VevorButtons::BT_BUTTON_Z_DOWN, forceDraw);
-    drawButton(95, 20, ST7735_BLUE, "Y+", VevorButtons::BT_BUTTON_Y_UP, forceDraw);
-    drawButton(65, 50, ST7735_BLUE, "X-", VevorButtons::BT_BUTTON_X_DOWN, forceDraw);
+    switch (currentMode)
+    {
+    case Move:
+        currentMode = Speed;
+        break;
+
+    default:
+        currentMode = Move;
+        break;
+    }
+    registerButtons(currentMode);
+    redraw(true, currentMode, false);
+}
+
+void ControlScreen::registerButtons(Mode mode)
+{
+    buttons->clearAll();
+    buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
+                      { switchScreen(SCREEN_MENU); });
+    buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
+                      { switchFeedrate(); });
+    buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
+                      { switchMode(); });
+
+    if (mode == Speed)
+    {
+        buttons->onButton(VevorButtons::BT_BUTTON_X_UP, VevorButtons::Press, [this]()
+                          { changeSpeed(1); });
+        buttons->onButton(VevorButtons::BT_BUTTON_X_DOWN, VevorButtons::Press, [this]()
+                          { changeSpeed(-1); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this]()
+                          { changeSpeed(10); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
+                          { changeSpeed(-10); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::Press, [this]()
+                          { changeSpeed(100); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::Press, [this]()
+                          { changeSpeed(-100); });
+    }
+}
+
+void ControlScreen::changeSpeed(uint8_t change)
+{
+    currentSpeed += change;
+    if (currentSpeed > 100)
+        currentSpeed = 100;
+    if (currentSpeed < 0)
+        currentSpeed = 0;
+}
+
+void ControlScreen::switchFeedrate()
+{
+    if (currentFeedrate == Hundred)
+        currentFeedrate = Point5;
+    else
+        currentFeedrate = (Feedrate)(currentFeedrate + 1);
+    redraw(false, currentMode, true);
+}
+
+void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
+{
+    tft->setTextColor(ST7735_WHITE);
+    tft->setTextSize(1); // 6x8
+    drawButton(10, 20, ST7735_BLUE, mode == Move ? "Z+" : "100", VevorButtons::BT_BUTTON_Z_UP, forceDraw);
+    drawButton(10, 80, ST7735_BLUE, mode == Move ? "Z-" : "Off", VevorButtons::BT_BUTTON_Z_DOWN, forceDraw);
+    drawButton(95, 20, ST7735_BLUE, mode == Move ? "Y+" : "+10", VevorButtons::BT_BUTTON_Y_UP, forceDraw);
+    drawButton(65, 50, ST7735_BLUE, mode == Move ? "X-" : "-1", VevorButtons::BT_BUTTON_X_DOWN, forceDraw);
     // Spindle
-    drawButton(95, 50, ST7735_RED, "SET", VevorButtons::BT_BUTTON_SET, forceDraw);
-    drawButton(125, 50, ST7735_BLUE, "X+", VevorButtons::BT_BUTTON_X_UP, forceDraw);
-    drawButton(95, 80, ST7735_BLUE, "Y-", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
+    drawButton(95, 50, ST7735_RED, mode == Move ? "Spd" : "Mov", VevorButtons::BT_BUTTON_SET, forceDraw);
+    drawButton(125, 50, ST7735_BLUE, mode == Move ? "X+" : "+1", VevorButtons::BT_BUTTON_X_UP, forceDraw);
+    drawButton(95, 80, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
     // Step
-    drawButton(125, 80, ST7735_RED, "ESC", VevorButtons::BT_BUTTON_ESC, forceDraw);
+    drawButton(125, 80, ST7735_RED, getFeedrateString(currentFeedrate), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
 }
 
 void ControlScreen::hideHook()
@@ -58,4 +119,13 @@ void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String capt
         tft->setCursor(x + (BUTTON_WIDTH - caption.length() * 6) / 2, y + TEXT_START_Y + (color == ST7735_BLUE ? 1 : 0));
         tft->print(caption);
     }
+}
+
+String ControlScreen::getFeedrateString(Feedrate feedrate)
+{
+#define COMMAND_FEEDRATRE_STRING(ENUM, STRING) \
+    if (feedrate == ENUM)                      \
+        return STRING;
+    FOREACH_FEEDRATE(COMMAND_FEEDRATRE_STRING)
+    return "??";
 }

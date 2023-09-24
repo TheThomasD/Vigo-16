@@ -9,7 +9,34 @@ public:
     void hideHook();
 
 protected:
-    void redraw(bool forceDraw);
+    enum Mode
+    {
+        Move,
+        Speed
+    };
+#define FOREACH_FEEDRATE(COMMAND) \
+    COMMAND(Point5, ".5")         \
+    COMMAND(One, "1")             \
+    COMMAND(Five, "5")            \
+    COMMAND(Ten, "10")            \
+    COMMAND(Fifty, "50")          \
+    COMMAND(Hundred, "100")
+#define COMMAND_FEEDRATE_ENUM(ENUM, STRING) ENUM,
+    enum Feedrate
+    {
+        FOREACH_FEEDRATE(COMMAND_FEEDRATE_ENUM)
+    };
+
+    void redraw(bool forceDraw, Mode mode, bool forceStatusDraw);
     void drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, VevorButtons::Button button, bool forceDraw);
+    void registerButtons(Mode mode);
+    void switchMode();
+    String getFeedrateString(Feedrate feedrate);
+    void switchFeedrate();
+    void changeSpeed(uint8_t change);
+
     VevorButtons::ButtonStatus buttonStatus = VevorButtons::ButtonStatus();
+    Mode currentMode = Move;
+    Feedrate currentFeedrate = One;
+    uint8_t currentSpeed = 10;
 };

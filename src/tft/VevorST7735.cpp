@@ -51,7 +51,7 @@ uint16_t VevorST7735::getColor(const Status status)
 void VevorST7735::redrawStatus()
 {
     const uint8_t statusWidth = 3 * 6 + 1;
-    fillRect(0, 0, width(), 10, ST7735_BLACK);
+    fillRect(0, 0, 60, 10, ST7735_BLACK);
     fillRect(0, 0, statusWidth, 10, getColor(staStatus));
     fillRect(statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
     fillRect(2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
