@@ -4,7 +4,7 @@
 class ControlScreen : public AScreen
 {
 public:
-    ControlScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, SwitchScreenCb switchScreenCb) : AScreen(tft, timer, buttons, switchScreenCb){};
+    ControlScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config, SwitchScreenCb switchScreenCb) : AScreen(tft, timer, buttons, config, switchScreenCb){};
     void showHook();
 
 protected:

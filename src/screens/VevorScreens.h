@@ -5,6 +5,7 @@
 #include "ControlScreen.h"
 #include "MenuScreen.h"
 #include "InfoScreen.h"
+#include "SettingsScreen.h"
 #include <arduino-timer.h>
 #include "../config/VevorConfig.h"
 
@@ -24,6 +25,7 @@ private:
     ControlScreen *controlScreen;
     MenuScreen *menuScreen;
     InfoScreen *infoScreen;
+    SettingsScreen *settingsScreen;
     AScreen *currentScreen;
     Timer<> *timer;
 };

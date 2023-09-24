@@ -31,7 +31,7 @@ void InfoScreen::redraw(bool onlyValues)
     }
 
     tft->setTextSize(1);
-    tft->setCursor(1, 20 - Y_DISTANCE);
+    tft->setCursor(2, 20 - Y_DISTANCE);
 
     printLine("AP:", WiFi.softAPSSID(), onlyValues);
     printLine("AP PW:", config->getApPassword(), onlyValues);
@@ -56,7 +56,7 @@ void InfoScreen::printLine(String label, String value, bool onlyValues)
     {
         tft->fillRect(X_OFFSET, tft->getCursorY(), tft->width() - X_OFFSET, 8, ST7735_BLACK);
         tft->setCursor(X_OFFSET, tft->getCursorY());
-        tft->setTextColor(ST7735_WHITE);
+        tft->setTextColor(ST7735_VEVOR_YELLOW);
         tft->println(value);
     }
     else

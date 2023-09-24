@@ -1,7 +1,5 @@
 #include "MenuScreen.h"
 
-#define VEVOR_YELLOW 0xfea5
-
 void MenuScreen::showHook()
 {
     redraw();
@@ -64,10 +62,10 @@ void MenuScreen::createMenuItem(uint8_t y, String caption, bool selected)
 
     const uint8_t x = (tft->width() - ITEM_WIDTH) / 2;
     if (selected)
-        tft->fillRoundRect(x, y, ITEM_WIDTH, ITEM_HEIGHT, 12, VEVOR_YELLOW);
+        tft->fillRoundRect(x, y, ITEM_WIDTH, ITEM_HEIGHT, 12, ST7735_VEVOR_YELLOW);
     else
-        tft->drawRoundRect(x, y, ITEM_WIDTH, ITEM_HEIGHT, 12, VEVOR_YELLOW);
-    tft->setTextColor(selected ? ST7735_BLACK : VEVOR_YELLOW);
+        tft->drawRoundRect(x, y, ITEM_WIDTH, ITEM_HEIGHT, 12, ST7735_VEVOR_YELLOW);
+    tft->setTextColor(selected ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
     tft->setTextSize(1);
     tft->setCursor(x + (ITEM_WIDTH - caption.length() * TEXT_WIDTH) / 2, y + (ITEM_HEIGHT - TEXT_HEIGHT) / 2);
     tft->print(caption);
