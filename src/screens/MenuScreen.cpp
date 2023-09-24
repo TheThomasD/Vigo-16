@@ -36,11 +36,12 @@ void MenuScreen::selectEntry()
 void MenuScreen::redraw()
 {
     tft->clear();
+    tft->setTitle("Menu");
 
-    createMenuItem(20, "Control", selectedEntry == Control);
-    createMenuItem(45, "File", selectedEntry == File);
-    createMenuItem(70, "Settings", selectedEntry == Settings);
-    createMenuItem(95, "Info", selectedEntry == Info);
+    createMenuItem(25, "Control", selectedEntry == Control);
+    createMenuItem(50, "File", selectedEntry == File);
+    createMenuItem(75, "Settings", selectedEntry == Settings);
+    createMenuItem(100, "Info", selectedEntry == Info);
 }
 
 void MenuScreen::changeMenuEntry(bool up)

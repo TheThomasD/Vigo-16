@@ -33,10 +33,10 @@ protected:
     void switchMode();
     String getFeedrateString(Feedrate feedrate);
     void switchFeedrate();
-    void changeSpeed(uint8_t change);
+    void changeSpeed(int8_t change);
 
     VevorButtons::ButtonStatus buttonStatus = VevorButtons::ButtonStatus();
     Mode currentMode = Move;
     Feedrate currentFeedrate = One;
-    uint8_t currentSpeed = 10;
+    int16_t currentSpeed = 0;
 };

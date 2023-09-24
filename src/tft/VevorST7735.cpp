@@ -16,6 +16,14 @@ void VevorST7735::init()
     setRotation(1);
 }
 
+void VevorST7735::setTitle(String title) {
+    fillRect(0, 0, 99, 10, ST7735_BLACK);
+    setTextColor(ST7735_WHITE);
+    setTextSize(1);
+    setCursor(1,2);
+    print(title);
+}
+
 void VevorST7735::setStaStatus(const Status status)
 {
     staStatus = status;
@@ -51,26 +59,28 @@ uint16_t VevorST7735::getColor(const Status status)
 void VevorST7735::redrawStatus()
 {
     const uint8_t statusWidth = 3 * 6 + 1;
-    fillRect(0, 0, 60, 10, ST7735_BLACK);
-    fillRect(0, 0, statusWidth, 10, getColor(staStatus));
-    fillRect(statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
-    fillRect(2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
+    fillRect(100, 0, 59, 10, ST7735_BLACK);
+    fillRect(100, 0, statusWidth, 10, getColor(staStatus));
+    fillRect(100 + statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
+    fillRect(100 + 2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
 
     setTextSize(1);
     setTextColor(ST7735_BLACK);
 
-    setCursor(1, 1);
+    setCursor(100 + 1, 1);
     print("STA");
-    setCursor(statusWidth + 1 + 1, 1);
+    setCursor(100 + statusWidth + 1 + 1, 1);
     print("AP");
     print(apClients);
-    setCursor(2 * statusWidth + 2 + 1, 1);
+    setCursor(100 + 2 * statusWidth + 2 + 1, 1);
     print("SER");
 }
 
 void VevorST7735::clear()
 {
     fillScreen(ST7735_BLACK);
+    drawFastHLine(0, 12, width(), ST7735_RED);
+    drawFastHLine(0, 13, width(), ST7735_RED);
     redrawStatus();
 }
 

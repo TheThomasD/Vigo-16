@@ -22,6 +22,7 @@ public:
   void setSerialStatus(Status status);
   void redrawStatus();
   void clear();
+  void setTitle(String title);
 
   //    void demo();
 
