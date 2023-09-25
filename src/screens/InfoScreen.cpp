@@ -3,9 +3,12 @@
 
 void InfoScreen::showHook()
 {
+    values.clear();
     redraw(false);
 
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
+                      { switchScreenCb(AScreen::Menu); });
+    buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
                       { switchScreenCb(AScreen::Menu); });
 
     timer->every(

@@ -2,6 +2,7 @@
 
 void SettingsScreen::showHook()
 {
+    currentSetting = BaudRate;
     redraw(false);
 
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
@@ -24,8 +25,7 @@ void SettingsScreen::showHook()
                       { switchSetting(false); });
 }
 
-#define Y_DISTANCE 4
-#define X_OFFSET 12 * 6
+#define Y_DISTANCE (11 + 5)
 
 void SettingsScreen::redraw(bool onlyValues)
 {
@@ -36,35 +36,68 @@ void SettingsScreen::redraw(bool onlyValues)
     }
 
     tft->setTextSize(1);
-    tft->setTextColor(ST7735_GREY);
-    tft->setCursor(2, 20);
-    tft->print("Baud Rate:");
 
-    tft->fillRect(X_OFFSET - 2, tft->getCursorY() - 2, tft->width() - X_OFFSET, 8 + 3, currentSetting == BaudRate ? ST7735_VEVOR_YELLOW : ST7735_BLACK);
-    tft->setTextColor(currentSetting == BaudRate ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
-    tft->setCursor(X_OFFSET + 12, tft->getCursorY());
-    tft->print(config->toValue(config->getBaudRate()));
-    if (currentSetting == BaudRate) {
-        tft->fillTriangle(X_OFFSET, tft->getCursorY() + 3, X_OFFSET + 7, tft->getCursorY() - 1, X_OFFSET + 7, tft->getCursorY() + 7, ST7735_BLACK);
-        tft->fillTriangle(tft->width() - 4, tft->getCursorY() + 3, tft->width() - 11, tft->getCursorY() - 1, tft->width() - 11, tft->getCursorY() + 7, ST7735_BLACK);
+    VevorConfig::BaudRate baudRate = config->getBaudRate();
+    drawLine("Baud Rate:", String(config->toValue(baudRate)), 20, currentSetting == BaudRate, baudRate == VevorConfig::BR_9600, baudRate == VevorConfig::BR_921600, onlyValues);
+
+    uint16_t feedRate = config->getFeedRate();
+    drawLine("Feed Rate:", String(feedRate), 20 + Y_DISTANCE, currentSetting == FeedRate, feedRate <= 100, feedRate >= 6000, onlyValues);
+
+    drawButton("Save", 20 + 2 * Y_DISTANCE, currentSetting == Save);
+    drawButton("Cancel", 20 + 3 * Y_DISTANCE, currentSetting == Cancel);
+}
+
+#define X_OFFSET 12 * 6
+
+void SettingsScreen::drawButton(String label, uint16_t y, bool selected)
+{
+    tft->fillRoundRect(
+        X_OFFSET, y,
+        tft->width() - X_OFFSET - 1, 12,
+        6,
+        selected ? ST7735_VEVOR_YELLOW : ST7735_BLACK);
+    if (!selected)
+        tft->drawRoundRect(
+            X_OFFSET, y,
+            tft->width() - X_OFFSET - 1, 12,
+            6,
+            ST7735_VEVOR_YELLOW);
+    tft->setTextColor(selected ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
+    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - label.length() * 6) / 2;
+    tft->setCursor(xOffset, y + 2);
+    tft->print(label);
+}
+
+void SettingsScreen::drawLine(String label, String value, uint16_t y, bool editable, bool isMin, bool isMax, bool onlyValues)
+{
+    if (!onlyValues)
+    {
+        tft->setTextColor(ST7735_GREY);
+        tft->setCursor(2, y + 2);
+        tft->print(label);
     }
 
-    if (currentSetting == FeedRate)
-    {
-    }
-    else
-    {
-    }
+    tft->fillRect(
+        X_OFFSET, y,
+        tft->width() - X_OFFSET - 1, 12,
+        editable ? ST7735_VEVOR_YELLOW : ST7735_BLACK);
+    tft->setTextColor(editable ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
+    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - value.length() * 6) / 2;
+    tft->setCursor(xOffset, y + 2);
+    tft->print(value);
 
-    if (currentSetting == Save)
+    if (editable)
     {
-    }
-    else
-    {
-    }
-
-    if (currentSetting == Cancel)
-    {
+        if (!isMin)
+            tft->fillTriangle(
+                X_OFFSET + 2, y + 5,
+                X_OFFSET + 6, y + 1,
+                X_OFFSET + 6, y + 10, ST7735_BLACK);
+        if (!isMax)
+            tft->fillTriangle(
+                tft->width() - 4, y + 5,
+                tft->width() - 8, y + 1,
+                tft->width() - 8, y + 10, ST7735_BLACK);
     }
 }
 
@@ -87,7 +120,7 @@ void SettingsScreen::editBaudRate(bool left)
 
 void SettingsScreen::editFeedRate(bool left)
 {
-    if (left && config->getFeedRate() <= 100 || !left && config->getBaudRate() >= 6000)
+    if (left && config->getFeedRate() <= 100 || !left && config->getFeedRate() >= 6000)
         return;
     config->setFeedRate(config->getFeedRate() + (left ? -100 : 100));
     redraw(true);

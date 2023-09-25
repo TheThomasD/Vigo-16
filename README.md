@@ -349,12 +349,31 @@ and after that (most likely in this order):
 * Display implementation for files and printing
 * (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
 
+### Settings implemented
+
+The settings are now implemented, altough I only implemented feed rate and baud rate (for the serial to the GRBL board). The information is stored in the NVM (non-volatile memory), so it will survive any reboot and update. The only missing thing on the display is the file implementation. However, as this requires some testing with the GRBL board (is this file really processed?), I'm going to push this back a little bit. One idea that I had: maybe if I stop the communication of the serial port to the GRBL board, the board can be connected via USB? This would solve my problem, but I fear that this will not work. As far as I can remember this worked for my Laser cutter, but I'll have to test that with the machine directly. So, next points in the order I see them now:
+
+1. ~~WiFi STA and AP in parallel~~
+    * ~~if STA is not connected, start AP anyway~~ (both already done)
+2. ~~implement OTA updates via the web interface~~
+3. ~~Display implementation for settings (only feed rate and baud rate?)~~
+    * maybe add "disconnect" functionality if that frees the USB connection?
+4. GRBL board connection
+    * maybe a good point in time to look also at this: (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
+5. configure STA and AP mode over a web interface (pushed back)
+6. Web serial connection
+7. Web interface for control, files, printing and serial terminal (wifi config ~~and update~~ (done) is ideally already there, see above)
+8. Display implementation for files and printing
+
+
 ## Later
 
 * ~~[partition tables and embedding binary data](https://docs.platformio.org/en/latest/platforms/espressif32.html#partition-tables), see also [here](https://community.platformio.org/t/unable-to-build-and-upload-spiffs-filesystem-image-with-framework-esp-idf/17820/2) and [here](https://github.com/espressif/arduino-esp32/blob/master/tools/partitions/default.csv)~~
 * ~~[OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)~~
 * ~~[Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)~~
 * [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)
-* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) nad [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)
+* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) and [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)
 * [onReceive for Serial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Serial/OnReceive_Demo/OnReceive_Demo.ino)
 * [RGB565 Color Picker](https://barth-dev.de/online/rgb565-color-picker/)
+* [Pixel editor](https://apps.lospec.com/pixel-editor) (good for figuring out how to draw something)
+* [Online Arduino ESP32 simulator](https://wokwi.com/projects/new/esp32) (unfortunately, very slow when working with a display, but still allows to try some things...)
