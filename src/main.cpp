@@ -9,47 +9,56 @@
 #include <arduino-timer.h>
 #include <screens/VevorScreens.h>
 #include <buttons/VevorButtons.h>
+#include <grbl/GrblController.h>
 
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
 Timer<> timer = timer_create_default();
+GrblController grbl = GrblController(&Serial1, &config, &tft, &timer);
 VevorButtons buttons = VevorButtons(&timer);
-VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config);
+VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, &grbl);
 
 AsyncWebServer webServer(80);
 VevorServer server;
 
-
 void setup(void)
 {
+  log_println("Start...");
   Serial.begin(115200);
-  Serial1.begin(115200);
 
   VevorSpeaker::playTone(NOTE_C5, 100);
   VevorSpeaker::playTone(NOTE_E5, 100);
   VevorSpeaker::playTone(NOTE_G5, 100);
 
-  delay(1000);
-
+  log_println("Loading config...");
   config.load();
-  config.print();
 
+  log_println("Init display...");
   tft.init();
+  
+  log_println("Init GRBL serial...");
+  grbl.init();
 
+  log_println("Init buttons...");
   buttons.init();
 
+
+  log_println("Loading boot screen...");
   screens.showBootScreen();
 
+  log_println("Starting WiFi...");
   wifi.startWifi(&config, &timer, &screens);
 
+  log_println("Starting web server...");
   server.init(&webServer);
 
-  log_println(F("Initialized"));
+  log_println("Initialization done!");
 
-  delay(1000);
-
-  screens.showMenuScreen();
+  timer.in(3000, [](void * screens){
+    ((VevorScreens *) screens)->showMenuScreen();
+    return false;
+  }, &screens);
 }
 
 void loop()

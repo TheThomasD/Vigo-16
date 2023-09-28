@@ -33,8 +33,7 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
     {
         log_println("Connecting to STA " + config->getStaSsid() + "...");
         screens->addBootStatusLine("Connecting to STA " + config->getStaSsid() + "...");
-        WiFi.begin(config->getStaSsid().c_str(), config->getStaPassword().c_str());
-        wl_status_t status = (wl_status_t)WiFi.waitForConnectResult(5000);
+        wl_status_t status =WiFi.begin(config->getStaSsid().c_str(), config->getStaPassword().c_str());
         if (WL_CONNECTED == status)
         {
             log_println("STA " + config->getStaSsid() + ", IP " + WiFi.localIP().toString());
@@ -91,24 +90,24 @@ void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
     switch (event)
     {
     case ARDUINO_EVENT_WIFI_STA_GOT_IP:
-        tft->setStaStatus(CONNECTED);
+        tft->setStaStatus(VevorST7735::Connected);
         break;
     case ARDUINO_EVENT_WIFI_STA_STOP:
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
     case ARDUINO_EVENT_WIFI_STA_LOST_IP:
-        tft->setStaStatus(DISCONNECTED);
+        tft->setStaStatus(VevorST7735::Disconnected);
         break;
     case ARDUINO_EVENT_WIFI_STA_START:
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:
-        tft->setStaStatus(UNKNOWN);
+        tft->setStaStatus(VevorST7735::Unknown);
         break;
     case ARDUINO_EVENT_WIFI_AP_START:
     case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
     case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
-        tft->setApStatus(CONNECTED, WiFi.softAPgetStationNum());
+        tft->setApStatus(VevorST7735::Connected, WiFi.softAPgetStationNum());
         break;
     case ARDUINO_EVENT_WIFI_AP_STOP:
-        tft->setApStatus(DISCONNECTED, WiFi.softAPgetStationNum());
+        tft->setApStatus(VevorST7735::Disconnected, WiFi.softAPgetStationNum());
         break;
 
     default:

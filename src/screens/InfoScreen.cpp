@@ -1,5 +1,6 @@
 #include "InfoScreen.h"
 #include <WiFi.h>
+#include "../grbl/GrblReceiver.h"
 
 void InfoScreen::showHook()
 {
@@ -22,7 +23,7 @@ void InfoScreen::showHook()
         this);
 }
 
-#define Y_DISTANCE 4
+#define Y_DISTANCE 3
 #define X_OFFSET 10 * 6
 
 void InfoScreen::redraw(bool onlyValues)
@@ -45,6 +46,7 @@ void InfoScreen::redraw(bool onlyValues)
     printLine("STA IP:", WiFi.localIP().toString(), onlyValues);
     printLine("Host:", WiFi.getHostname(), onlyValues);
     printLine("mDNS:", String(WiFi.getHostname()) + ".local", onlyValues);
+    printLine("Grbl:", GrblReceiver::getGrblVersion(), onlyValues);
 }
 
 void InfoScreen::printLine(String label, String value, bool onlyValues)

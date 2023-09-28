@@ -11,11 +11,10 @@
 #define BUTTON_Z_DOWN 26
 #define BUTTON_ESC 0
 
-typedef std::function<void(void)> OnButtonCb;
-
 class VevorButtons
 {
 public:
+    typedef std::function<void(void)> OnButtonCb;
     enum PressType
     {
         Press,

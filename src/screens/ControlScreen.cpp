@@ -16,6 +16,13 @@ void ControlScreen::showHook()
         this);
 
     registerButtons(currentMode);
+
+    grbl->getReceiver()->onStatusReceived([this](GrblStatusParser::GrblStatus status)
+                                          {
+                                              tft->setCursor(0, tft->height() - 9);
+                                              tft->setTextColor(ST7735_WHITE);
+                                              tft->print("Status " + grbl->getReceiver()->toString(status.state));
+                                              tft->print(" X " + String(status.x)); });
 }
 
 void ControlScreen::switchMode()

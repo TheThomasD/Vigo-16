@@ -3,17 +3,16 @@
 #include <Adafruit_ST7735.h>
 #include "VevorSPI.h"
 
-enum Status
-{
-  UNKNOWN,
-  DISCONNECTED,
-  CONNECTED
-};
-
 class VevorST7735 : public Adafruit_ST7735
 {
-
 public:
+  enum Status
+  {
+    Unknown,
+    Disconnected,
+    Connected
+  };
+
   VevorST7735();
   void init();
 
@@ -31,8 +30,8 @@ protected:
   uint16_t getColor(Status status);
 
 private:
-  Status staStatus = UNKNOWN;
-  Status apStatus = UNKNOWN;
+  Status staStatus = Unknown;
+  Status apStatus = Unknown;
   uint8_t apClients = 0;
-  Status serialStatus = UNKNOWN;
+  Status serialStatus = Unknown;
 };

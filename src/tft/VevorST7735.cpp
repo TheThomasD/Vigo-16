@@ -16,11 +16,12 @@ void VevorST7735::init()
     setRotation(1);
 }
 
-void VevorST7735::setTitle(String title) {
+void VevorST7735::setTitle(String title)
+{
     fillRect(0, 0, 99, 10, ST7735_BLACK);
     setTextColor(ST7735_WHITE);
     setTextSize(1);
-    setCursor(1,2);
+    setCursor(1, 2);
     print(title);
 }
 
@@ -47,10 +48,11 @@ uint16_t VevorST7735::getColor(const Status status)
 {
     switch (status)
     {
-    case CONNECTED:
+    case Connected:
         return ST7735_GREEN;
-    case DISCONNECTED:
+    case Disconnected:
         return ST7735_RED;
+    case Unknown:
     default:
         return ST7735_ORANGE;
     }
