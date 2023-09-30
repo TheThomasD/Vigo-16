@@ -1,4 +1,8 @@
 #include "ControlScreen.h"
+#include "../bmp/home.h"
+#include "../bmp/reset.h"
+#include "../bmp/unlock.h"
+#include "../bmp/esc.h"
 
 void ControlScreen::showHook()
 {
@@ -118,6 +122,24 @@ void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
     drawButton(95, 90, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
     // Step
     drawButton(125, 90, ST7735_RED, getMoveDistanceString(currentMoveDistance), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
+
+    if (forceDraw)
+    {
+        if (mode == Move)
+        {
+            tft->drawRGBBitmap(118, 57, image_data_reset, 8, 10);
+            tft->drawRGBBitmap(35, 30, image_data_unlock, 8, 9);
+            tft->drawRGBBitmap(35, 90, image_data_home, 7, 8);
+            tft->drawRGBBitmap(148, 90, image_data_esc, 11, 5);
+        }
+        else
+        {
+            tft->fillRect(118, 57, 8, 10, ST7735_BLACK);
+            tft->fillRect(35, 30, 8, 9, ST7735_BLACK);
+            tft->fillRect(35, 90, 7, 8, ST7735_BLACK);
+            tft->fillRect(148, 90, 11, 5, ST7735_BLACK);
+        }
+    }
 }
 
 void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, VevorButtons::Button button, bool forceDraw)
