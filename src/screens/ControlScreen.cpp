@@ -70,6 +70,32 @@ void ControlScreen::registerButtons(Mode mode)
         buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::Press, [this]()
                           { changeSpeed(-100); });
     }
+    else if (mode == Move)
+    {
+        buttons->onButton(VevorButtons::BT_BUTTON_X_UP, VevorButtons::Press, [this]()
+                          { move(GrblSender::X, true); });
+        buttons->onButton(VevorButtons::BT_BUTTON_X_DOWN, VevorButtons::Press, [this]()
+                          { move(GrblSender::X, false); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this]()
+                          { move(GrblSender::Y, true); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
+                          { move(GrblSender::Y, false); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::LongPress, [this]()
+                          { grbl->getSender()->sendUnlock(); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::Press, [this]()
+                          { move(GrblSender::Z, true); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::LongPress, [this]()
+                          { grbl->getSender()->sendHome(); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::Press, [this]()
+                          { move(GrblSender::Z, false); });
+        buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::LongPress, [this]()
+                          { grbl->getSender()->sendReset(); });
+    }
+}
+
+void ControlScreen::move(GrblSender::Axis axis, bool positive)
+{
+    grbl->getSender()->sendJog(axis, toFloat(currentMoveDistance) * (positive ? 1 : -1), config->getFeedRate());
 }
 
 void ControlScreen::changeSpeed(int8_t change)
@@ -79,13 +105,19 @@ void ControlScreen::changeSpeed(int8_t change)
         currentSpeed = 100;
     if (currentSpeed < 0)
         currentSpeed = 0;
+
+    if (currentSpeed == 0)
+        grbl->getSender()->sendSpindelStop();
+    else
+        grbl->getSender()->sendSpindleSpeed(currentSpeed);
+
     redraw(false, currentMode, true);
 }
 
 void ControlScreen::switchMoveDistance()
 {
-    if (currentMoveDistance == Hundred)
-        currentMoveDistance = Point5;
+    if (currentMoveDistance == Fifty)
+        currentMoveDistance = Point1;
     else
         currentMoveDistance = (MoveDistance)(currentMoveDistance + 1);
     redraw(false, currentMode, true);
@@ -112,32 +144,32 @@ void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
     }
     tft->setTextColor(ST7735_WHITE);
     tft->setTextSize(1); // 6x8
-    drawButton(10, 30, ST7735_BLUE, mode == Move ? "Z+" : "100", VevorButtons::BT_BUTTON_Z_UP, forceDraw);
-    drawButton(10, 90, ST7735_BLUE, mode == Move ? "Z-" : "Off", VevorButtons::BT_BUTTON_Z_DOWN, forceDraw);
-    drawButton(95, 30, ST7735_BLUE, mode == Move ? "Y+" : "+10", VevorButtons::BT_BUTTON_Y_UP, forceDraw);
-    drawButton(65, 60, ST7735_BLUE, mode == Move ? "X-" : "-1", VevorButtons::BT_BUTTON_X_DOWN, forceDraw);
+    drawButton(8, 30, ST7735_BLUE, mode == Move ? "Z+" : "100", VevorButtons::BT_BUTTON_Z_UP, forceDraw);
+    drawButton(8, 90, ST7735_BLUE, mode == Move ? "Z-" : "Off", VevorButtons::BT_BUTTON_Z_DOWN, forceDraw);
+    drawButton(93, 30, ST7735_BLUE, mode == Move ? "Y+" : "+10", VevorButtons::BT_BUTTON_Y_UP, forceDraw);
+    drawButton(63, 60, ST7735_BLUE, mode == Move ? "X-" : "-1", VevorButtons::BT_BUTTON_X_DOWN, forceDraw);
     // Spindle
-    drawButton(95, 60, ST7735_RED, mode == Move ? "Spd" : "Mov", VevorButtons::BT_BUTTON_SET, forceDraw);
-    drawButton(125, 60, ST7735_BLUE, mode == Move ? "X+" : "+1", VevorButtons::BT_BUTTON_X_UP, forceDraw);
-    drawButton(95, 90, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
+    drawButton(93, 60, ST7735_RED, mode == Move ? "Spd" : "Mov", VevorButtons::BT_BUTTON_SET, forceDraw);
+    drawButton(123, 60, ST7735_BLUE, mode == Move ? "X+" : "+1", VevorButtons::BT_BUTTON_X_UP, forceDraw);
+    drawButton(93, 90, ST7735_BLUE, mode == Move ? "Y-" : "-10", VevorButtons::BT_BUTTON_Y_DOWN, forceDraw);
     // Step
-    drawButton(125, 90, ST7735_RED, getMoveDistanceString(currentMoveDistance), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
+    drawButton(123, 90, ST7735_RED, toString(currentMoveDistance), VevorButtons::BT_BUTTON_ESC, forceDraw || forceStatusDraw);
 
     if (forceDraw)
     {
         if (mode == Move)
         {
-            tft->drawRGBBitmap(118, 57, image_data_reset, 8, 10);
-            tft->drawRGBBitmap(35, 30, image_data_unlock, 8, 9);
-            tft->drawRGBBitmap(35, 90, image_data_home, 7, 8);
-            tft->drawRGBBitmap(148, 90, image_data_esc, 11, 5);
+            tft->drawRGBBitmap(116, 57, image_data_reset, 8, 10);
+            tft->drawRGBBitmap(33, 30, image_data_unlock, 8, 9);
+            tft->drawRGBBitmap(33, 90, image_data_home, 7, 8);
+            tft->drawRGBBitmap(146, 90, image_data_esc, 11, 5);
         }
         else
         {
-            tft->fillRect(118, 57, 8, 10, ST7735_BLACK);
-            tft->fillRect(35, 30, 8, 9, ST7735_BLACK);
-            tft->fillRect(35, 90, 7, 8, ST7735_BLACK);
-            tft->fillRect(148, 90, 11, 5, ST7735_BLACK);
+            tft->fillRect(116, 57, 8, 10, ST7735_BLACK);
+            tft->fillRect(33, 30, 8, 9, ST7735_BLACK);
+            tft->fillRect(33, 90, 7, 8, ST7735_BLACK);
+            tft->fillRect(146, 90, 11, 5, ST7735_BLACK);
         }
     }
 }
@@ -164,7 +196,7 @@ void ControlScreen::drawButton(uint8_t x, uint8_t y, uint16_t color, String capt
     }
 }
 
-String ControlScreen::getMoveDistanceString(MoveDistance moveDistance)
+String ControlScreen::toString(MoveDistance moveDistance)
 {
 #define COMMAND_MOVE_DISTANCE_STRING(ENUM, STRING, FLOAT) \
     if (moveDistance == ENUM)                             \
@@ -173,7 +205,7 @@ String ControlScreen::getMoveDistanceString(MoveDistance moveDistance)
     return "??";
 }
 
-float_t ControlScreen::getMoveDistance(MoveDistance moveDistance)
+float_t ControlScreen::toFloat(MoveDistance moveDistance)
 {
 #define COMMAND_MOVE_DISTANCE_FLOAT(ENUM, STRING, FLOAT) \
     if (moveDistance == ENUM)                            \

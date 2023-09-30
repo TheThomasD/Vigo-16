@@ -20,12 +20,12 @@ protected:
         Speed
     };
 #define FOREACH_MOVE_DISTANCE(COMMAND) \
+    COMMAND(Point1, ".1", 0.1f)        \
     COMMAND(Point5, ".5", 0.5f)        \
     COMMAND(One, "1", 1.0f)            \
     COMMAND(Five, "5", 5.0f)           \
     COMMAND(Ten, "10", 10.0f)          \
-    COMMAND(Fifty, "50", 50.0f)        \
-    COMMAND(Hundred, "100", 100.0f)
+    COMMAND(Fifty, "50", 50.0f)
 #define COMMAND_MOVE_DISTANCE_ENUM(ENUM, STRING, FLOAT) ENUM,
     enum MoveDistance
     {
@@ -36,10 +36,11 @@ protected:
     void drawButton(uint8_t x, uint8_t y, uint16_t color, String caption, VevorButtons::Button button, bool forceDraw);
     void registerButtons(Mode mode);
     void switchMode();
-    String getMoveDistanceString(MoveDistance moveDistance);
-    float_t getMoveDistance(MoveDistance moveDistance);
+    String toString(MoveDistance moveDistance);
+    float_t toFloat(MoveDistance moveDistance);
     void switchMoveDistance();
     void changeSpeed(int8_t change);
+    void move(GrblSender::Axis axis, bool positive);
 
 private:
     VevorButtons::ButtonStatus buttonStatus = VevorButtons::ButtonStatus();

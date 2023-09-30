@@ -10,8 +10,6 @@ String GrblReceiver::getGrblVersion()
 
 void GrblReceiver::processReceivedData()
 {
-    log_print("data: ");
-    log_println(serial->available());
     if (serial->available())
     {
         if (!connected)
@@ -79,7 +77,8 @@ void GrblReceiver::processLine()
     }
 }
 
-void GrblReceiver::processGrblLine(const String line) {
+void GrblReceiver::processGrblLine(const String line)
+{
     const u_int8_t spaceIndex = line.indexOf(' ', 5);
     if (spaceIndex > 0)
         grblVersion = line.substring(0, spaceIndex);
