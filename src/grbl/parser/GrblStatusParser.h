@@ -25,7 +25,7 @@ public:
     struct GrblStatus
     {
         GrblState state = Alarm;
-        float x = 0, y = 0, z = 0;
+        String x = "-0.00", y = "-0.00", z = "-0.00";
         uint16_t feedRate = 0, spindelRpm = 0;
         bool xEndstop = false, yEndstop = false, zEndstop = false, probe = false;
     };

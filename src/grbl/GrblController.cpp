@@ -1,7 +1,7 @@
 #include "GrblController.h"
 #include "../log/Logger.h"
 
-#define QUERY_DELAY 1000
+#define QUERY_DELAY 500
 
 void GrblController::init()
 {

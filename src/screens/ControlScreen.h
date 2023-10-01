@@ -1,6 +1,7 @@
 #pragma once
 #include "AScreen.h"
 #include "../grbl/GrblController.h"
+#include <map>
 
 class ControlScreen : public AScreen
 {
@@ -41,6 +42,11 @@ protected:
     void switchMoveDistance();
     void changeSpeed(int8_t change);
     void move(GrblSender::Axis axis, bool positive);
+    void drawStatus(const GrblStatusParser::GrblStatus status);
+    uint16_t getStateColor(const GrblStatusParser::GrblState state);
+    void drawEndstopState(const uint8_t x, const char axis, const bool hit);
+    void printAxisValue(const uint8_t x, const char axis, const String value);
+    bool valueChanged(const String key, const String value);
 
 private:
     VevorButtons::ButtonStatus buttonStatus = VevorButtons::ButtonStatus();
@@ -48,4 +54,5 @@ private:
     MoveDistance currentMoveDistance = One;
     int16_t currentSpeed = 0;
     GrblController *grbl;
+    std::map<String, String> statusValues;
 };

@@ -22,11 +22,95 @@ void ControlScreen::showHook()
     registerButtons(currentMode);
 
     grbl->getReceiver()->onStatusReceived([this](GrblStatusParser::GrblStatus status)
-                                          {
-                                              tft->setCursor(0, tft->height() - 9);
-                                              tft->setTextColor(ST7735_WHITE);
-                                              tft->print("Status " + grbl->getReceiver()->toString(status.state));
-                                              tft->print(" X " + String(status.x)); });
+                                          { drawStatus(status); });
+}
+
+void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus status)
+{
+    tft->setTextColor(ST7735_GREY);
+    if (valueChanged("x", status.x))
+        printAxisValue(0, 'X', status.x);
+    if (valueChanged("y", status.y))
+        printAxisValue(tft->width() / 3, 'Y', status.y);
+    if (valueChanged("z", status.z))
+        printAxisValue(tft->width() / 3 * 2, 'Z', status.z);
+
+    tft->setTextColor(ST7735_BLACK);
+#define WIDTH_STATE (3 * 6 + 1)
+    String state = grbl->getReceiver()->toString(status.state).substring(0, 3);
+    if (valueChanged("state", state))
+    {
+        tft->fillRect(0, tft->height() - 10, WIDTH_STATE, 10, getStateColor(status.state));
+        tft->setCursor(1, tft->height() - 9);
+        tft->print(state);
+    }
+
+#define WIDTH_SPACE 1
+#define WIDTH_ENDSTOP (6 + 1)
+    if (valueChanged("xe", String(status.xEndstop)))
+        drawEndstopState(WIDTH_STATE + WIDTH_SPACE, 'X', status.xEndstop);
+    if (valueChanged("ye", String(status.yEndstop)))
+        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 2 + WIDTH_ENDSTOP, 'Y', status.yEndstop);
+    if (valueChanged("ze", String(status.zEndstop)))
+        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 3 + WIDTH_ENDSTOP * 2, 'Z', status.zEndstop);
+    if (valueChanged("p", String(status.probe)))
+        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 4 + WIDTH_ENDSTOP * 3, 'P', status.probe);
+}
+
+bool ControlScreen::valueChanged(const String key, const String value)
+{
+    auto a = statusValues.find(key);
+    if (a == statusValues.end())
+    {
+        statusValues.insert(std::pair<String, String>(key, value));
+        return true;
+    }
+    else if (a->second == value)
+    {
+        return false;
+    }
+    else
+    {
+        a->second = value;
+        return true;
+    }
+}
+
+void ControlScreen::printAxisValue(const uint8_t x, const char axis, const String value)
+{
+    tft->fillRect(x, 16, tft->width() / 3, 10, ST7735_BLACK);
+    tft->setCursor(x + 1, 17);
+    tft->print(axis);
+    if (value.charAt(0) != '-')
+        tft->print('+');
+    tft->print(value);
+    tft->print(" ");
+}
+
+void ControlScreen::drawEndstopState(const uint8_t x, const char axis, const bool hit)
+{
+    tft->fillRect(x, tft->height() - 10, 6 + 1, 10, hit ? ST7735_RED : ST7735_GREEN);
+    tft->setCursor(x + 1, tft->height() - 9);
+    tft->print(axis);
+}
+
+uint16_t ControlScreen::getStateColor(const GrblStatusParser::GrblState state)
+{
+    switch (state)
+    {
+    case GrblStatusParser::Alarm:
+    case GrblStatusParser::Unknown:
+        return ST7735_RED;
+
+    case GrblStatusParser::Door:
+    case GrblStatusParser::Hold:
+    case GrblStatusParser::Check:
+    case GrblStatusParser::Sleep:
+        return ST7735_ORANGE;
+
+    default:
+        return ST7735_GREEN;
+    }
 }
 
 void ControlScreen::switchMode()
@@ -95,7 +179,10 @@ void ControlScreen::registerButtons(Mode mode)
 
 void ControlScreen::move(GrblSender::Axis axis, bool positive)
 {
-    grbl->getSender()->sendJog(axis, toFloat(currentMoveDistance) * (positive ? 1 : -1), config->getFeedRate());
+    MoveDistance distance = currentMoveDistance;
+    if (axis == GrblSender::Z && distance > Ten)
+        distance = Ten;
+    grbl->getSender()->sendJog(axis, toFloat(distance) * (positive ? 1 : -1), config->getFeedRate());
 }
 
 void ControlScreen::changeSpeed(int8_t change)

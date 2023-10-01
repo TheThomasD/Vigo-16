@@ -17,7 +17,7 @@ GrblStatusParser::GrblStatus GrblStatusParser::parse(const String line)
     {
         int nextIndex = line.indexOf('|', currentIndex + 1);
         String field = line.substring(currentIndex + 1, nextIndex > -1 ? nextIndex : line.length() - 2);
-        
+
         log_println("Parsing field: " + field);
         if (currentIndex == 0)
             result.state = parseState(field);
@@ -26,7 +26,7 @@ GrblStatusParser::GrblStatus GrblStatusParser::parse(const String line)
 
         currentIndex = nextIndex;
     }
-    return {};
+    return result;
 }
 
 void GrblStatusParser::parseFields(const String field, GrblStatus *result)
@@ -56,10 +56,10 @@ void GrblStatusParser::parsePositions(const String field, GrblStatus *result)
     // example: MPos:0.000,-10.000,5.000
     int firstComma = field.indexOf(',');
     int secondComma = field.indexOf(',', firstComma + 1);
-    int thirdComma = field.indexOf(',', secondComma + 1);
-    result->x = field.substring(5, firstComma).toFloat();
-    result->y = field.substring(firstComma + 1, secondComma).toFloat();
-    result->z = field.substring(secondComma + 1, thirdComma).toFloat();
+    // cut off last digit to save space
+    result->x = field.substring(5, firstComma - 1);
+    result->y = field.substring(firstComma + 1, secondComma - 1);
+    result->z = field.substring(secondComma + 1, field.length() - 1);
 }
 
 void GrblStatusParser::parseSpeeds(const String field, GrblStatus *result)
