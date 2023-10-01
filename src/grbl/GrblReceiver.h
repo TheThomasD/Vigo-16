@@ -46,7 +46,7 @@ protected:
 
     void processVersionLine();
     void processAlarmLine();
-    void processStatusLine();
+    void processStatusLine(const String line);
     void processSettingsLine();
     void processGrblLine(const String line);
 
@@ -58,6 +58,8 @@ protected:
 private:
     HardwareSerial *serial;
     VevorST7735 *tft;
+
+    GrblStatusParser statusParser;
 
     bool connected = false;
     long expectedReplyAt;

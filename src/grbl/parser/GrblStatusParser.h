@@ -24,9 +24,18 @@ public:
 
     struct GrblStatus
     {
-        GrblState state;
-        float x, y, z;
+        GrblState state = Alarm;
+        float x = 0, y = 0, z = 0;
+        uint16_t feedRate = 0, spindelRpm = 0;
+        bool xEndstop = false, yEndstop = false, zEndstop = false, probe = false;
     };
 
-    static GrblStatus parse(const char *buffer);
+    GrblStatus parse(const String line);
+
+protected:
+    GrblState parseState(const String stateField);
+    void parseFields(const String field, GrblStatus *result);
+    void parsePositions(const String field, GrblStatus *result);
+    void parseSpeeds(const String field, GrblStatus *result);
+    void parseEndstops(const String field, GrblStatus *result);
 };

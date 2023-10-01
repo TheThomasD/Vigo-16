@@ -57,7 +57,7 @@ void GrblReceiver::processLine()
     {
     case '<':
         log_println("Status");
-        // processStatusLine();
+        processStatusLine(line);
         break;
     case 'A':
         log_println("Alarm");
@@ -79,14 +79,14 @@ void GrblReceiver::processLine()
 
 void GrblReceiver::processGrblLine(const String line)
 {
-    const u_int8_t spaceIndex = line.indexOf(' ', 5);
+    const u_int8_t spaceIndex = line.indexOf(' ', 5); // next space after "Grbl "
     if (spaceIndex > 0)
         grblVersion = line.substring(0, spaceIndex);
 }
 
-void GrblReceiver::processStatusLine()
+void GrblReceiver::processStatusLine(const String line)
 {
-    const GrblStatusParser::GrblStatus status = {.state = GrblStatusParser::Alarm, .x = rand(), .y = 2, .z = 3};
+    const GrblStatusParser::GrblStatus status = statusParser.parse(line);
     if (statusCallback != nullptr)
         statusCallback(status);
 }
