@@ -21,7 +21,7 @@ void ControlScreen::showHook()
 
     registerButtons(currentMode);
 
-    receiver->onStatusReceived([this](GrblStatusParser::GrblStatus status)
+    receiver->onStatusReceived([this](const GrblStatusParser::GrblStatus &status)
                                { drawStatus(status); });
 }
 
@@ -31,7 +31,7 @@ void ControlScreen::hideHook()
     statusValues.clear();
 }
 
-void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus status)
+void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus &status)
 {
     tft->setTextColor(ST7735_GREY);
     if (valueChanged("x", status.x))

@@ -1,7 +1,7 @@
 #include "GrblStatusParser.h"
 #include "../../log/Logger.h"
 
-//#define DEBUG
+// #define DEBUG
 
 const GrblStatusParser::GrblStatus *GrblStatusParser::parse(const String &line)
 {
@@ -23,9 +23,15 @@ const GrblStatusParser::GrblStatus *GrblStatusParser::parse(const String &line)
         log_println("Parsing field: " + field);
 #endif
         if (currentIndex == 0)
+        {
             currentState.state = parseState(field);
+            // have to reset endstop states
+            currentState.xEndstop = currentState.yEndstop = currentState.zEndstop = currentState.probe = false;
+        }
         else
+        {
             parseFields(field, currentState);
+        }
 
         currentIndex = nextIndex;
     }

@@ -45,7 +45,7 @@ protected:
     void switchMoveDistance();
     void changeSpeed(int8_t change);
     void move(GrblSender::Axis axis, bool positive);
-    void drawStatus(const GrblStatusParser::GrblStatus status);
+    void drawStatus(const GrblStatusParser::GrblStatus& status);
     uint16_t getStateColor(const GrblStatusParser::GrblState state);
     void drawEndstopState(const uint8_t x, const char axis, const bool hit);
     void printAxisValue(const uint8_t x, const char axis, const String value);
