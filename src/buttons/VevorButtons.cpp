@@ -12,7 +12,7 @@ void VevorButtons::init()
 #define COMMAND_BEGIN_BUTTON(BUTTON)                                                \
     b_##BUTTON.begin();                                                             \
     b_##BUTTON.onPressed([this]() { pressed(BT_##BUTTON, Press); });                \
-    b_##BUTTON.onSequence(2, 750, [this]() { pressed(BT_##BUTTON, DoublePress); }); \
+    /*b_##BUTTON.onSequence(2, 750, [this]() { pressed(BT_##BUTTON, DoublePress); });*/ \
     b_##BUTTON.onPressedFor(1500, [this]() { pressed(BT_##BUTTON, LongPress); });   \
     b_##BUTTON.enableInterrupt([this]() { b_##BUTTON.read(); });
 

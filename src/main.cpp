@@ -24,12 +24,12 @@ VevorServer server;
 
 void setup(void)
 {
-  log_println("Start...");
   Serial.begin(115200);
+  log_println("Start...");
 
-  VevorSpeaker::playTone(NOTE_C5, 100);
-  VevorSpeaker::playTone(NOTE_E5, 100);
-  VevorSpeaker::playTone(NOTE_G5, 100);
+  Speaker.playTone(NOTE_C5, 100);
+  Speaker.playTone(NOTE_E5, 100);
+  Speaker.playTone(NOTE_G5, 100);
 
   log_println("Loading config...");
   config.load();

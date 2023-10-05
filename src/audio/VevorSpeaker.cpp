@@ -3,22 +3,15 @@
 
 #define SPEAKER_PIN 21
 
-bool VevorSpeaker::initialized = false;
-
-void VevorSpeaker::init()
+VevorSpeaker::VevorSpeaker()
 {
-  if (!initialized)
-  {
-    // setup ledc library for playing tones
-    ledcSetup(0, 1000, 8);
-    ledcAttachPin(SPEAKER_PIN, 0);
-    setToneChannel(0);
-    initialized = true;
-  }
+  // setup ledc library for playing tones
+  ledcSetup(0, 1000, 8);
+  ledcAttachPin(SPEAKER_PIN, 0);
+  setToneChannel(0);
 }
 
 void VevorSpeaker::playTone(unsigned int frequency, unsigned long duration)
 {
-  init();
   tone(SPEAKER_PIN, frequency, duration);
 }

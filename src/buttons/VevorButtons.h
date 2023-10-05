@@ -18,7 +18,7 @@ public:
     enum PressType
     {
         Press,
-        DoublePress,
+        /*DoublePress,*/
         LongPress
     };
 #define FOREACH_BUTTON(COMMAND) \

@@ -5,11 +5,10 @@
 class VevorSpeaker
 {
 public:
-    static void playTone(unsigned int frequency, unsigned long duration);
-
-protected:
-    static void init();
+    void playTone(unsigned int frequency, unsigned long duration);
 
 private:
-    static bool initialized;
+    VevorSpeaker();
 };
+
+VevorSpeaker Speaker;
