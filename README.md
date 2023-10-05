@@ -357,13 +357,15 @@ The settings are now implemented, altough I only implemented feed rate and baud 
     * ~~if STA is not connected, start AP anyway~~ (both already done)
 2. ~~implement OTA updates via the web interface~~
 3. ~~Display implementation for settings (only feed rate and baud rate?)~~
-    * maybe add "disconnect" functionality if that frees the USB connection?
-4. GRBL board connection
-    * maybe a good point in time to look also at this: (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel
+    * ~~maybe add "disconnect" functionality if that frees the USB connection?~~ (does not work)
+4. ~~GRBL board connection~~ (done)
+    * ~~maybe a good point in time to look also at this: (GRBL board topic; maybe not required with web serial connection) allow USB and display in parallel~~ (seems impossible with my GRBL board as the USB and the display port connect to the same pins of the processor)
 5. configure STA and AP mode over a web interface (pushed back)
-6. Web serial connection
+6. ~~Web serial connection~~ (works, yay! But consumes a lot of processing power making OTA nearly impossible :()
 7. Web interface for control, files, printing and serial terminal (wifi config ~~and update~~ (done) is ideally already there, see above)
 8. Display implementation for files and printing
+
+NOTE: in the current state the OTA functionality is not really usable. I think I have to change my programming style to consume less resources. That will require some refactoring, I think :(
 
 
 ## Later

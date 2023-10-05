@@ -43,6 +43,8 @@ public:
     uint32_t toValue(BaudRate rate);
     void setFeedRate(uint16_t feedRate);
     uint16_t getFeedRate();
+    void setTcpPort(uint16_t port);
+    uint16_t getTcpPort();
 
 protected:
     Preferences prefs;
@@ -58,6 +60,7 @@ private:
     String hostName;
     BaudRate baudRate;
     uint16_t feedRate;
+    uint16_t tcpPort;
 
     const char *storageNamespace = "vigo-16";
     const char *nameApSsid = "apSsid";
@@ -67,4 +70,5 @@ private:
     const char *nameHostName = "host";
     const char *nameBaudRate = "bRate";
     const char *nameFeedRate = "fRate";
+    const char *nameTcpPort = "port";
 };

@@ -52,6 +52,9 @@ void GrblReceiver::processLine()
 {
     const String line = String(readBuffer);
     log_println("Received: " + line);
+    
+    if (messageCallback)
+        messageCallback(line);
 
     switch (readBuffer[0])
     {
@@ -75,6 +78,10 @@ void GrblReceiver::processLine()
         log_println("OK");
         break;
     }
+}
+
+void GrblReceiver::onMessageReceived(OnMessageReceivedCb callback) {
+    messageCallback = callback;
 }
 
 void GrblReceiver::processGrblLine(const String line)

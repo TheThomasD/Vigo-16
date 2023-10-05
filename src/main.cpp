@@ -17,7 +17,7 @@ VevorWifi wifi = VevorWifi(&tft);
 Timer<> timer = timer_create_default();
 GrblController grbl = GrblController(&Serial1, &config, &tft, &timer);
 VevorButtons buttons = VevorButtons(&timer);
-VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, &grbl);
+VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, grbl.getSender(), grbl.getReceiver());
 
 AsyncWebServer webServer(80);
 VevorServer server;
@@ -36,13 +36,9 @@ void setup(void)
 
   log_println("Init display...");
   tft.init();
-  
-  log_println("Init GRBL serial...");
-  grbl.init();
 
   log_println("Init buttons...");
   buttons.init();
-
 
   log_println("Loading boot screen...");
   screens.showBootScreen();
@@ -50,15 +46,20 @@ void setup(void)
   log_println("Starting WiFi...");
   wifi.startWifi(&config, &timer, &screens);
 
+  log_println("Init GRBL serial...");
+  grbl.init(&wifi);
+
   log_println("Starting web server...");
   server.init(&webServer);
 
   log_println("Initialization done!");
 
-  timer.in(3000, [](void * screens){
+  timer.in(
+      3000, [](void *screens)
+      {
     ((VevorScreens *) screens)->showMenuScreen();
-    return false;
-  }, &screens);
+    return false; },
+      &screens);
 }
 
 void loop()

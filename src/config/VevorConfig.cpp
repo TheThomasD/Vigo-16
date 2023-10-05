@@ -10,6 +10,7 @@ void VevorConfig::load()
     hostName = prefs.getString(nameHostName, "Vevor-CNC");
     baudRate = fromValue(prefs.getULong(nameBaudRate, 115200));
     feedRate = prefs.getUShort(nameFeedRate, 1000);
+    tcpPort = prefs.getUShort(nameTcpPort, 8888);
     prefs.end();
 }
 
@@ -23,6 +24,7 @@ void VevorConfig::save()
     prefs.putString(nameHostName, hostName);
     prefs.putULong(nameBaudRate, toValue(baudRate));
     prefs.putUShort(nameFeedRate, feedRate);
+    prefs.putUShort(nameTcpPort, tcpPort);
     prefs.end();
 }
 
@@ -42,6 +44,7 @@ void VevorConfig::print()
     printPair(nameHostName, hostName);
     printPair(nameBaudRate, String(toValue(baudRate)));
     printPair(nameFeedRate, String(feedRate));
+    printPair(nameTcpPort, String(tcpPort));
 }
 
 uint32_t VevorConfig::toValue(BaudRate rate)
@@ -130,4 +133,12 @@ void VevorConfig::setFeedRate(uint16_t rate)
 uint16_t VevorConfig::getFeedRate()
 {
     return feedRate;
+}
+
+void VevorConfig::setTcpPort(uint16_t port) {
+    tcpPort = port;
+}
+
+uint16_t VevorConfig::getTcpPort() {
+    return tcpPort;
 }

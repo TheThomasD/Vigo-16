@@ -33,7 +33,7 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
     {
         log_println("Connecting to STA " + config->getStaSsid() + "...");
         screens->addBootStatusLine("Connecting to STA " + config->getStaSsid() + "...");
-        wl_status_t status =WiFi.begin(config->getStaSsid().c_str(), config->getStaPassword().c_str());
+        wl_status_t status = WiFi.begin(config->getStaSsid().c_str(), config->getStaPassword().c_str());
         if (WL_CONNECTED == status)
         {
             log_println("STA " + config->getStaSsid() + ", IP " + WiFi.localIP().toString());
@@ -66,8 +66,6 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
 
     if (WiFi.isConnected())
         screens->addBootStatusLine("STA " + config->getStaSsid() + ", IP " + WiFi.localIP().toString());
-    else
-        screens->addBootStatusLine("STA: not connected!");
 
     if (MDNS.begin(config->getHostName().c_str()))
     {
@@ -81,8 +79,50 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
         screens->addBootStatusLine("MDNS: could not enable!");
     }
 
+    server = new WiFiServer(config->getTcpPort());
+    server->begin();
+    server->setNoDelay(true);
+
     timer->every(3000, [](void *)
-                 {if (!WiFi.isConnected())WiFi.reconnect(); return true; });
+                 {if (!WiFi.isConnected()) WiFi.reconnect(); return true; });
+
+    timer->every(
+        10, [](void *wifi)
+        { 
+            ((VevorWifi *) wifi)->handleWiFiServer();
+            return true; },
+        this);
+}
+
+void VevorWifi::handleWiFiServer()
+{
+    if ((!client || !client.connected()) && server->hasClient())
+    {
+        if (client)
+            client.stop(); // disconnect existing client
+        client = server->available();
+    }
+    if (clientMessageCb && client && client.connected() && client.available())
+    {
+        static char buffer[129];
+        while (client.available())
+        {
+            size_t read = client.readBytes(buffer, 128);
+            buffer[read] = '\0'; // add string terminator
+            clientMessageCb(String(buffer));
+        }
+    }
+}
+
+void VevorWifi::onClientMessage(const OnClientMessageCb callback)
+{
+    clientMessageCb = callback;
+}
+
+void VevorWifi::sendToClient(const String message)
+{
+    if (client && client.connected())
+        client.println(message);
 }
 
 void VevorWifi::onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)

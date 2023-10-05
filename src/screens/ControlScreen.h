@@ -1,6 +1,7 @@
 #pragma once
 #include "AScreen.h"
-#include "../grbl/GrblController.h"
+#include "../grbl/GrblSender.h"
+#include "../grbl/GrblReceiver.h"
 #include <map>
 
 class ControlScreen : public AScreen
@@ -8,9 +9,10 @@ class ControlScreen : public AScreen
 public:
     ControlScreen(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons,
                   VevorConfig *config, SwitchScreenCb switchScreenCb,
-                  GrblController *grbl) : AScreen(tft, timer, buttons, config, switchScreenCb)
+                  GrblSender *sender, GrblReceiver *receiver) : AScreen(tft, timer, buttons, config, switchScreenCb)
     {
-        this->grbl = grbl;
+        this->sender = sender;
+        this->receiver = receiver;
     };
     void showHook();
 
@@ -53,6 +55,7 @@ private:
     Mode currentMode = Move;
     MoveDistance currentMoveDistance = One;
     int16_t currentSpeed = 0;
-    GrblController *grbl;
+    GrblSender *sender;
+    GrblReceiver *receiver;
     std::map<String, String> statusValues;
 };

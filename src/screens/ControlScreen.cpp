@@ -21,7 +21,7 @@ void ControlScreen::showHook()
 
     registerButtons(currentMode);
 
-    grbl->getReceiver()->onStatusReceived([this](GrblStatusParser::GrblStatus status)
+    receiver->onStatusReceived([this](GrblStatusParser::GrblStatus status)
                                           { drawStatus(status); });
 }
 
@@ -37,7 +37,7 @@ void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus status)
 
     tft->setTextColor(ST7735_BLACK);
 #define WIDTH_STATE (3 * 6 + 1)
-    String state = grbl->getReceiver()->toString(status.state).substring(0, 3);
+    String state = receiver->toString(status.state).substring(0, 3);
     if (valueChanged("state", state))
     {
         tft->fillRect(0, tft->height() - 10, WIDTH_STATE, 10, getStateColor(status.state));
@@ -165,15 +165,15 @@ void ControlScreen::registerButtons(Mode mode)
         buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
                           { move(GrblSender::Y, false); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::LongPress, [this]()
-                          { grbl->getSender()->sendUnlock(); });
+                          { sender->sendUnlock(); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::Press, [this]()
                           { move(GrblSender::Z, true); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::LongPress, [this]()
-                          { grbl->getSender()->sendHome(); });
+                          { sender->sendHome(); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::Press, [this]()
                           { move(GrblSender::Z, false); });
         buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::LongPress, [this]()
-                          { grbl->getSender()->sendReset(); });
+                          { sender->sendReset(); });
     }
 }
 
@@ -182,7 +182,7 @@ void ControlScreen::move(GrblSender::Axis axis, bool positive)
     MoveDistance distance = currentMoveDistance;
     if (axis == GrblSender::Z && distance > Ten)
         distance = Ten;
-    grbl->getSender()->sendJog(axis, toFloat(distance) * (positive ? 1 : -1), config->getFeedRate());
+    sender->sendJog(axis, toFloat(distance) * (positive ? 1 : -1), config->getFeedRate());
 }
 
 void ControlScreen::changeSpeed(int8_t change)
@@ -194,9 +194,9 @@ void ControlScreen::changeSpeed(int8_t change)
         currentSpeed = 0;
 
     if (currentSpeed == 0)
-        grbl->getSender()->sendSpindelStop();
+        sender->sendSpindelStop();
     else
-        grbl->getSender()->sendSpindleSpeed(currentSpeed);
+        sender->sendSpindleSpeed(currentSpeed);
 
     redraw(false, currentMode, true);
 }

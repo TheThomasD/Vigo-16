@@ -10,6 +10,7 @@ class GrblReceiver
     friend class GrblController;
 
 public:
+    typedef std::function<void(String)> OnMessageReceivedCb;
     typedef std::function<void(GrblStatusParser::GrblStatus)> OnStatusReceivedCb;
     enum GrblAlarm
     {
@@ -32,6 +33,7 @@ public:
     };
     void processReceivedData();
 
+    void onMessageReceived(OnMessageReceivedCb callback);
     void onStatusReceived(OnStatusReceivedCb callback);
     void onAlarmReceived(OnAlarmReceivedCb callback);
 
@@ -65,6 +67,7 @@ private:
     long expectedReplyAt;
     OnStatusReceivedCb statusCallback = nullptr;
     OnAlarmReceivedCb alarmCallback = nullptr;
+    OnMessageReceivedCb messageCallback = nullptr;
 
     static String grblVersion;
 

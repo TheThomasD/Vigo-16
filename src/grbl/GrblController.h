@@ -5,6 +5,7 @@
 #include <arduino-timer.h>
 #include "GrblSender.h"
 #include "GrblReceiver.h"
+#include "../wifi/VevorWifi.h"
 
 class GrblController
 {
@@ -20,7 +21,7 @@ public:
         sender = new GrblSender(receiver);
     };
 
-    void init();
+    void init(VevorWifi *wifi);
     GrblSender *getSender() { return sender; };
     GrblReceiver *getReceiver() { return receiver; };
 

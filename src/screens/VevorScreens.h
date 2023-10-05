@@ -8,12 +8,13 @@
 #include "SettingsScreen.h"
 #include <arduino-timer.h>
 #include "../config/VevorConfig.h"
-#include "../grbl/GrblController.h"
+#include "../grbl/GrblSender.h"
+#include "../grbl/GrblReceiver.h"
 
 class VevorScreens
 {
 public:
-    VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config, GrblController *grbl);
+    VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config, GrblSender *sender, GrblReceiver *receiver);
     void showBootScreen();
     void showMenuScreen();
     void addBootStatusLine(String line);
