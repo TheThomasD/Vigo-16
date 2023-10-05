@@ -1,16 +1,17 @@
 #include "GrblSender.h"
 #include "../log/Logger.h"
+#include <WString.h>
 
-#define QUERY_TIMEOUT 5000
+// #define DEBUG
 
 void GrblSender::queryStatus()
 {
     if (serial->availableForWrite())
     {
         serial->print("?");
+#ifdef DEBUG
         log_println("Sent!");
-
-        receiver->expectReply(millis() + QUERY_TIMEOUT);
+#endif
     }
 }
 
@@ -32,7 +33,9 @@ void GrblSender::sendReset()
 void GrblSender::sendSpindleSpeed(uint8_t percent)
 {
     String motorOnCommand = String("S") + String(percent * 100) + "M3"; // Max: 10.000
+#ifdef DEBUG
     log_println("sending " + motorOnCommand);
+#endif
     serial->println(motorOnCommand);
 }
 
@@ -44,7 +47,9 @@ void GrblSender::sendSpindelStop()
 void GrblSender::sendJog(Axis axis, float units, uint16_t feedRate)
 {
     String jogCommand = String("$J=G91") + String(getAxisChar(axis)) + String(units) + 'F' + String(feedRate); // relative move
+#ifdef DEBUG
     log_println("Sending " + jogCommand);
+#endif
     serial->println(jogCommand);
 }
 

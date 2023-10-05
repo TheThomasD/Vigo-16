@@ -14,11 +14,9 @@ void GrblReceiver::processReceivedData()
 {
     if (serial->available())
     {
+        lastMessageAt = millis();
         if (!connected)
-        {
-            expectedReplyAt = -1;
             onConnected();
-        }
 
         while (serial->available())
             readData();
@@ -108,21 +106,21 @@ void GrblReceiver::processGrblLine(const String &line)
 
 void GrblReceiver::processStatusLine(const String &line)
 {
+    lastStatusAt = millis();
     if (statusCallback != nullptr)
         statusCallback(*statusParser.parse(line));
 }
 
-void GrblReceiver::expectReply(long futureMillis)
+void GrblReceiver::checkConnection()
 {
-    if (expectedReplyAt == -1)
-    {
-        expectedReplyAt = futureMillis;
-    }
-    else if (expectedReplyAt < millis())
-    {
-        expectedReplyAt = futureMillis;
+    if (lastMessageAt < millis() - 3000)
         onDisconnected();
-    }
+}
+
+void GrblReceiver::checkForStatus()
+{
+    if (lastStatusAt == -1 || lastStatusAt < millis() - 500)
+        sender->queryStatus();
 }
 
 void GrblReceiver::onStatusReceived(OnStatusReceivedCb callback)

@@ -1,12 +1,9 @@
 #include "GrblController.h"
 #include "../log/Logger.h"
 
-#define QUERY_DELAY 700
-
 void GrblController::init(VevorWifi *wifi)
 {
     tft->setSerialStatus(VevorST7735::Unknown);
-    receiver->connected = false;
 
     serial->end();
     serial->begin(config->toValue(config->getBaudRate()));
@@ -21,15 +18,22 @@ void GrblController::init(VevorWifi *wifi)
                             this->receiver); });
 
     timer->every(
-        QUERY_DELAY, [](void *sender)
+        3000, [](void *receiver)
         {
-            ((GrblSender *) sender)->queryStatus();
+            ((GrblReceiver *) receiver)->checkConnection();
             return true; },
-        this->sender);
+        this->receiver);
 
-    wifi->onClientMessage([this](const String& message)
+    timer->every(
+        500, [](void *receiver)
+        {
+            ((GrblReceiver *) receiver)->checkForStatus();
+            return true; },
+        this->receiver);
+
+    wifi->onClientMessage([this](const String &message)
                           { serial->print(message); });
 
-    receiver->onMessageReceived([wifi](const String& message)
+    receiver->onMessageReceived([wifi](const String &message)
                                 { wifi->sendToClient(message); });
 }

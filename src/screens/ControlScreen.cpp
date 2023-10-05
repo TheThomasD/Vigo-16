@@ -22,7 +22,13 @@ void ControlScreen::showHook()
     registerButtons(currentMode);
 
     receiver->onStatusReceived([this](GrblStatusParser::GrblStatus status)
-                                          { drawStatus(status); });
+                               { drawStatus(status); });
+}
+
+void ControlScreen::hideHook()
+{
+    receiver->onStatusReceived(nullptr);
+    statusValues.clear();
 }
 
 void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus status)

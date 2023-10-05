@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GrblReceiver.h"
+#include <Arduino.h>
 
 class GrblSender
 {
@@ -12,10 +12,9 @@ public:
         Z
     };
 
-    GrblSender(GrblReceiver *receiver)
+    GrblSender(HardwareSerial *serial)
     {
-        this->receiver = receiver;
-        this->serial = receiver->serial;
+        this->serial = serial;
     };
     void queryStatus();
     void sendHome();
@@ -30,5 +29,4 @@ protected:
 
 private:
     HardwareSerial *serial;
-    GrblReceiver *receiver;
 };

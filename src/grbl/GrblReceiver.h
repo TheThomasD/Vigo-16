@@ -3,12 +3,10 @@
 #include <WString.h>
 #include "../tft/VevorST7735.h"
 #include "parser/GrblStatusParser.h"
+#include "GrblSender.h"
 
 class GrblReceiver
 {
-    friend class GrblSender;
-    friend class GrblController;
-
 public:
     typedef std::function<void(const String&)> OnMessageReceivedCb;
     typedef std::function<void(const GrblStatusParser::GrblStatus&)> OnStatusReceivedCb;
@@ -26,12 +24,15 @@ public:
     };
     typedef std::function<void(GrblAlarm)> OnAlarmReceivedCb;
 
-    GrblReceiver(HardwareSerial *serial, VevorST7735 *tft)
+    GrblReceiver(HardwareSerial *serial, GrblSender *sender, VevorST7735 *tft)
     {
         this->serial = serial;
+        this->sender = sender;
         this->tft = tft;
     };
     void processReceivedData();
+    void checkConnection();
+    void checkForStatus();
 
     void onMessageReceived(OnMessageReceivedCb callback);
     void onStatusReceived(OnStatusReceivedCb callback);
@@ -54,17 +55,18 @@ protected:
 
     void onDisconnected();
     void onConnected();
-    void expectReply(long futureMillis);
     GrblStatusParser::GrblState fromString(const String *state);
 
 private:
     HardwareSerial *serial;
     VevorST7735 *tft;
+    GrblSender *sender;
 
     GrblStatusParser statusParser;
 
     bool connected = false;
-    long expectedReplyAt;
+    u_long lastStatusAt = -1;
+    u_long lastMessageAt = -1;
     OnStatusReceivedCb statusCallback = nullptr;
     OnAlarmReceivedCb alarmCallback = nullptr;
     OnMessageReceivedCb messageCallback = nullptr;

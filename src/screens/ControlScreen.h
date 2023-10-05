@@ -15,6 +15,7 @@ public:
         this->receiver = receiver;
     };
     void showHook();
+    void hideHook();
 
 protected:
     enum Mode

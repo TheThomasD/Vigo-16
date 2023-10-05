@@ -17,8 +17,8 @@ public:
         this->tft = tft;
         this->timer = timer;
 
-        receiver = new GrblReceiver(serial, tft);
-        sender = new GrblSender(receiver);
+        sender = new GrblSender(serial);
+        receiver = new GrblReceiver(serial, sender, tft);
     };
 
     void init(VevorWifi *wifi);
@@ -26,7 +26,6 @@ public:
     GrblReceiver *getReceiver() { return receiver; };
 
 protected:
-
 private:
     HardwareSerial *serial;
     VevorConfig *config;
