@@ -1,6 +1,8 @@
 #include "GrblReceiver.h"
 #include "../log/Logger.h"
 
+// #define DEBUG
+
 String GrblReceiver::grblVersion = "";
 
 String GrblReceiver::getGrblVersion()
@@ -50,52 +52,64 @@ void GrblReceiver::readData()
 
 void GrblReceiver::processLine()
 {
-    const String line = String(readBuffer);
-    log_println("Received: " + line);
-    
+    messageLine = String(readBuffer);
+#ifdef DEBUG
+    log_println("Received: " + messageLine);
+#endif
+
     if (messageCallback)
-        messageCallback(line);
+        messageCallback(messageLine);
 
     switch (readBuffer[0])
     {
     case '<':
+#ifdef DEBUG
         log_println("Status");
-        processStatusLine(line);
+#endif
+        processStatusLine(messageLine);
         break;
     case 'A':
+#ifdef DEBUG
         log_println("Alarm");
+#endif
         break;
     case 'G':
-        processGrblLine(line);
+        processGrblLine(messageLine);
         break;
     case '$':
+#ifdef DEBUG
         log_println("Config");
+#endif
         break;
     case '[':
+#ifdef DEBUG
         log_println("Message");
+#endif
         break;
     case 'o':
+#ifdef DEBUG
         log_println("OK");
+#endif
         break;
     }
 }
 
-void GrblReceiver::onMessageReceived(OnMessageReceivedCb callback) {
+void GrblReceiver::onMessageReceived(OnMessageReceivedCb callback)
+{
     messageCallback = callback;
 }
 
-void GrblReceiver::processGrblLine(const String line)
+void GrblReceiver::processGrblLine(const String &line)
 {
     const u_int8_t spaceIndex = line.indexOf(' ', 5); // next space after "Grbl "
     if (spaceIndex > 0)
         grblVersion = line.substring(0, spaceIndex);
 }
 
-void GrblReceiver::processStatusLine(const String line)
+void GrblReceiver::processStatusLine(const String &line)
 {
-    const GrblStatusParser::GrblStatus status = statusParser.parse(line);
     if (statusCallback != nullptr)
-        statusCallback(status);
+        statusCallback(*statusParser.parse(line));
 }
 
 void GrblReceiver::expectReply(long futureMillis)
@@ -137,10 +151,10 @@ String GrblReceiver::toString(GrblStatusParser::GrblState state)
     return "Unknown";
 }
 
-GrblStatusParser::GrblState GrblReceiver::fromString(String state)
+GrblStatusParser::GrblState GrblReceiver::fromString(const String *state)
 {
 #define COMMAND_GRBL_STATE_FROMSTRING(STATE) \
-    if (state == #STATE)                     \
+    if (*state == #STATE)                    \
         return GrblStatusParser::STATE;
     FOREACH_GRBL_STATE(COMMAND_GRBL_STATE_FROMSTRING)
     return GrblStatusParser::Unknown;

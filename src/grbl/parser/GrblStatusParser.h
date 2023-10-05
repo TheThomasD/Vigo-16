@@ -30,12 +30,15 @@ public:
         bool xEndstop = false, yEndstop = false, zEndstop = false, probe = false;
     };
 
-    GrblStatus parse(const String line);
+    const GrblStatus* parse(const String &line);
 
 protected:
-    GrblState parseState(const String stateField);
-    void parseFields(const String field, GrblStatus *result);
-    void parsePositions(const String field, GrblStatus *result);
-    void parseSpeeds(const String field, GrblStatus *result);
-    void parseEndstops(const String field, GrblStatus *result);
+    GrblState parseState(const String &stateField);
+    void parseFields(const String &field, GrblStatus &result);
+    void parsePositions(const String &field, GrblStatus &result);
+    void parseSpeeds(const String &field, GrblStatus &result);
+    void parseEndstops(const String &field, GrblStatus &result);
+
+private:
+    GrblStatus currentState = {};
 };

@@ -11,6 +11,7 @@
 #include <buttons/VevorButtons.h>
 #include <grbl/GrblController.h>
 
+VevorSpeaker speaker = VevorSpeaker();
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
@@ -27,9 +28,9 @@ void setup(void)
   Serial.begin(115200);
   log_println("Start...");
 
-  Speaker.playTone(NOTE_C5, 100);
-  Speaker.playTone(NOTE_E5, 100);
-  Speaker.playTone(NOTE_G5, 100);
+  speaker.playTone(NOTE_C5, 100);
+  speaker.playTone(NOTE_E5, 100);
+  speaker.playTone(NOTE_G5, 100);
 
   log_println("Loading config...");
   config.load();

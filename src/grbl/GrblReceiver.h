@@ -10,8 +10,8 @@ class GrblReceiver
     friend class GrblController;
 
 public:
-    typedef std::function<void(String)> OnMessageReceivedCb;
-    typedef std::function<void(GrblStatusParser::GrblStatus)> OnStatusReceivedCb;
+    typedef std::function<void(const String&)> OnMessageReceivedCb;
+    typedef std::function<void(const GrblStatusParser::GrblStatus&)> OnStatusReceivedCb;
     enum GrblAlarm
     {
         HardLimit = 1,
@@ -48,14 +48,14 @@ protected:
 
     void processVersionLine();
     void processAlarmLine();
-    void processStatusLine(const String line);
+    void processStatusLine(const String& line);
     void processSettingsLine();
-    void processGrblLine(const String line);
+    void processGrblLine(const String& line);
 
     void onDisconnected();
     void onConnected();
     void expectReply(long futureMillis);
-    GrblStatusParser::GrblState fromString(String state);
+    GrblStatusParser::GrblState fromString(const String *state);
 
 private:
     HardwareSerial *serial;
@@ -74,4 +74,5 @@ private:
     u_int8_t currentIndex = 0;
 #define MAX_READ_BUFFER 128
     char readBuffer[MAX_READ_BUFFER + 1];
+    String messageLine = "";
 };

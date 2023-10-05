@@ -5,10 +5,6 @@
 class VevorSpeaker
 {
 public:
-    void playTone(unsigned int frequency, unsigned long duration);
-
-private:
     VevorSpeaker();
+    void playTone(unsigned int frequency, unsigned long duration);
 };
-
-VevorSpeaker Speaker;

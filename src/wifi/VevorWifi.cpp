@@ -104,12 +104,11 @@ void VevorWifi::handleWiFiServer()
     }
     if (clientMessageCb && client && client.connected() && client.available())
     {
-        static char buffer[129];
         while (client.available())
         {
-            size_t read = client.readBytes(buffer, 128);
-            buffer[read] = '\0'; // add string terminator
-            clientMessageCb(String(buffer));
+            size_t read = client.readBytes(messageBuffer, 128);
+            messageBuffer[read] = '\0'; // add string terminator
+            clientMessageCb(String(messageBuffer));
         }
     }
 }
@@ -119,7 +118,7 @@ void VevorWifi::onClientMessage(const OnClientMessageCb callback)
     clientMessageCb = callback;
 }
 
-void VevorWifi::sendToClient(const String message)
+void VevorWifi::sendToClient(const String& message)
 {
     if (client && client.connected())
         client.println(message);
