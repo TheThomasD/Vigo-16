@@ -367,6 +367,14 @@ The settings are now implemented, altough I only implemented feed rate and baud 
 
 NOTE: in the current state the OTA functionality is not really usable. I think I have to change my programming style to consume less resources. That will require some refactoring, I think :(
 
+### Performance increase
+
+Success! After some changes I am now able to quickly upload an OTA update. However, when Candle is connected to the Web Serial Port, the control screen becomes very unresponsive. I think I'll have to look into that later. It works for now, although I have to test "the real thing", i.e. running a gcode file through Candle.
+
+### Preparations for web improvements
+
+I want to use Bootstrap 5 for my web pages, so I downloaded the required CSS files etc. I read [here](https://github.com/me-no-dev/ESPAsyncWebServer/issues/556) that the ESPAsyncWebServer is already capable of serving gzipped files. Hence, I zipped the files I want to serve and I created a `data-unzipped` folder for the files that I will use during web development. In addition to that, I added a `pre` python script that zips the `index.html` automatically whenever a new SPIFFS files is built. Additional files can easily be added, if needed. I got the ideas from [here](https://docs.platformio.org/en/latest/scripting/actions.html) and [here](https://docs.python.org/3/library/gzip.html#examples-of-usage).
+
 
 ## Later
 
@@ -379,3 +387,4 @@ NOTE: in the current state the OTA functionality is not really usable. I think I
 * [RGB565 Color Picker](https://barth-dev.de/online/rgb565-color-picker/)
 * [Pixel editor](https://apps.lospec.com/pixel-editor) (good for figuring out how to draw something)
 * [Online Arduino ESP32 simulator](https://wokwi.com/projects/new/esp32) (unfortunately, very slow when working with a display, but still allows to try some things...)
+* [Bootstrap icons](https://icons.getbootstrap.com/#icons)
