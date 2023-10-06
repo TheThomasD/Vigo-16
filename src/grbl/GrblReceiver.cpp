@@ -50,13 +50,13 @@ void GrblReceiver::readData()
 
 void GrblReceiver::processLine()
 {
+    if (messageCallback)
+        messageCallback(readBuffer, currentIndex);
+
     messageLine = String(readBuffer);
 #ifdef DEBUG
     log_println("Received: " + messageLine);
 #endif
-
-    if (messageCallback)
-        messageCallback(messageLine);
 
     switch (readBuffer[0])
     {

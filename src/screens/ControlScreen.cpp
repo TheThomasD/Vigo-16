@@ -3,6 +3,7 @@
 #include "../bmp/reset.h"
 #include "../bmp/unlock.h"
 #include "../bmp/esc.h"
+#include "../bmp/probe.h"
 
 void ControlScreen::showHook()
 {
@@ -164,20 +165,22 @@ void ControlScreen::registerButtons(Mode mode)
     {
         buttons->onButton(VevorButtons::BT_BUTTON_X_UP, VevorButtons::Press, [this]()
                           { move(GrblSender::X, true); });
+        buttons->onButton(VevorButtons::BT_BUTTON_X_UP, VevorButtons::LongPress, [this]()
+                          { sender->sendHome(); });
         buttons->onButton(VevorButtons::BT_BUTTON_X_DOWN, VevorButtons::Press, [this]()
                           { move(GrblSender::X, false); });
+        buttons->onButton(VevorButtons::BT_BUTTON_X_DOWN, VevorButtons::LongPress, [this]()
+                          { sender->sendUnlock(); });
         buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this]()
                           { move(GrblSender::Y, true); });
         buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
                           { move(GrblSender::Y, false); });
-        buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::LongPress, [this]()
-                          { sender->sendUnlock(); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_UP, VevorButtons::Press, [this]()
                           { move(GrblSender::Z, true); });
-        buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::LongPress, [this]()
-                          { sender->sendHome(); });
         buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::Press, [this]()
                           { move(GrblSender::Z, false); });
+        buttons->onButton(VevorButtons::BT_BUTTON_Z_DOWN, VevorButtons::LongPress, [this]()
+                          { sender->sendProbe(); });
         buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::LongPress, [this]()
                           { sender->sendReset(); });
     }
@@ -252,17 +255,19 @@ void ControlScreen::redraw(bool forceDraw, Mode mode, bool forceStatusDraw)
     {
         if (mode == Move)
         {
-            tft->drawRGBBitmap(116, 57, image_data_reset, 8, 10);
-            tft->drawRGBBitmap(33, 30, image_data_unlock, 8, 9);
-            tft->drawRGBBitmap(33, 90, image_data_home, 7, 8);
-            tft->drawRGBBitmap(146, 90, image_data_esc, 11, 5);
+            tft->drawRGBBitmap(116, 57, image_data_reset, 8, 10); // Set
+            tft->drawRGBBitmap(87, 57, image_data_unlock, 8, 9);  // X-
+            tft->drawRGBBitmap(146, 57, image_data_home, 7, 8);   // X+
+            tft->drawRGBBitmap(146, 90, image_data_esc, 11, 5);   // Esc
+            tft->drawRGBBitmap(33, 90, image_data_probe, 10, 8);  // Z-
         }
         else
         {
             tft->fillRect(116, 57, 8, 10, ST7735_BLACK);
-            tft->fillRect(33, 30, 8, 9, ST7735_BLACK);
-            tft->fillRect(33, 90, 7, 8, ST7735_BLACK);
+            tft->fillRect(87, 57, 8, 9, ST7735_BLACK);
+            tft->fillRect(146, 57, 7, 8, ST7735_BLACK);
             tft->fillRect(146, 90, 11, 5, ST7735_BLACK);
+            tft->fillRect(33, 90, 10, 8, ST7735_BLACK);
         }
     }
 }

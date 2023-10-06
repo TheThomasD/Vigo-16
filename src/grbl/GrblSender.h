@@ -20,6 +20,7 @@ public:
     void sendHome();
     void sendUnlock();
     void sendReset();
+    void sendProbe();
     void sendJog(Axis axis, float units, uint16_t feedRate);
     void sendSpindleSpeed(uint8_t percent);
     void sendSpindelStop();

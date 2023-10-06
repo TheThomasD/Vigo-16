@@ -30,6 +30,12 @@ void GrblSender::sendReset()
     serial->println(char(24)); // = ctrl-x
 }
 
+void GrblSender::sendProbe()
+{
+    sendSpindelStop();
+    serial->println("G21G91\nG38.2Z-40F100\nG0Z1\nG38.2Z-2F10\nG1Z1F50");
+}
+
 void GrblSender::sendSpindleSpeed(uint8_t percent)
 {
     String motorOnCommand = String("S") + String(percent * 100) + "M3"; // Max: 10.000

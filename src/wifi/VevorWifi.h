@@ -9,11 +9,11 @@
 class VevorWifi
 {
 public:
-    typedef std::function<void(const String&)> OnClientMessageCb;
+    typedef std::function<void(const char *buffer, const size_t size)> OnClientMessageCb;
     VevorWifi(VevorST7735 *tft);
     void startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *screens);
     void onClientMessage(const OnClientMessageCb callback);
-    void sendToClient(const String& message);
+    void sendToClient(const char *buffer, const size_t size);
 
 protected:
     void onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info);

@@ -31,9 +31,9 @@ void GrblController::init(VevorWifi *wifi)
             return true; },
         this->receiver);
 
-    wifi->onClientMessage([this](const String &message)
-                          { serial->print(message); });
+    wifi->onClientMessage([this](const char *buffer, const size_t size)
+                          { serial->write(buffer, size); });
 
-    receiver->onMessageReceived([wifi](const String &message)
-                                { wifi->sendToClient(message); });
+    receiver->onMessageReceived([wifi](const char *buffer, const size_t size)
+                                { wifi->sendToClient(buffer, size); });
 }
