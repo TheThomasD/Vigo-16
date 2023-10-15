@@ -10,14 +10,223 @@
 </head>
 
 <body>
-    <h1>Hello World!</h1>
-    <p>
-         Click <a href="/update">here</a> to upload a new firmware or filesystem!
-    </p>
-    <!--i class="bi-wifi"></i>
-    <button class="btn btn-primary">Hello World!</button-->
+    <main class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-secondary" style="width: 270px; height: 100vh;">
+            <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto">
+                <i class="bi-motherboard me-2 pe-none fs-4"></i>
+                <span class="fs-4">Vevor CNC</span>
+            </div>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto fs-5">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page" id="b-home">
+                        <i class="bi-house"></i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-body-emphasis" id="b-settings">
+                        <i class="bi-toggles"></i>
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-body-emphasis" id="b-files">
+                        <i class="bi-files"></i>
+                        Files
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+
+        <span class="d-flex flex-column p-3 w-100 vh-100" id="d-home">
+            <span class="d-flex flex-row w-100 vh-100 overflow-hidden">
+                <span class="d-flex w-50 flex-column">
+                    <span class="text-body text-center w-100 mb-3 fs-5"><i class="bi-joystick"></i> Control</span>
+                    <span class="d-inline-flex">
+                        <table class="me-3">
+                            <tr>
+                                <td></td>
+                                <td class="text-end">Y+</td>
+                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-up"></i></button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-up"></i></button>
+                                </td>
+                                <td>Z+</td>
+                            </tr>
+                            <tr>
+                                <td class="text-end">X-</td>
+                                <td><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-left"></i></button>
+                                </td>
+                                <td><button class="btn btn-outline-danger border border-2 fs-5"><i
+                                            class="bi-sign-stop-fill"></i></button></td>
+                                <td><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-right"></i></button></td>
+                                <td class="pe-3">X+</td>
+                                <td><button class="btn btn-outline-warning border border-2" data-bs-toggle="button"><i
+                                            class="bi-hurricane"></i></button>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="text-end">Y-</td>
+                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-down"></i></button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                            class="bi-chevron-down"></i></button>
+                                </td>
+                                <td>Z-</td>
+                            </tr>
+                        </table>
+                        <table>
+                            <tr>
+                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                            class="bi-house-check"></i></button></td>
+                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                            class="bi-unlock"></i></button>
+                                </td>
+                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                            class="bi-bootstrap-reboot"></i></button></td>
+                                <td><button class="btn btn-light border border-2 fs-5"
+                                        style="transform: rotate(180deg);"><i class="bi-marker-tip"></i></button></td>
+                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                            class="bi-pause-circle"></i></button></td>
+                            </tr>
+                        </table>
+                    </span>
+                    <span class="mt-3 d-flex flex-row">
+                        <span class="col-2"><i class="bi-dpad"></i> Step Size:</span>
+                        <span class="col-5 ms-1"><input class="align-middle w-100" type="range" name="stepSize"
+                                id="i-stepSize" min=".1" max="100" step="0.1" value="10"
+                                oninput="updateStepSize();"></span>
+                        <span class="col-1 ms-3"><input class="text-end" readonly type="text" size="2"
+                                id="i-stepSize-value"></input></span>
+                        <select class="ms-1" style="width: 17px;" onchange="setStepSize(this.value);">
+                            <option value="0.1">0.1</option>
+                            <option value="0.5">0.5</option>
+                            <option value="1">1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </span>
+                    <span class="mt-3 d-flex flex-row">
+                        <span class="col-2"><i class="bi-speedometer2"></i> Feed Rate:</span>
+                        <span class="col-5 ms-1"><input class="align-middle w-100" type="range" name="feedRate"
+                                id="i-feedRate" min="100" max="2000" step="100" value="1000"
+                                oninput="updateFeedRate();"></span>
+                        <span class="col-1 ms-3"><input class="text-end" readonly type="text" size="2"
+                                id="i-feedRate-value"></input></span>
+                        <select class="ms-1" style="width: 17px;" onchange="setFeedRate(this.value);">
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                            <option value="1500">1500</option>
+                            <option value="2000">2000</option>
+                        </select>
+                    </span>
+                    <span class="mt-3 d-flex flex-row">
+                        <span class="col-2"><i class="bi-disc"></i> Spindle:</span>
+                        <span class="col-5 ms-1"><input class="align-middle w-100" type="range" name="spindleSpeed"
+                                id="i-spindleSpeed" min="0" max="10000" step="100" value="10000"
+                                oninput="updateSpindleSpeed();"></span>
+                        <span class="col-1 ms-3"><input class="text-end" readonly type="text" size="2"
+                                id="i-spindleSpeed-value"></input></span>
+                        <select class="ms-1" style="width: 17px;" onchange="setSpindleSpeed(this.value);">
+                            <option value="0">0</option>
+                            <option value="100">100</option>
+                            <option value="1000">1000</option>
+                            <option value="5000">5000</option>
+                            <option value="10000">10000</option>
+                        </select>
+                    </span>
+                </span>
+                <span class="d-flex flex-grow-1 flex-column">
+                    <span class="text-center fs-5"><i class="bi-terminal"></i> Terminal</span>
+                    <span class="mt-1 d-flex flex-grow-1 overflow-hidden border border-1">
+                        <div class="overflow-y-scroll w-100 pt-2 px-1 font-monospace" id="d-terminal"></div>
+                    </span>
+                    <span>
+                        <span class="d-flex mt-2 flex-row">
+                            <input type="text" class="w-100" name="command" id="i-command">
+                            <button class="ms-1" id="b-send">
+                                <i class="bi-send"></i>
+                            </button>
+                        </span>
+                    </span>
+                </span>
+            </span>
+        </span>
+        <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-settings">
+            <span class="text-body text-center w-100 fs-3"><i class="bi-toggles"></i> Settings</span>
+            <hr>
+            <form class="m-1">
+                <span class="d-flex flex-row mb-1">
+                    <span class="card me-2">
+                        <span class="card-header">
+                            <span class="col fs-5 "><i class="bi-router"></i> Wifi (STA)</span>
+                        </span>
+                        <span class="card-body d-grid">
+                            <span class="row">
+                                <span class="input-group col">
+                                    <span class="input-group-text">SSID</span>
+                                    <input class="form-control" type="text" name="staSsid" id="i-staSsid">
+                                </span>
+                                <span class="input-group col">
+                                    <span class="input-group-text">Password</span>
+                                    <input class="form-control" type="password" name="staPw" id="i-staPw">
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                    <span class="card">
+                        <span class="card-header">
+                            <span class="col fs-5"><i class="bi-wifi"></i> Wifi (AP)</span>
+                        </span>
+                        <span class="card-body d-grid">
+                            <span class="row">
+                                <span class="input-group col">
+                                    <span class="input-group-text">SSID</span>
+                                    <input class="form-control" type="text" name="ap-ssid" id="i-apSsid">
+                                </span>
+                                <span class="input-group col">
+                                    <span class="input-group-text">Password</span>
+                                    <input class="form-control" type="password" name="ap-pw" id="i-apPassword">
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+                <span class="d-flex flex-row-reverse mt-2">
+                    <span>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </span>
+                    <span class="me-2">
+                        <button class="btn btn-secondary">Cancel</button>
+                    </span>
+                </span>
+
+            </form>
+        </span>
+        <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-files">
+            <span class="text-body text-center w-100 fs-3"><i class="bi-files"></i> Files</span>
+            <hr>
+        </span>
+    </main>
 
     <script src="bootstrap.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

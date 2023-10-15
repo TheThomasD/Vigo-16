@@ -33,7 +33,7 @@ void GrblSender::sendReset()
 void GrblSender::sendProbe()
 {
     sendSpindelStop();
-    serial->println("G21G91\nG38.2Z-40F100\nG0Z1\nG38.2Z-2F10\nG1Z1F50");
+    serial->println("G21G91\nG38.2Z-41F100\nG0Z1\nG38.2Z-2F10\nG1Z1.2F50");
 }
 
 void GrblSender::sendSpindleSpeed(uint8_t percent)
