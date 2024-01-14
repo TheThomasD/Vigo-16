@@ -27,7 +27,7 @@ const stopButton = document.getElementById('b-stop');
 var ws = null;
 
 function connect() {
-    ws = new WebSocket("ws://" + /*location.host*/ "vevor-cnc" + "/ws");
+    ws = new WebSocket("ws://" + location.host /*"vevor-cnc"*/ + "/ws");
     ws.onopen = function () {
         console.log(new Date().toISOString(), ": WebSocket open!");
     };
