@@ -119,7 +119,7 @@ function addLineFromInput() {
 function sendCommand(command) {
     addLine(command);
     if (ws && ws.readyState == WebSocket.OPEN)
-        ws.send(command);
+        ws.send(command + "\n");
     else
         addLine("*** Not connected! ***", false);
 }
