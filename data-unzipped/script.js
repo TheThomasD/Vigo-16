@@ -11,7 +11,7 @@ const feedRateValue = document.getElementById('i-feedRate-value');
 const spindleSpeedInput = document.getElementById('i-spindleSpeed');
 const spindleSpeedValue = document.getElementById('i-spindleSpeed-value');
 const resetButton = document.getElementById('b-reset');
-const homeButton = document.getElementById('b-home');
+const homeButton = document.getElementById('b-homing');
 const unlockButton = document.getElementById('b-unlock');
 const probeButton = document.getElementById('b-probe');
 const resumeButton = document.getElementById('b-resume');
@@ -22,6 +22,7 @@ const yBackButton = document.getElementById('b-y-back');
 const zUpButton = document.getElementById('b-z-up');
 const zDownButton = document.getElementById('b-z-down');
 const spindleButton = document.getElementById('b-spindle');
+const stopButton = document.getElementById('b-stop');
 
 var ws = null;
 
@@ -110,6 +111,37 @@ spindleButton.addEventListener('click', function () {
     else
         sendCommand("M5");
 });
+homeButton.addEventListener('click', function () { sendCommand("$H"); });
+unlockButton.addEventListener('click', function () { sendCommand("$X"); });
+resumeButton.addEventListener('click', function () { sendCommand("~"); });
+stopButton.addEventListener('click', function () { sendCommand("!"); });
+xLeftButton.addEventListener('click', function () { sendMovement("X", true); });
+xRightButton.addEventListener('click', function () { sendMovement("X"); });
+yFrontButton.addEventListener('click', function () { sendMovement("Y"); });
+yBackButton.addEventListener('click', function () { sendMovement("Y", true); });
+zUpButton.addEventListener('click', function () { sendMovement("Z"); });
+zDownButton.addEventListener('click', function () { sendMovement("Z", true); });
+probeButton.addEventListener('click', function() {
+    if (confirm("Please ensure that probing is prepared!\n\nStart probing?"))
+        probe();
+});
+
+function probe() {
+    sendCommand("M5G21G91");
+    sendCommand("G38.2Z-41F100");
+    sendCommand("G0Z1");
+    sendCommand("G38.2Z-2F10");
+    sendCommand("G1Z1.2F50");
+}
+
+function sendMovement(axis, negative = false) {
+    axis = axis.toUpperCase();
+    var feedRate = feedRateValue.value;
+    var step = stepSizeValue.value;
+    if (axis == "Z")
+        step = Math.min(step, 10);
+    sendCommand("$J=G91" + axis + (negative ? "-" : "") + step + "F" + feedRate);
+}
 
 function addLineFromInput() {
     sendCommand(commandInput.value);
