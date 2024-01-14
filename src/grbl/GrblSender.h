@@ -24,6 +24,7 @@ public:
     void sendJog(Axis axis, float units, uint16_t feedRate);
     void sendSpindleSpeed(uint8_t percent);
     void sendSpindelStop();
+    void sendGcode(char *code);
 
 protected:
     char getAxisChar(Axis axis);

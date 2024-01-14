@@ -59,6 +59,10 @@ void GrblSender::sendJog(Axis axis, float units, uint16_t feedRate)
     serial->println(jogCommand);
 }
 
+void GrblSender::sendGcode(char *code) {
+    serial->println(code);
+}
+
 char GrblSender::getAxisChar(Axis axis)
 {
     switch (axis)

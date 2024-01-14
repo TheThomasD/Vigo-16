@@ -20,8 +20,8 @@
             <ul class="nav nav-pills flex-column mb-auto fs-5">
                 <li class="nav-item">
                     <a href="#" class="nav-link active" aria-current="page" id="b-home">
-                        <i class="bi-house"></i>
-                        Home
+                        <i class="bi-dpad"></i>
+                        Control
                     </a>
                 </li>
                 <li>
@@ -32,8 +32,14 @@
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis" id="b-files">
-                        <i class="bi-files"></i>
+                        <i class="bi-floppy2-fill"></i>
                         Files
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-body-emphasis" id="b-update">
+                        <i class="bi-cloud-arrow-up"></i>
+                        Update
                     </a>
                 </li>
             </ul>
@@ -43,7 +49,7 @@
         <span class="d-flex flex-column p-3 w-100 vh-100" id="d-home">
             <span class="d-flex flex-row w-100 vh-100 overflow-hidden">
                 <span class="d-flex w-50 flex-column">
-                    <span class="text-body text-center w-100 mb-3 fs-5"><i class="bi-joystick"></i> Control</span>
+                    <span class="text-body text-center w-100 mb-3 fs-5"><i class="bi-dpad"></i> Control</span>
                     <span class="d-inline-flex">
                         <table class="me-3">
                             <tr>
@@ -69,8 +75,8 @@
                                 <td><button class="btn btn-light border border-2"><i
                                             class="bi-chevron-right"></i></button></td>
                                 <td class="pe-3">X+</td>
-                                <td><button class="btn btn-outline-warning border border-2" data-bs-toggle="button"><i
-                                            class="bi-hurricane"></i></button>
+                                <td><button class="btn btn-outline-warning border border-2" data-bs-toggle="button"
+                                        title="Spindle"><i class="bi-hurricane"></i></button>
                                 </td>
                                 <td></td>
                             </tr>
@@ -90,16 +96,17 @@
                         </table>
                         <table>
                             <tr>
-                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="home"><i
                                             class="bi-house-check"></i></button></td>
-                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="unlock"><i
                                             class="bi-unlock"></i></button>
                                 </td>
-                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="reset"><i
                                             class="bi-bootstrap-reboot"></i></button></td>
                                 <td><button class="btn btn-light border border-2 fs-5"
-                                        style="transform: rotate(180deg);"><i class="bi-marker-tip"></i></button></td>
-                                <td><button class="btn btn-light border border-2 fs-5"><i
+                                        style="transform: rotate(180deg);" title="probe"><i
+                                            class="bi-marker-tip"></i></button></td>
+                                <td><button class="btn btn-light border border-2 fs-5" title="pause"><i
                                             class="bi-pause-circle"></i></button></td>
                             </tr>
                         </table>
@@ -220,8 +227,13 @@
             </form>
         </span>
         <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-files">
-            <span class="text-body text-center w-100 fs-3"><i class="bi-files"></i> Files</span>
+            <span class="text-body text-center w-100 fs-3"><i class="bi-floppy2-fill"></i> Files</span>
             <hr>
+        </span>
+        <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-update">
+            <span class="text-body text-center w-100 fs-3"><i class="bi-cloud-arrow-up"></i> Update</span>
+            <hr>
+            <iframe class="w-100 vh-100" src="/update"></iframe>
         </span>
     </main>
 

@@ -1,10 +1,9 @@
 #include "VevorServer.h"
 #include <SPIFFS.h>
-#include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
 #include "../log/Logger.h"
 
-void VevorServer::init(AsyncWebServer *server)
+void VevorServer::init(AsyncWebServer *server, AsyncWebSocket *webSocket, WebSocketHandler *handler)
 {
     if (SPIFFS.begin(true))
         log_println("SPIFFS mounted.");
@@ -18,6 +17,10 @@ void VevorServer::init(AsyncWebServer *server)
                { request->redirect("/index.html"); });
 
     server->serveStatic("/", SPIFFS, "/");
+
+    webSocket->onEvent([handler](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
+                       { handler->onEvent(server, client, type, arg, data, len); });
+    server->addHandler(webSocket);
 
     AsyncElegantOTA.begin(server);
 

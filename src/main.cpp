@@ -6,6 +6,7 @@
 #include <ESPAsyncWebServer.h>
 #include "log/Logger.h"
 #include <server/VevorServer.h>
+#include <server/WebSocketHandler.h>
 #include <arduino-timer.h>
 #include <screens/VevorScreens.h>
 #include <buttons/VevorButtons.h>
@@ -21,7 +22,10 @@ VevorButtons buttons = VevorButtons(&timer);
 VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, grbl.getSender(), grbl.getReceiver());
 
 AsyncWebServer webServer(80);
+AsyncWebSocket webSocket("/ws");
+
 VevorServer server;
+WebSocketHandler webSocketHandler;
 
 void setup(void)
 {
@@ -50,8 +54,10 @@ void setup(void)
   log_println("Init GRBL serial...");
   grbl.init(&wifi);
 
+  webSocketHandler.init(&grbl);
+
   log_println("Starting web server...");
-  server.init(&webServer);
+  server.init(&webServer, &webSocket, &webSocketHandler);
 
   log_println("Initialization done!");
 
