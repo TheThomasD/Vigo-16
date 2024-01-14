@@ -55,40 +55,40 @@
                             <tr>
                                 <td></td>
                                 <td class="text-end">Y+</td>
-                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                <td class="text-center"><button class="btn btn-light border border-2" id="b-y-front"><i
                                             class="bi-chevron-up"></i></button>
                                 </td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                <td class="text-center"><button class="btn btn-light border border-2" id="b-z-up"><i
                                             class="bi-chevron-up"></i></button>
                                 </td>
                                 <td>Z+</td>
                             </tr>
                             <tr>
                                 <td class="text-end">X-</td>
-                                <td><button class="btn btn-light border border-2"><i
+                                <td><button class="btn btn-light border border-2" id="b-x-left"><i
                                             class="bi-chevron-left"></i></button>
                                 </td>
-                                <td><button class="btn btn-outline-danger border border-2 fs-5"><i
-                                            class="bi-sign-stop-fill"></i></button></td>
-                                <td><button class="btn btn-light border border-2"><i
+                                <td><button class="btn btn-outline-danger border border-2 fs-5" id="b-stop"
+                                        title="stop!"><i class="bi-sign-stop-fill"></i></button></td>
+                                <td><button class="btn btn-light border border-2" id="b-x-right"><i
                                             class="bi-chevron-right"></i></button></td>
                                 <td class="pe-3">X+</td>
                                 <td><button class="btn btn-outline-warning border border-2" data-bs-toggle="button"
-                                        title="Spindle"><i class="bi-hurricane"></i></button>
+                                        title="Spindle" id="b-spindle" aria-pressed="false"><i class="bi-hurricane"></i></button>
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td class="text-end">Y-</td>
-                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                <td class="text-center"><button class="btn btn-light border border-2" id="b-y-back"><i
                                             class="bi-chevron-down"></i></button>
                                 </td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-center"><button class="btn btn-light border border-2"><i
+                                <td class="text-center"><button class="btn btn-light border border-2" id="b-z-down"><i
                                             class="bi-chevron-down"></i></button>
                                 </td>
                                 <td>Z-</td>
@@ -96,23 +96,23 @@
                         </table>
                         <table>
                             <tr>
-                                <td><button class="btn btn-light border border-2 fs-5" title="home"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="home" id="b-home"><i
                                             class="bi-house-check"></i></button></td>
-                                <td><button class="btn btn-light border border-2 fs-5" title="unlock"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="unlock" id="b-unlock"><i
                                             class="bi-unlock"></i></button>
                                 </td>
-                                <td><button class="btn btn-light border border-2 fs-5" title="reset"><i
+                                <td><button class="btn btn-light border border-2 fs-5" title="reset" id="b-reset"><i
                                             class="bi-bootstrap-reboot"></i></button></td>
                                 <td><button class="btn btn-light border border-2 fs-5"
-                                        style="transform: rotate(180deg);" title="probe"><i
+                                        style="transform: rotate(180deg);" title="probe" id="b-probe"><i
                                             class="bi-marker-tip"></i></button></td>
-                                <td><button class="btn btn-light border border-2 fs-5" title="pause"><i
-                                            class="bi-pause-circle"></i></button></td>
+                                <td><button class="btn btn-light border border-2 fs-5" title="resume" id="b-resume"><i
+                                            class="bi-play-circle"></i></button></td>
                             </tr>
                         </table>
                     </span>
                     <span class="mt-3 d-flex flex-row">
-                        <span class="col-2"><i class="bi-dpad"></i> Step Size:</span>
+                        <span class="col-2"><i class="bi-rulers"></i> Step Size:</span>
                         <span class="col-5 ms-1"><input class="align-middle w-100" type="range" name="stepSize"
                                 id="i-stepSize" min=".1" max="100" step="0.1" value="10"
                                 oninput="updateStepSize();"></span>
@@ -143,10 +143,10 @@
                             <option value="2000">2000</option>
                         </select>
                     </span>
-                    <span class="mt-3 d-flex flex-row">
+                    <span class="mt-3 w-100 d-flex flex-row">
                         <span class="col-2"><i class="bi-disc"></i> Spindle:</span>
                         <span class="col-5 ms-1"><input class="align-middle w-100" type="range" name="spindleSpeed"
-                                id="i-spindleSpeed" min="0" max="10000" step="100" value="10000"
+                                id="i-spindleSpeed" min="0" max="10000" step="100" value="1000"
                                 oninput="updateSpindleSpeed();"></span>
                         <span class="col-1 ms-3"><input class="text-end" readonly type="text" size="2"
                                 id="i-spindleSpeed-value"></input></span>
@@ -157,6 +157,10 @@
                             <option value="5000">5000</option>
                             <option value="10000">10000</option>
                         </select>
+                    </span>
+                    <span class="mt-3 w-100 d-flex flex-row">
+                        <span>Status:&nbsp</span>
+                        <i id="o-status">???</i>
                     </span>
                 </span>
                 <span class="d-flex flex-grow-1 flex-column">
@@ -169,6 +173,9 @@
                             <input type="text" class="w-100" name="command" id="i-command">
                             <button class="ms-1" id="b-send">
                                 <i class="bi-send"></i>
+                            </button>
+                            <button class="ms-1" id="b-clear">
+                                <i class="bi-terminal-x"></i>
                             </button>
                         </span>
                     </span>
@@ -233,7 +240,7 @@
         <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-update">
             <span class="text-body text-center w-100 fs-3"><i class="bi-cloud-arrow-up"></i> Update</span>
             <hr>
-            <iframe class="w-100 vh-100" src="/update"></iframe>
+            <iframe class="w-100 vh-100" src="http://vevor-cnc/update"></iframe>
         </span>
     </main>
 

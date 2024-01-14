@@ -54,6 +54,8 @@ void GrblReceiver::processLine()
         messageCallback(readBuffer, currentIndex);
 
     messageLine = String(readBuffer);
+    if (webSocket->count() > 0)
+        webSocket->textAll(messageLine);
 #ifdef DEBUG
     log_println("Received: " + messageLine);
 #endif

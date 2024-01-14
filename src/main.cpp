@@ -12,17 +12,18 @@
 #include <buttons/VevorButtons.h>
 #include <grbl/GrblController.h>
 
+AsyncWebServer webServer(80);
+AsyncWebSocket webSocket("/ws");
+
 VevorSpeaker speaker = VevorSpeaker();
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
 Timer<> timer = timer_create_default();
-GrblController grbl = GrblController(&Serial1, &config, &tft, &timer);
+GrblController grbl = GrblController(&Serial1, &config, &tft, &timer, &webSocket);
 VevorButtons buttons = VevorButtons(&timer);
 VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, grbl.getSender(), grbl.getReceiver());
 
-AsyncWebServer webServer(80);
-AsyncWebSocket webSocket("/ws");
 
 VevorServer server;
 WebSocketHandler webSocketHandler;
@@ -54,7 +55,7 @@ void setup(void)
   log_println("Init GRBL serial...");
   grbl.init(&wifi);
 
-  webSocketHandler.init(&grbl);
+  webSocketHandler.init(grbl.getSender());
 
   log_println("Starting web server...");
   server.init(&webServer, &webSocket, &webSocketHandler);

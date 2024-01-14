@@ -1,6 +1,6 @@
 #pragma once
 #include <ESPAsyncWebServer.h>
-#include "../grbl/GrblController.h"
+#include "../grbl/GrblSender.h"
 
 class WebSocketHandler {
     public:

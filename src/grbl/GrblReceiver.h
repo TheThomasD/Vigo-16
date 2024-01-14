@@ -1,6 +1,7 @@
 #pragma once
 
 #include <WString.h>
+#include <ESPAsyncWebServer.h>
 #include "../tft/VevorST7735.h"
 #include "parser/GrblStatusParser.h"
 #include "GrblSender.h"
@@ -24,11 +25,12 @@ public:
     };
     typedef std::function<void(GrblAlarm)> OnAlarmReceivedCb;
 
-    GrblReceiver(HardwareSerial *serial, GrblSender *sender, VevorST7735 *tft)
+    GrblReceiver(HardwareSerial *serial, GrblSender *sender, VevorST7735 *tft, AsyncWebSocket *webSocket)
     {
         this->serial = serial;
         this->sender = sender;
         this->tft = tft;
+        this->webSocket = webSocket;
     };
     void processReceivedData();
     void checkConnection();
@@ -61,6 +63,7 @@ private:
     HardwareSerial *serial;
     VevorST7735 *tft;
     GrblSender *sender;
+    AsyncWebSocket *webSocket;
 
     GrblStatusParser statusParser;
 

@@ -2,29 +2,45 @@ const entries = ['home', 'settings', 'files', 'update'];
 const terminal = document.getElementById('d-terminal');
 const commandInput = document.getElementById('i-command');
 const sendButton = document.getElementById('b-send');
+const clearButton = document.getElementById('b-clear');
+const statusLine = document.getElementById('o-status');
 const stepSizeInput = document.getElementById('i-stepSize');
 const stepSizeValue = document.getElementById('i-stepSize-value');
 const feedRateInput = document.getElementById('i-feedRate');
 const feedRateValue = document.getElementById('i-feedRate-value');
 const spindleSpeedInput = document.getElementById('i-spindleSpeed');
 const spindleSpeedValue = document.getElementById('i-spindleSpeed-value');
+const resetButton = document.getElementById('b-reset');
+const homeButton = document.getElementById('b-home');
+const unlockButton = document.getElementById('b-unlock');
+const probeButton = document.getElementById('b-probe');
+const resumeButton = document.getElementById('b-resume');
+const xLeftButton = document.getElementById('b-x-left');
+const xRightButton = document.getElementById('b-x-right');
+const yFrontButton = document.getElementById('b-y-front');
+const yBackButton = document.getElementById('b-y-back');
+const zUpButton = document.getElementById('b-z-up');
+const zDownButton = document.getElementById('b-z-down');
+const spindleButton = document.getElementById('b-spindle');
 
 var ws = null;
 
 function connect() {
     ws = new WebSocket("ws://" + /*location.host*/ "vevor-cnc" + "/ws");
     ws.onopen = function () {
-        console.log("WebSocket ist mit dem " + ws.protocol + " Protokoll geöffnet");
-        ws.send("Hello Server!");
+        console.log(new Date().toISOString(), ": WebSocket open!");
     };
 
     ws.onmessage = function (e) {
-        console.log('Message received:', e.data);
-        addLine(e.data, false);
+        //console.log('Message received:', e.data);
+        if (e.data[0] != '<')
+            addLine(escapeHtml(e.data), false);
+        else
+            statusLine.innerHTML = escapeHtml(e.data);
     };
 
     ws.onclose = function (e) {
-        console.log("WebSocket wurde geschlossen");
+        console.log(new Date().toISOString(), ": WebSocket closed!");
         setTimeout(function () {
             connect();
         }, 1000);
@@ -58,14 +74,26 @@ function setFeedRate(value) {
     updateFeedRate();
 }
 
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+const debouncedSpindleUpdate = debounce((value) => setSpindleSpeed(value), 700);
+
 function updateSpindleSpeed() {
     spindleSpeedValue.value = spindleSpeedInput.value;
+    debouncedSpindleUpdate(spindleSpeedValue.value);
 }
-updateSpindleSpeed();
+spindleSpeedValue.value = spindleSpeedInput.value;
 
 function setSpindleSpeed(value) {
     spindleSpeedInput.value = value;
-    updateSpindleSpeed();
+    spindleSpeedValue.value = value;
+    sendCommand("S" + spindleSpeedValue.value);
 }
 
 commandInput.addEventListener('keydown', function (event) {
@@ -74,14 +102,26 @@ commandInput.addEventListener('keydown', function (event) {
 });
 
 sendButton.addEventListener('click', addLineFromInput);
+clearButton.addEventListener('click', function () { terminal.innerHTML = ""; });
+resetButton.addEventListener('click', function () { sendCommand(String.fromCharCode(24) + " ;(Reset)"); });
+spindleButton.addEventListener('click', function () {
+    if (spindleButton.getAttribute('aria-pressed') == "true")
+        sendCommand("S" + spindleSpeedValue.value + "M3");
+    else
+        sendCommand("M5");
+});
 
 function addLineFromInput() {
-    addLine(commandInput.value);
+    sendCommand(commandInput.value);
+    commandInput.value = "";
+}
+
+function sendCommand(command) {
+    addLine(command);
     if (ws && ws.readyState == WebSocket.OPEN)
-        ws.send(commandInput.value);
+        ws.send(command);
     else
         addLine("*** Not connected! ***", false);
-    commandInput.value = "";
 }
 
 entries.forEach(entry => {
@@ -107,4 +147,8 @@ function addLine(line, isSent = true) {
         terminal.innerHTML += line + '<br>';
         terminal.scrollTop = terminal.scrollHeight; // scroll to bottom
     }
+}
+
+const escapeHtml = (unsafe) => {
+    return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }

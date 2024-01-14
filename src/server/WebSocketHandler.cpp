@@ -12,7 +12,7 @@ void WebSocketHandler::onEvent(AsyncWebSocket *server, AsyncWebSocketClient *cli
     {
     case WS_EVT_CONNECT:
         log_println("WS client connected...");
-        client->text("Connected!");
+        client->text("Connection successful!");
         break;
     case WS_EVT_DISCONNECT:
         log_println("WS client disconnected...");
@@ -24,7 +24,7 @@ void WebSocketHandler::onEvent(AsyncWebSocket *server, AsyncWebSocketClient *cli
         log_print("WS received data: ");
         data[len] = 0;
         log_println((char *) data);
-        client->text((char *) data);
+        grblSender->sendGcode((char *) data);
         break;
     case WS_EVT_PONG:
         log_println("WS received pong...");
