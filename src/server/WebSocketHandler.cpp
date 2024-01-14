@@ -11,23 +11,33 @@ void WebSocketHandler::onEvent(AsyncWebSocket *server, AsyncWebSocketClient *cli
     switch (type)
     {
     case WS_EVT_CONNECT:
+#ifdef DEBUG
         log_println("WS client connected...");
+#endif
         client->text("Connection successful!");
         break;
     case WS_EVT_DISCONNECT:
+#ifdef DEBUG
         log_println("WS client disconnected...");
+#endif
         break;
     case WS_EVT_ERROR:
+#ifdef DEBUG
         log_println("WS client error...");
+#endif
         break;
     case WS_EVT_DATA:
+#ifdef DEBUG
         log_print("WS received data: ");
+#endif
         data[len] = 0;
-        log_println((char *) data);
-        grblSender->sendGcode((char *) data);
+        log_println((char *)data);
+        grblSender->sendGcode((char *)data);
         break;
     case WS_EVT_PONG:
+#ifdef DEBUG
         log_println("WS received pong...");
+#endif
         break;
 
     default:

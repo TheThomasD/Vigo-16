@@ -1,5 +1,31 @@
+#include "SdCard.h"
 #include <Arduino.h>
 #include <SD.h>
+#include "../log/Logger.h"
+
+void SdCard::mount()
+{
+  if (SD.begin())
+    mounted = true;
+  else
+    log_println("Could not mount SD card!");
+}
+
+void SdCard::unmount()
+{
+  SD.end();
+  mounted = false;
+}
+
+uint64_t SdCard::getTotalSpaceMB()
+{
+  return SD.totalBytes() / 1024 / 1024;
+}
+
+uint64_t SdCard::getUsedSpaceMB()
+{
+  return SD.usedBytes() / 1024 / 1024;
+}
 
 void printDirectory(File dir, int numTabs)
 {
@@ -72,4 +98,6 @@ void testSD()
 
   File dir = SD.open("/");
   printDirectory(dir, 0);
+
+  SD.end();
 }
