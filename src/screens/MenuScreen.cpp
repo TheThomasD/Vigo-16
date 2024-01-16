@@ -19,8 +19,8 @@ void MenuScreen::selectEntry()
     case Control:
         switchScreenCb(AScreen::Control);
         break;
-    case File:
-        switchScreenCb(AScreen::File);
+    case Files:
+        switchScreenCb(AScreen::Files);
         break;
     case Settings:
         switchScreenCb(AScreen::Settings);
@@ -39,7 +39,7 @@ void MenuScreen::redraw()
     tft->setTitle("Menu");
 
     createMenuItem(25, "Control", selectedEntry == Control);
-    createMenuItem(50, "File", selectedEntry == File);
+    createMenuItem(50, "Files", selectedEntry == Files);
     createMenuItem(75, "Settings", selectedEntry == Settings);
     createMenuItem(100, "Info", selectedEntry == Info);
 }

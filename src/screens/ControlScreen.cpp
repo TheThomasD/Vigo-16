@@ -7,7 +7,6 @@
 
 void ControlScreen::showHook()
 {
-    tft->clear();
     currentMode = Move;
     redraw(true, currentMode, true);
 

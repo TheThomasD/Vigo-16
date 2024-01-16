@@ -14,7 +14,7 @@ public:
     {
         Menu,
         Control,
-        File,
+        Files,
         Settings,
         Info
     };

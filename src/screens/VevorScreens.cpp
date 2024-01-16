@@ -11,6 +11,7 @@ VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *butto
     menuScreen = new MenuScreen(tft, timer, buttons, config, func);
     infoScreen = new InfoScreen(tft, timer, buttons, config, func);
     settingsScreen = new SettingsScreen(tft, timer, buttons, config, func);
+    filesScreen = new FilesScreen(tft, timer, buttons, config, func);
 }
 
 void VevorScreens::switchScreen(AScreen::Screen screen)
@@ -23,8 +24,8 @@ void VevorScreens::switchScreen(AScreen::Screen screen)
     case AScreen::Screen::Control:
         switchToScreen(controlScreen);
         break;
-    case AScreen::Screen::File:
-        /* code */
+    case AScreen::Screen::Files:
+        switchToScreen(filesScreen);
         break;
     case AScreen::Screen::Settings:
         switchToScreen(settingsScreen);

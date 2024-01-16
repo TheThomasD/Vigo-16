@@ -16,7 +16,7 @@ protected:
     enum MenuEntry
     {
         Control,
-        File,
+        Files,
         Settings,
         Info
     };
