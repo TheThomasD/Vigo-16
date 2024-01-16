@@ -16,7 +16,8 @@ public:
         Control,
         Files,
         Settings,
-        Info
+        Info,
+        Run
     };
 
     typedef std::function<void(Screen)> SwitchScreenCb;

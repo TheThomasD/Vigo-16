@@ -29,7 +29,8 @@ void FilesScreen::showHook()
                               currentPathPosition = 0;
                               showFiles();
                           } else if (String(currentFile.name()).endsWith(".nc")) {
-                            // TODO: start
+                            setFileToRunCb(currentFile);
+                            switchScreenCb(AScreen::Run);
                           } });
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
                       {

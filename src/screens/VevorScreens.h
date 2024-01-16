@@ -7,6 +7,7 @@
 #include "InfoScreen.h"
 #include "SettingsScreen.h"
 #include "FilesScreen.h"
+#include "RunScreen.h"
 #include <arduino-timer.h>
 #include "../config/VevorConfig.h"
 #include "../grbl/GrblSender.h"
@@ -30,6 +31,7 @@ private:
     InfoScreen *infoScreen;
     SettingsScreen *settingsScreen;
     FilesScreen *filesScreen;
+    RunScreen *runScreen;
     AScreen *currentScreen;
     Timer<> *timer;
 };
