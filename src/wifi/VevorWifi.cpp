@@ -80,7 +80,6 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
     }
 
     server = new WiFiServer(config->getTcpPort());
-    server->setTimeout(1);
     server->begin();
     server->setNoDelay(true);
 
@@ -118,7 +117,7 @@ void VevorWifi::onClientMessage(const OnClientMessageCb callback)
 
 void VevorWifi::sendToClient(const int byte)
 {
-    if (client && client.connected() && client.availableForWrite()) {
+    if (client && client.connected()) {
         client.write(byte);
     }
 }
