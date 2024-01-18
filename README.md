@@ -380,7 +380,7 @@ I want to use Bootstrap 5 for my web pages, so I downloaded the required CSS fil
 ... but I managed to implement some stuff and I was also able to improve performance a little bit (including by using the two cores of the ESP32 more effectively for the UI and the buttons). Printing via network seems flawlessly possible right now (I use Candle with the Tibbo remote serial software), control via web UI works as well and printing a file from the SD card is also possible. Nevertheless, there are still some things that I might want to implement in the future (most likely with this priority):
 
 1. Files in the Web UI (show files, start file, upload/download/delete files)
-2. Implement overrides (feed, rapid, spindle) via display
+2. Implement overrides (feed, rapid, spindle) via display (see [here](https://github.com/gnea/grbl/blob/master/doc/markdown/commands.md#extended-ascii-realtime-command-descriptions))
 3. Make file printing better (nicer UI, easier usage and maybe react to GRBL replies?)
 4. Implement Web UI settings
 
