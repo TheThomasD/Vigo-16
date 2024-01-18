@@ -375,6 +375,14 @@ Success! After some changes I am now able to quickly upload an OTA update. Howev
 
 I want to use Bootstrap 5 for my web pages, so I downloaded the required CSS files etc. I read [here](https://github.com/me-no-dev/ESPAsyncWebServer/issues/556) that the ESPAsyncWebServer is already capable of serving gzipped files. Hence, I zipped the files I want to serve and I created a `data-unzipped` folder for the files that I will use during web development. In addition to that, I added a `pre` python script that zips the `index.html` automatically whenever a new SPIFFS files is built. Additional files can easily be added, if needed. I got the ideas from [here](https://docs.platformio.org/en/latest/scripting/actions.html) and [here](https://docs.python.org/3/library/gzip.html#examples-of-usage).
 
+## It has been some days...
+
+... but I managed to implement some stuff and I was also able to improve performance a little bit (including by using the two cores of the ESP32 more effectively for the UI and the buttons). Printing via network seems flawlessly possible right now (I use Candle with the Tibbo remote serial software), control via web UI works as well and printing a file from the SD card is also possible. Nevertheless, there are still some things that I might want to implement in the future (most likely with this priority):
+
+1. Files in the Web UI (show files, start file, upload/download/delete files)
+2. Implement overrides (feed, rapid, spindle) via display
+3. Make file printing better (nicer UI, easier usage and maybe react to GRBL replies?)
+4. Implement Web UI settings
 
 ## Later
 
