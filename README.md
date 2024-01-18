@@ -390,9 +390,10 @@ I want to use Bootstrap 5 for my web pages, so I downloaded the required CSS fil
 * ~~[OTA updates](https://randomnerdtutorials.com/esp32-over-the-air-ota-programming/) and [AsyncElegantOTA](https://randomnerdtutorials.com/esp32-ota-over-the-air-arduino/)~~
 * ~~[Preferences](https://randomnerdtutorials.com/esp32-save-data-permanently-preferences/)~~
 * [GRBL quick reference](https://www.sainsmart.com/blogs/news/grbl-v1-1-quick-reference) and [GRBL command documentation](https://github.com/gnea/grbl/tree/master/doc/markdown)
-* [Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) and [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)
-* [onReceive for Serial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Serial/OnReceive_Demo/OnReceive_Demo.ino)
+* ~~[Websockets](https://randomnerdtutorials.com/esp32-websocket-server-arduino/) and [here as well](https://github.com/me-no-dev/ESPAsyncWebServer#async-websocket-plugin)~~
+*~~[onReceive for Serial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Serial/OnReceive_Demo/OnReceive_Demo.ino)~~
 * [RGB565 Color Picker](https://barth-dev.de/online/rgb565-color-picker/)
 * [Pixel editor](https://apps.lospec.com/pixel-editor) (good for figuring out how to draw something)
 * [Online Arduino ESP32 simulator](https://wokwi.com/projects/new/esp32) (unfortunately, very slow when working with a display, but still allows to try some things...)
-* [Bootstrap icons](https://icons.getbootstrap.com/#icons)
+* ~~[Bootstrap icons](https://icons.getbootstrap.com/#icons)~~
+* [File Upload](https://github.com/smford/esp32-asyncwebserver-fileupload-example/blob/master/example-02/example-02.ino)
