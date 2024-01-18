@@ -11,7 +11,7 @@ VevorScreens::VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *butto
     menuScreen = new MenuScreen(tft, timer, buttons, config, func);
     infoScreen = new InfoScreen(tft, timer, buttons, config, func);
     settingsScreen = new SettingsScreen(tft, timer, buttons, config, func);
-    runScreen = new RunScreen(tft, timer, buttons, config, func);
+    runScreen = new RunScreen(tft, timer, buttons, config, func, sender);
     SetFileToRunCb setFileToRunCb = [this](File fileToRun)
     { runScreen->setFile(fileToRun); };
     filesScreen = new FilesScreen(tft, timer, buttons, config, func, setFileToRunCb);

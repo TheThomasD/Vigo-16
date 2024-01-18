@@ -4,9 +4,13 @@
 void RunScreen::showHook()
 {
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
-                      { switchScreenCb(AScreen::Files); });
+                      {
+                          sender->sendSpindelStop();
+                          switchScreenCb(AScreen::Files); });
     buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
-                      { run(); });
+                      {
+                          run(); //
+                      });
 
     tft->setTitle("Run");
 
@@ -54,7 +58,7 @@ void RunScreen::run()
             return ((RunScreen *)runScreen)->running; },
             this);
         timer->every(
-            100, [](void *runScreen)
+            5, [](void *runScreen)
             { return ((RunScreen *)runScreen)->processNextBytes(); },
             this);
     }
@@ -62,10 +66,11 @@ void RunScreen::run()
 
 boolean RunScreen::processNextBytes()
 {
-#define BUFFER_SIZE 50
-    static char buffer[BUFFER_SIZE];
-    size_t read = fileToRun.readBytes(&buffer[0], BUFFER_SIZE);
-    processedBytes += read;
+    if (fileToRun.available())
+    {
+        sender->sendByte(fileToRun.read());
+        processedBytes++;
+    }
     running = fileToRun.available() > 0 && isActive();
     return running;
 }

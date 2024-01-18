@@ -64,6 +64,13 @@ void GrblSender::sendGcode(char *code)
     serial->print(code);
 }
 
+void GrblSender::sendByte(const int byte)
+{
+    while (serial->availableForWrite() == 0)
+        delay(1);
+    serial->write(byte);
+}
+
 char GrblSender::getAxisChar(Axis axis)
 {
     switch (axis)

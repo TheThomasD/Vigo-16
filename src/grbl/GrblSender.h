@@ -25,6 +25,7 @@ public:
     void sendSpindleSpeed(uint8_t percent);
     void sendSpindelStop();
     void sendGcode(char *code);
+    void sendByte(const int byte);
 
 protected:
     char getAxisChar(Axis axis);

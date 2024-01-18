@@ -5,33 +5,41 @@
 void FilesScreen::showHook()
 {
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::LongPress, [this]()
-                      { switchScreenCb(AScreen::Menu); });
+                      {
+                          switchScreenCb(AScreen::Menu); //
+                      });
     buttons->onButton(VevorButtons::BT_BUTTON_Y_UP, VevorButtons::Press, [this]()
                       {
                           if (currentPathPosition > 0)
                           {
                               currentPathPosition--;
                               showFiles();
-                          } });
+                          } //
+                      });
     buttons->onButton(VevorButtons::BT_BUTTON_Y_DOWN, VevorButtons::Press, [this]()
                       {
                           if (currentPathPosition < sdCard->getNumberOfFiles(currentPath) - 1)
                           {
                               currentPathPosition++;
                               showFiles();
-                          } });
+                          } //
+                      });
     buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
                       {
+                          String fileName = String(currentFile.name());
                           if (currentFile.isDirectory())
                           {
                               currentPath = currentFile;
                               currentFile = File();
                               currentPathPosition = 0;
                               showFiles();
-                          } else if (String(currentFile.name()).endsWith(".nc")) {
-                            setFileToRunCb(currentFile);
-                            switchScreenCb(AScreen::Run);
-                          } });
+                          }
+                          else if (fileName.endsWith(".nc") || fileName.endsWith(".ngc"))
+                          {
+                              setFileToRunCb(currentFile);
+                              switchScreenCb(AScreen::Run);
+                          } //
+                      });
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
                       {
                           String path = currentPath.path();
@@ -43,7 +51,8 @@ void FilesScreen::showHook()
                               if (!currentPath)
                                   currentPath = sdCard->getRoot();
                               showFiles();
-                          } });
+                          } //
+                      });
 
     tft->setTitle("Files");
 
