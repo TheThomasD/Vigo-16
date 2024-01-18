@@ -19,14 +19,16 @@ VevorSpeaker speaker = VevorSpeaker();
 VevorST7735 tft = VevorST7735();
 VevorConfig config = VevorConfig();
 VevorWifi wifi = VevorWifi(&tft);
-Timer<> timer = timer_create_default();
-GrblController grbl = GrblController(&Serial1, &config, &tft, &timer, &webSocket);
-VevorButtons buttons = VevorButtons(&timer);
-VevorScreens screens = VevorScreens(&tft, &timer, &buttons, &config, grbl.getSender(), grbl.getReceiver());
-
-
+TaskHandle_t task_CPU0;
+Timer<> timer_CPU0 = timer_create_default();
+Timer<> timer_CPU1 = timer_create_default();
+GrblController grbl = GrblController(&Serial1, &config, &tft, &timer_CPU1, &webSocket);
+VevorButtons buttons = VevorButtons(&timer_CPU0);
+VevorScreens screens = VevorScreens(&tft, &timer_CPU0, &buttons, &config, grbl.getSender(), grbl.getReceiver());
 VevorServer server;
 WebSocketHandler webSocketHandler;
+
+void timerTask_CPU0(void * parameter);
 
 void setup(void)
 {
@@ -50,7 +52,7 @@ void setup(void)
   screens.showBootScreen();
 
   log_println("Starting WiFi...");
-  wifi.startWifi(&config, &timer, &screens);
+  wifi.startWifi(&config, &timer_CPU1, &screens);
 
   log_println("Init GRBL serial...");
   grbl.init(&wifi);
@@ -62,15 +64,34 @@ void setup(void)
 
   log_println("Initialization done!");
 
-  timer.in(
+  timer_CPU0.in(
       3000, [](void *screens)
       {
     ((VevorScreens *) screens)->showMenuScreen();
     return false; },
       &screens);
+
+  xTaskCreatePinnedToCore(
+      timerTask_CPU0, // Function to implement the task
+      "task1",        // Name of the task
+      4000,           // Stack size in words
+      NULL,           // Task input parameter
+      0,             // Priority of the task (lower = lower prio)
+      &task_CPU0,           // Task handle. (can stop the task)
+      0               // Core where the task should run
+  );
+  //vTaskDelete(task_CPU0); // delete the task created above
+}
+
+void timerTask_CPU0(void * parameter)
+{
+  while (true) {
+    timer_CPU0.tick();
+    delay(10);
+  }
 }
 
 void loop()
 {
-  timer.tick();
+  timer_CPU1.tick();
 }

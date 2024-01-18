@@ -80,6 +80,7 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
     }
 
     server = new WiFiServer(config->getTcpPort());
+    server->setTimeout(1);
     server->begin();
     server->setNoDelay(true);
 
@@ -101,14 +102,12 @@ void VevorWifi::handleWiFiServer()
         if (client)
             client.stop(); // disconnect existing client
         client = server->available();
+        client.setTimeout(1);
     }
     if (clientMessageCb && client && client.connected() && client.available())
     {
         while (client.available())
-        {
-            size_t read = client.readBytes(messageBuffer, 128);
-            clientMessageCb(messageBuffer, read);
-        }
+            clientMessageCb(client.read());
     }
 }
 
@@ -117,11 +116,10 @@ void VevorWifi::onClientMessage(const OnClientMessageCb callback)
     clientMessageCb = callback;
 }
 
-void VevorWifi::sendToClient(const char *buffer, const size_t size)
+void VevorWifi::sendToClient(const int byte)
 {
-    if (client && client.connected()) {
-        client.write(buffer, size);
-        client.println();
+    if (client && client.connected() && client.availableForWrite()) {
+        client.write(byte);
     }
 }
 

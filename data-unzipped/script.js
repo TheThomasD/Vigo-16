@@ -4,6 +4,7 @@ const commandInput = document.getElementById('i-command');
 const sendButton = document.getElementById('b-send');
 const clearButton = document.getElementById('b-clear');
 const statusLine = document.getElementById('o-status');
+const parserLine = document.getElementById('o-parser');
 const stepSizeInput = document.getElementById('i-stepSize');
 const stepSizeValue = document.getElementById('i-stepSize-value');
 const feedRateInput = document.getElementById('i-feedRate');
@@ -34,10 +35,12 @@ function connect() {
 
     ws.onmessage = function (e) {
         //console.log('Message received:', e.data);
-        if (e.data[0] != '<')
-            addLine(escapeHtml(e.data), false);
-        else
+        if (e.data[0] == '<')
             statusLine.innerHTML = escapeHtml(e.data);
+        else if (e.data.startsWith("[GC:"))
+            parserLine.innerHTML = escapeHtml(e.data);
+        else
+            addLine(escapeHtml(e.data), false);
     };
 
     ws.onclose = function (e) {
@@ -121,7 +124,7 @@ yFrontButton.addEventListener('click', function () { sendMovement("Y"); });
 yBackButton.addEventListener('click', function () { sendMovement("Y", true); });
 zUpButton.addEventListener('click', function () { sendMovement("Z"); });
 zDownButton.addEventListener('click', function () { sendMovement("Z", true); });
-probeButton.addEventListener('click', function() {
+probeButton.addEventListener('click', function () {
     if (confirm("Please ensure that probing is prepared!\n\nStart probing?"))
         probe();
 });

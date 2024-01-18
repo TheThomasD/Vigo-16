@@ -29,6 +29,8 @@ void GrblReceiver::readData()
     while (serial->available() && !foundNewLine)
     {
         readBuffer[currentIndex] = serial->read();
+        if (messageCallback)
+            messageCallback(readBuffer[currentIndex]);
         if (readBuffer[currentIndex] == '\n')
             foundNewLine = true;
         else
@@ -50,9 +52,6 @@ void GrblReceiver::readData()
 
 void GrblReceiver::processLine()
 {
-    if (messageCallback)
-        messageCallback(readBuffer, currentIndex);
-
     messageLine = String(readBuffer);
     if (webSocket->count() > 0)
         webSocket->textAll(messageLine);

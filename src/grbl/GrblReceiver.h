@@ -9,7 +9,7 @@
 class GrblReceiver
 {
 public:
-    typedef std::function<void(const char *buffer, const size_t size)> OnMessageReceivedCb;
+    typedef std::function<void(const int)> OnMessageReceivedCb;
     typedef std::function<void(const GrblStatusParser::GrblStatus&)> OnStatusReceivedCb;
     enum GrblAlarm
     {
