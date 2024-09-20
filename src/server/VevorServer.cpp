@@ -1,6 +1,6 @@
 #include "VevorServer.h"
 #include <SPIFFS.h>
-#include <AsyncElegantOTA.h>
+#include <ElegantOTA.h>
 #include "../log/Logger.h"
 
 void VevorServer::init(AsyncWebServer *server, AsyncWebSocket *webSocket, WebSocketHandler *handler)
@@ -22,7 +22,7 @@ void VevorServer::init(AsyncWebServer *server, AsyncWebSocket *webSocket, WebSoc
                        { handler->onEvent(server, client, type, arg, data, len); });
     server->addHandler(webSocket);
 
-    AsyncElegantOTA.begin(server);
+    ElegantOTA.begin(server);
 
     server->begin();
 }
