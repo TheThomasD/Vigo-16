@@ -16,6 +16,12 @@ And as nice to haves:
 
 For now, I have uploaded the latest GRBL firmware and configured it in the way I wanted it. I also 3D-printed some improvements. Apart from that, I have some experience with the Marlin software and also with reverse engineering of Arduino compatible boards (done for at least 3 3D printers). I also have limited experinece with ESP32-CAM systems. But all this makes me confident that I can improve the offline controller.
 
+## Using this project
+
+* Open this project using Visual Studio Code (you can use Code to clone directly from Github).
+* When prompted, install the Platformio plugin; afterwards, restart Visual Studio.
+* Using the Platformio view, to deploy to the Vigo-16, run both the General>Build and Platform>Upload Filesystem Image tasks.
+
 ## The Controller
 
 The controller features 8 buttons, one micro-SD card slot, a 1.8" 128x160 RGB TFT LCD and an [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) chip. The display shows "Driver IC:ST7735" and "SW-M35 V2.0 210506" printed on its back ([this](https://techoverflow.net/2023/05/30/minimal-esp32-platformio-128x160px-tft-display-example-using-adafruit-st7735/) might be helpful in the future). The controller board shows the print "VIGO-16 V3.3 211105". There is also another connecter that is usally used for powering devices, but I haven't figured out yet what it is for (I think it is just another way to power the device ;)).
