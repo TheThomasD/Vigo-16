@@ -20,7 +20,9 @@ For now, I have uploaded the latest GRBL firmware and configured it in the way I
 
 * Open this project using Visual Studio Code (you can use Code to clone directly from Github).
 * When prompted, install the Platformio plugin; afterwards, restart Visual Studio.
-* Using the Platformio view, to deploy to the Vigo-16, run both the General>Build and Platform>Upload Filesystem Image tasks.
+* Using the Platformio view, to deploy to the Vigo-16, run the following two targets (**both are required!**)
+   * General>Build and
+   * Platform>Upload Filesystem Image
 
 ## The Controller
 
