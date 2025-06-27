@@ -39,6 +39,8 @@ function connect() {
             statusLine.innerHTML = escapeHtml(e.data);
         else if (e.data.startsWith("[GC:"))
             parserLine.innerHTML = escapeHtml(e.data);
+        else if (e.data.startsWith("{") && e.data.endsWith("}")) 
+            parsJson(e.data);
         else
             addLine(escapeHtml(e.data), false);
     };
@@ -174,6 +176,10 @@ function show(entry) {
     const buttonClassList = document.getElementById('b-' + entry).classList;
     buttonClassList.add('active');
     buttonClassList.remove('link-body-emphasis');
+
+    if (entry === "files") {
+        ws === null || ws === void 0 ? void 0 : ws.send(JSON.stringify({ type: "files", data: {} }));
+    }
 }
 
 function addLine(line, isSent = true) {
@@ -186,4 +192,54 @@ function addLine(line, isSent = true) {
 
 const escapeHtml = (unsafe) => {
     return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
+
+function parsJson(data) {
+  try {
+    const json = JSON.parse(data);
+    if (json.type === "files") {
+      const filesList = document.getElementById("files-list");
+      filesList.innerHTML = ""; // Clear previous list
+
+      json.files.forEach((file) => {
+        const fileLineWrapper = document.createElement("div");
+        fileLineWrapper.className = "d-flex flex-row justify-content-between mb-3";
+
+        const fileItem = document.createElement("span");
+        fileItem.textContent = file.name;
+        fileItem.className = "text-body fs-5";
+
+        const buttonsWrapper = document.createElement("div");
+        buttonsWrapper.className = "d-flex flex-row";
+
+        const download = document.createElement("input");
+        download.value = "Download";
+        download.type = "button";
+        download.style.width = "96px";
+        download.className = "btn btn-info me-3";
+        download.onclick = () => {
+          window.open(`/download?file=${file.path}`, "_blank");
+        };
+
+        const deleteItem = document.createElement("input");
+        deleteItem.value = "delete";
+        deleteItem.type = "button";
+        deleteItem.className = "btn btn-danger";
+        deleteItem.style.width = "74px";
+        deleteItem.onclick = async () => {
+          await fetch(`/delete?file=${file.path}`);
+          show("files");
+        };
+
+        buttonsWrapper.appendChild(download);
+        buttonsWrapper.appendChild(deleteItem);
+
+        fileLineWrapper.appendChild(fileItem);
+        fileLineWrapper.appendChild(buttonsWrapper);
+        filesList.appendChild(fileLineWrapper);
+      });
+    }
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+  }
 }

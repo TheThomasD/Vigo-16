@@ -240,6 +240,13 @@
         <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-files">
             <span class="text-body text-center w-100 fs-3"><i class="bi-floppy2-fill"></i> Files</span>
             <hr>
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <div class="card-body d-flex flex-row">
+                    <input type="file" class="form-control me-3 mb-3" name="file">
+                    <input type="submit" class="btn btn-primary mb-3" value="Upload">
+                </div>
+            </form>
+            <span class="d-flex flex-column" id="files-list"></span>
         </span>
         <span class="p-3 d-none w-100 vh-100 d-flex flex-column" id="d-update">
             <span class="text-body text-center w-100 fs-3"><i class="bi-cloud-arrow-up"></i> Update</span>
