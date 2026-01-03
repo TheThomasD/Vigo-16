@@ -3,12 +3,7 @@
 
 // #define DEBUG
 
-String GrblReceiver::grblVersion = "";
-
-String GrblReceiver::getGrblVersion()
-{
-    return grblVersion;
-}
+char GrblReceiver::grblVersion[64] = "";
 
 void GrblReceiver::processReceivedData()
 {
@@ -28,23 +23,28 @@ void GrblReceiver::readData()
     bool foundNewLine = false;
     while (serial->available() && !foundNewLine)
     {
-        readBuffer[currentIndex] = serial->read();
+        char c = serial->read();
         if (messageCallback)
-            messageCallback(readBuffer[currentIndex]);
-        if (readBuffer[currentIndex] == '\n')
-            foundNewLine = true;
-        else
-            currentIndex++;
-        if (currentIndex > MAX_READ_BUFFER)
+            messageCallback(c);
+        if (c == '\n')
         {
-            Serial.println("Overflow in GRBL serial read!");
-            delay(5000);
-            throw std::invalid_argument("Buffer size exceeded!");
+            foundNewLine = true;
+        }
+        else
+        {
+            readBuffer[currentIndex] = c;
+            currentIndex++;
+            if (currentIndex > MAX_READ_BUFFER)
+            {
+                Serial.println("Overflow in GRBL serial read!");
+                delay(5000);
+                throw std::invalid_argument("Buffer size exceeded!");
+            }
         }
     }
     if (foundNewLine)
     {
-        readBuffer[currentIndex] = '\0'; // replace \n and null terminate (for String processing)
+        readBuffer[currentIndex] = '\0';  // replace \n and null terminate (for String processing)
         processLine();
         currentIndex = 0;
     }
@@ -52,11 +52,13 @@ void GrblReceiver::readData()
 
 void GrblReceiver::processLine()
 {
-    messageLine = String(readBuffer);
     if (webSocket->count() > 0)
-        webSocket->textAll(messageLine);
+    {
+        webSocket->textAll(readBuffer);
+    }
 #ifdef DEBUG
-    log_println("Received: " + messageLine);
+    log_print("Received: ");
+    log_println(readBuffer);
 #endif
 
     switch (readBuffer[0])
@@ -65,7 +67,7 @@ void GrblReceiver::processLine()
 #ifdef DEBUG
         log_println("Status");
 #endif
-        processStatusLine(messageLine);
+        processStatusLine(readBuffer);  // pass C-string directly
         break;
     case 'A':
 #ifdef DEBUG
@@ -73,7 +75,7 @@ void GrblReceiver::processLine()
 #endif
         break;
     case 'G':
-        processGrblLine(messageLine);
+        processGrblLine(readBuffer);    // pass C-string directly
         break;
     case '$':
 #ifdef DEBUG
@@ -98,14 +100,21 @@ void GrblReceiver::onMessageReceived(OnMessageReceivedCb callback)
     messageCallback = callback;
 }
 
-void GrblReceiver::processGrblLine(const String &line)
+void GrblReceiver::processGrblLine(const char* line)
 {
-    const u_int8_t spaceIndex = line.indexOf(' ', 5); // next space after "Grbl "
-    if (spaceIndex > 0)
-        grblVersion = line.substring(0, spaceIndex);
+    // Find space after "Grbl " (at position 5)
+    const char* spacePtr = strchr(line + 5, ' ');
+    if (spacePtr != nullptr)
+    {
+        size_t len = (size_t)(spacePtr - line);
+        if (len >= sizeof(grblVersion))
+            len = sizeof(grblVersion) - 1;
+        memcpy(grblVersion, line, len);
+        grblVersion[len] = '\0';
+    }
 }
 
-void GrblReceiver::processStatusLine(const String &line)
+void GrblReceiver::processStatusLine(const char* line)
 {
     lastStatusAt = millis();
     if (statusCallback != nullptr)

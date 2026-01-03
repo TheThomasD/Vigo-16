@@ -1,9 +1,10 @@
 #include "GrblStatusParser.h"
 #include "../../log/Logger.h"
+#include <cstring>
 
 // #define DEBUG
 
-const GrblStatusParser::GrblStatus *GrblStatusParser::parse(const String &line)
+const GrblStatusParser::GrblStatus *GrblStatusParser::parse(const char *line)
 {
     /* examples:
     <Hold:0|MPos:-1.000,-1.000,-1.000|FS:0,0>
@@ -12,35 +13,52 @@ const GrblStatusParser::GrblStatus *GrblStatusParser::parse(const String &line)
     <Idle|MPos:-1.000,-1.000,-1.000|FS:0,0>
     <Alarm|MPos:-1.000,-1.000,-1.000|FS:0,0|Pn:X>
     */
-    int currentIndex = 0;
-    String currentString;
-    while (currentIndex != -1)
+    const char *p = line;
+    // start after initial '<' if present
+    if (*p == '<') p++;
+
+    bool firstField = true;
+    while (*p && *p != '>')
     {
-        int nextIndex = line.indexOf('|', currentIndex + 1);
-        const String field = line.substring(currentIndex + 1, nextIndex > -1 ? nextIndex : line.length() - 2);
+        const char *sep = strchr(p, '|');
+        const char *end = sep ? sep : strchr(p, '>');
+        if (!end) end = p + strlen(p);
+        size_t len = end - p;
+
+        // copy field into a small stack buffer (fields are short)
+        char fieldBuf[128];
+        if (len >= sizeof(fieldBuf)) len = sizeof(fieldBuf) - 1;
+        memcpy(fieldBuf, p, len);
+        fieldBuf[len] = '\0';
 
 #ifdef DEBUG
-        log_println("Parsing field: " + field);
+        log_println(String("Parsing field: ") + fieldBuf);
 #endif
-        if (currentIndex == 0)
+
+        if (firstField)
         {
-            currentState.state = parseState(field);
-            // have to reset endstop states
+            // parse state (C-string)
+            currentState.state = parseState(fieldBuf);
+            // reset endstop states
             currentState.xEndstop = currentState.yEndstop = currentState.zEndstop = currentState.probe = false;
+            firstField = false;
         }
         else
         {
-            parseFields(field, currentState);
+            parseFields(fieldBuf, currentState);
         }
 
-        currentIndex = nextIndex;
+        if (!sep)
+            break;
+        p = sep + 1;
     }
+
     return &currentState;
 }
 
-void GrblStatusParser::parseFields(const String &field, GrblStatus &result)
+void GrblStatusParser::parseFields(const char *field, GrblStatus &result)
 {
-    switch (field.charAt(0))
+    switch (field[0])
     {
     case 'M':
         parsePositions(field, result);
@@ -56,44 +74,82 @@ void GrblStatusParser::parseFields(const String &field, GrblStatus &result)
 
     default:
 #ifdef DEBUG
-        log_println("No parser for field: " + field);
+        log_print("No parser for field: ");
+        log_println(field);
 #endif
         break;
     }
 }
 
-void GrblStatusParser::parsePositions(const String &field, GrblStatus &result)
+void GrblStatusParser::parsePositions(const char *field, GrblStatus &result)
 {
     // example: MPos:0.000,-10.000,5.000
-    int firstComma = field.indexOf(',');
-    int secondComma = field.indexOf(',', firstComma + 1);
-    // cut off last digit to save space
-    result.x = field.substring(5, firstComma - 1);
-    result.y = field.substring(firstComma + 1, secondComma - 1);
-    result.z = field.substring(secondComma + 1, field.length() - 1);
+    const char* str = field + 5;  // skip "MPos:"
+    char buffer[8];
+    
+    // Parse X (until first comma)
+    int i = 0;
+    while (str[i] && str[i] != ',') buffer[i] = str[i++];
+    if (i > 0) buffer[i-1] = '\0';  // remove last digit to save space
+    result.x = buffer;
+    
+    str += i + 1;  // move past comma
+    i = 0;
+    while (str[i] && str[i] != ',') buffer[i] = str[i++];
+    if (i > 0) buffer[i-1] = '\0';  // remove last digit
+    result.y = buffer;
+    
+    str += i + 1;  // move past comma
+    i = 0;
+    while (str[i] && str[i] != '|' && str[i] != '\0') buffer[i] = str[i++];
+    if (i > 0) buffer[i-1] = '\0';  // remove last digit
+    result.z = buffer;
 }
 
-void GrblStatusParser::parseSpeeds(const String &field, GrblStatus &result)
+void GrblStatusParser::parseSpeeds(const char *field, GrblStatus &result)
 {
     // example: FS:500,8000
-    int commaIndex = field.indexOf(',');
-    result.feedRate = field.substring(3, commaIndex).toInt();
-    result.spindelRpm = field.substring(commaIndex + 1).toInt();
+    const char* str = field + 3;  // skip "FS:"
+    
+    // Parse feedRate until comma
+    uint16_t feedRate = 0;
+    while (*str && *str != ',') {
+        feedRate = feedRate * 10 + (*str - '0');
+        str++;
+    }
+    result.feedRate = feedRate;
+    
+    // Parse spindelRpm after comma
+    if (*str == ',') str++; //skip comma
+    uint16_t spindelRpm = 0;
+    while (*str && *str != '\0') {
+        spindelRpm = spindelRpm * 10 + (*str - '0');
+        str++;
+    }
+    result.spindelRpm = spindelRpm;
 }
 
-void GrblStatusParser::parseEndstops(const String &field, GrblStatus &result)
+void GrblStatusParser::parseEndstops(const char *field, GrblStatus &result)
 {
     // example: Pn:XYZPDHRS
-    result.xEndstop = field.indexOf('X') != -1;
-    result.yEndstop = field.indexOf('Y') != -1;
-    result.zEndstop = field.indexOf('Z') != -1;
-    result.probe = field.indexOf('P', 1) != -1;
+    const char* str = field;
+    result.xEndstop = false;
+    result.yEndstop = false;
+    result.zEndstop = false;
+    result.probe = false;
+    
+    for (int i = 3; str[i]; i++) {  // start after "Pn:"
+        if (str[i] == 'X') result.xEndstop = true;
+        else if (str[i] == 'Y') result.yEndstop = true;
+        else if (str[i] == 'Z') result.zEndstop = true;
+        else if (str[i] == 'P') result.probe = true;
+    }
 }
 
-GrblStatusParser::GrblState GrblStatusParser::parseState(const String &stateField)
+GrblStatusParser::GrblState GrblStatusParser::parseState(const char *stateField)
 {
 #define COMMAND_GRBL_STATE_PARSE(STATE) \
-    if (stateField.startsWith(#STATE))  \
+    if (strncmp(stateField, #STATE, sizeof(#STATE)-1) == 0) \
         return STATE;
     FOREACH_GRBL_STATE(COMMAND_GRBL_STATE_PARSE)
     return Unknown;

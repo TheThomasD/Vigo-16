@@ -28,23 +28,24 @@ public:
     void save();
     void print();
 
-    void setApSsid(String ssid);
-    String getApSsid();
-    void setApPassword(String password);
-    String getApPassword();
-    void setStaSsid(String ssid);
-    String getStaSsid();
-    void setStaPassword(String password);
-    String getStaPassword();
-    void setHostName(String hostname);
-    String getHostName();
-    void setBaudRate(BaudRate baudRate);
-    BaudRate getBaudRate();
+    // Inline getters and setters for better performance
+    void setApSsid(String ssid) { apSsid = ssid; }
+    String getApSsid() { return apSsid; }
+    void setApPassword(String password) { apPassword = password; }
+    String getApPassword() { return apPassword; }
+    void setStaSsid(String ssid) { staSsid = ssid; }
+    String getStaSsid() { return staSsid; }
+    void setStaPassword(String password) { staPassword = password; }
+    String getStaPassword() { return staPassword; }
+    void setHostName(String hostname) { hostName = hostname; }
+    String getHostName() { return hostName; }
+    void setBaudRate(BaudRate baudRate) { this->baudRate = baudRate; }
+    BaudRate getBaudRate() { return baudRate; }
     uint32_t toValue(BaudRate rate);
-    void setFeedRate(uint16_t feedRate);
-    uint16_t getFeedRate();
-    void setTcpPort(uint16_t port);
-    uint16_t getTcpPort();
+    void setFeedRate(uint16_t feedRate) { this->feedRate = feedRate; }
+    uint16_t getFeedRate() { return feedRate; }
+    void setTcpPort(uint16_t port) { tcpPort = port; }
+    uint16_t getTcpPort() { return tcpPort; }
 
 protected:
     Preferences prefs;

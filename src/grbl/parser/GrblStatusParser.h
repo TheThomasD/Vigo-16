@@ -30,14 +30,14 @@ public:
         bool xEndstop = false, yEndstop = false, zEndstop = false, probe = false;
     };
 
-    const GrblStatus* parse(const String &line);
+    const GrblStatus* parse(const char *line); // accept C-string to avoid String copies
 
 protected:
-    GrblState parseState(const String &stateField);
-    void parseFields(const String &field, GrblStatus &result);
-    void parsePositions(const String &field, GrblStatus &result);
-    void parseSpeeds(const String &field, GrblStatus &result);
-    void parseEndstops(const String &field, GrblStatus &result);
+    GrblState parseState(const char *stateField);
+    void parseFields(const char *field, GrblStatus &result);
+    void parsePositions(const char *field, GrblStatus &result);
+    void parseSpeeds(const char *field, GrblStatus &result);
+    void parseEndstops(const char *field, GrblStatus &result);
 
 private:
     GrblStatus currentState = {};

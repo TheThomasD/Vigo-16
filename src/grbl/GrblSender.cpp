@@ -38,11 +38,15 @@ void GrblSender::sendProbe()
 
 void GrblSender::sendSpindleSpeed(uint8_t percent)
 {
-    String motorOnCommand = String("S") + String(percent * 100) + "M3"; // Max: 10.000
 #ifdef DEBUG
-    log_println("sending " + motorOnCommand);
+    log_print("Sending S");
+    log_print(percent * 100);
+    log_println("M3");
 #endif
-    serial->println(motorOnCommand);
+    // Avoid String concatenation in hot path - write directly to serial
+    serial->print("S");
+    serial->print(percent * 100);
+    serial->println("M3");
 }
 
 void GrblSender::sendSpindelStop()
@@ -52,11 +56,19 @@ void GrblSender::sendSpindelStop()
 
 void GrblSender::sendJog(Axis axis, float units, uint16_t feedRate)
 {
-    String jogCommand = String("$J=G91") + String(getAxisChar(axis)) + String(units) + 'F' + String(feedRate); // relative move
 #ifdef DEBUG
-    log_println("Sending " + jogCommand);
+    log_print("Sending $J=G91");
+    log_print(getAxisChar(axis));
+    log_print(units);
+    log_print('F');
+    log_println(feedRate);
 #endif
-    serial->println(jogCommand);
+    // Avoid String concatenation in hot path - write directly to serial
+    serial->print("$J=G91");
+    serial->print(getAxisChar(axis));
+    serial->print(units);
+    serial->print('F');
+    serial->println(feedRate);
 }
 
 void GrblSender::sendGcode(char *code)

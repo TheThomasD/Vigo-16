@@ -60,22 +60,37 @@ uint16_t VevorST7735::getColor(const Status status)
 
 void VevorST7735::redrawStatus()
 {
-    const uint8_t statusWidth = 3 * 6 + 1;
+    #define STATUS_WIDTH 19
+    #define OFFSET_1 (STATUS_WIDTH + 1)
+    #define OFFSET_2 (OFFSET_1 + STATUS_WIDTH + 1)
+    #define X_OFFSET_1 (100 + OFFSET_1)
+    #define X_OFFSET_2 (100 + OFFSET_2)
+    #define X_TEXT_1 (101 + OFFSET_1)
+    #define X_TEXT_2 (101 + OFFSET_2)
+    
     fillRect(100, 0, 59, 10, ST7735_BLACK);
-    fillRect(100, 0, statusWidth, 10, getColor(staStatus));
-    fillRect(100 + statusWidth + 1, 0, statusWidth, 10, getColor(apStatus));
-    fillRect(100 + 2 * statusWidth + 2, 0, statusWidth, 10, getColor(serialStatus));
+    fillRect(100, 0, STATUS_WIDTH, 10, getColor(staStatus));
+    fillRect(X_OFFSET_1, 0, STATUS_WIDTH, 10, getColor(apStatus));
+    fillRect(X_OFFSET_2, 0, STATUS_WIDTH, 10, getColor(serialStatus));
 
     setTextSize(1);
     setTextColor(ST7735_BLACK);
 
-    setCursor(100 + 1, 1);
+    setCursor(101, 1);
     print("STA");
-    setCursor(100 + statusWidth + 1 + 1, 1);
+    setCursor(X_TEXT_1, 1);
     print("AP");
     print(apClients);
-    setCursor(100 + 2 * statusWidth + 2 + 1, 1);
+    setCursor(X_TEXT_2, 1);
     print("SER");
+    
+    #undef STATUS_WIDTH
+    #undef OFFSET_1
+    #undef OFFSET_2
+    #undef X_OFFSET_1
+    #undef X_OFFSET_2
+    #undef X_TEXT_1
+    #undef X_TEXT_2
 }
 
 void VevorST7735::clear()

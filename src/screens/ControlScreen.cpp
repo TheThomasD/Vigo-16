@@ -43,24 +43,41 @@ void ControlScreen::drawStatus(const GrblStatusParser::GrblStatus &status)
 
     tft->setTextColor(ST7735_BLACK);
 #define WIDTH_STATE (3 * 6 + 1)
-    String state = receiver->toString(status.state).substring(0, 3);
-    if (valueChanged("state", state))
+#define WIDTH_SPACE 1
+#define WIDTH_ENDSTOP (6 + 1)
+#define X_ENDSTOP_X (WIDTH_STATE + WIDTH_SPACE)
+#define X_ENDSTOP_Y (WIDTH_STATE + WIDTH_SPACE * 2 + WIDTH_ENDSTOP)
+#define X_ENDSTOP_Z (WIDTH_STATE + WIDTH_SPACE * 3 + WIDTH_ENDSTOP * 2)
+#define X_ENDSTOP_P (WIDTH_STATE + WIDTH_SPACE * 4 + WIDTH_ENDSTOP * 3)
+
+    // Optimize: only get state string if we need to draw it
+    String stateStr = receiver->toString(status.state);
+    const char* state3Char = stateStr.c_str();  // use c_str() to avoid substring String object
+    
+    // Create compact state representation without creating a new String
+    char stateKey[4];
+    stateKey[0] = state3Char[0];
+    stateKey[1] = state3Char[1];
+    stateKey[2] = state3Char[2];
+    stateKey[3] = '\0';
+    
+    if (valueChanged("state", String(stateKey)))
     {
         tft->fillRect(0, tft->height() - 10, WIDTH_STATE, 10, getStateColor(status.state));
         tft->setCursor(1, tft->height() - 9);
-        tft->print(state);
+        tft->print(stateKey);
     }
-
-#define WIDTH_SPACE 1
-#define WIDTH_ENDSTOP (6 + 1)
-    if (valueChanged("xe", String(status.xEndstop)))
-        drawEndstopState(WIDTH_STATE + WIDTH_SPACE, 'X', status.xEndstop);
-    if (valueChanged("ye", String(status.yEndstop)))
-        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 2 + WIDTH_ENDSTOP, 'Y', status.yEndstop);
-    if (valueChanged("ze", String(status.zEndstop)))
-        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 3 + WIDTH_ENDSTOP * 2, 'Z', status.zEndstop);
-    if (valueChanged("p", String(status.probe)))
-        drawEndstopState(WIDTH_STATE + WIDTH_SPACE * 4 + WIDTH_ENDSTOP * 3, 'P', status.probe);
+    
+    // Optimize: use bool overload to avoid String() conversion
+    // Pre-calculated x-offsets to eliminate arithmetic in hot path
+    if (valueChanged("xe", status.xEndstop))
+        drawEndstopState(X_ENDSTOP_X, 'X', status.xEndstop);
+    if (valueChanged("ye", status.yEndstop))
+        drawEndstopState(X_ENDSTOP_Y, 'Y', status.yEndstop);
+    if (valueChanged("ze", status.zEndstop))
+        drawEndstopState(X_ENDSTOP_Z, 'Z', status.zEndstop);
+    if (valueChanged("p", status.probe))
+        drawEndstopState(X_ENDSTOP_P, 'P', status.probe);
 }
 
 bool ControlScreen::valueChanged(const String key, const String value)

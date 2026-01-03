@@ -38,10 +38,15 @@ void SettingsScreen::redraw(bool onlyValues)
     tft->setTextSize(1);
 
     VevorConfig::BaudRate baudRate = config->getBaudRate();
-    drawLine("Baud Rate:", String(config->toValue(baudRate)), 20, currentSetting == BaudRate, baudRate == VevorConfig::BR_9600, baudRate == VevorConfig::BR_921600, onlyValues);
+    // Optimize: avoid String() conversion for numeric values
+    char baudRateStr[10];
+    snprintf(baudRateStr, sizeof(baudRateStr), "%lu", config->toValue(baudRate));
+    drawLine("Baud Rate:", baudRateStr, 20, currentSetting == BaudRate, baudRate == VevorConfig::BR_9600, baudRate == VevorConfig::BR_921600, onlyValues);
 
     uint16_t feedRate = config->getFeedRate();
-    drawLine("Feed Rate:", String(feedRate), 20 + Y_DISTANCE, currentSetting == FeedRate, feedRate <= 100, feedRate >= 6000, onlyValues);
+    char feedRateStr[10];
+    snprintf(feedRateStr, sizeof(feedRateStr), "%u", feedRate);
+    drawLine("Feed Rate:", feedRateStr, 20 + Y_DISTANCE, currentSetting == FeedRate, feedRate <= 100, feedRate >= 6000, onlyValues);
 
     drawButton("Save", 20 + 2 * Y_DISTANCE, currentSetting == Save);
     drawButton("Cancel", 20 + 3 * Y_DISTANCE, currentSetting == Cancel);
@@ -68,7 +73,7 @@ void SettingsScreen::drawButton(String label, uint16_t y, bool selected)
     tft->print(label);
 }
 
-void SettingsScreen::drawLine(String label, String value, uint16_t y, bool editable, bool isMin, bool isMax, bool onlyValues)
+void SettingsScreen::drawLine(const char* label, const char* value, uint16_t y, bool editable, bool isMin, bool isMax, bool onlyValues)
 {
     if (!onlyValues)
     {
@@ -82,7 +87,10 @@ void SettingsScreen::drawLine(String label, String value, uint16_t y, bool edita
         tft->width() - X_OFFSET - 1, 12,
         editable ? ST7735_VEVOR_YELLOW : ST7735_BLACK);
     tft->setTextColor(editable ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
-    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - value.length() * 6) / 2;
+    // Calculate value length from string
+    uint8_t valueLen = 0;
+    for (const char* p = value; *p; p++) valueLen++;
+    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - valueLen * 6) / 2;
     tft->setCursor(xOffset, y + 2);
     tft->print(value);
 

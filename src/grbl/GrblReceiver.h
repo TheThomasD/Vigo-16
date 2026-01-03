@@ -40,7 +40,7 @@ public:
     void onStatusReceived(OnStatusReceivedCb callback);
     void onAlarmReceived(OnAlarmReceivedCb callback);
 
-    static String getGrblVersion();
+    static inline const char* getGrblVersion() { return grblVersion; }
     String toString(GrblStatusParser::GrblState state);
 
     bool isConnected() { return connected; };
@@ -51,9 +51,9 @@ protected:
 
     void processVersionLine();
     void processAlarmLine();
-    void processStatusLine(const String& line);
+    void processStatusLine(const char* line);
     void processSettingsLine();
-    void processGrblLine(const String& line);
+    void processGrblLine(const char* line);
 
     void onDisconnected();
     void onConnected();
@@ -74,10 +74,9 @@ private:
     OnAlarmReceivedCb alarmCallback = nullptr;
     OnMessageReceivedCb messageCallback = nullptr;
 
-    static String grblVersion;
+    static char grblVersion[64];
 
     u_int8_t currentIndex = 0;
 #define MAX_READ_BUFFER 128
     char readBuffer[MAX_READ_BUFFER + 1];
-    String messageLine = "";
 };

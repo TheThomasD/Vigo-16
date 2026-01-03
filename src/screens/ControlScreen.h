@@ -50,6 +50,7 @@ protected:
     void drawEndstopState(const uint8_t x, const char axis, const bool hit);
     void printAxisValue(const uint8_t x, const char axis, const String value);
     bool valueChanged(const String key, const String value);
+    bool valueChanged(const String key, bool value) { return valueChanged(key, value ? "1" : "0"); }  // Optimize: avoid String() conversion
 
 private:
     VevorButtons::ButtonStatus buttonStatus = VevorButtons::ButtonStatus();

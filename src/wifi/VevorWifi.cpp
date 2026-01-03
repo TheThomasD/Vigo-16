@@ -20,28 +20,35 @@ void VevorWifi::startWifi(VevorConfig *config, Timer<> *timer, VevorScreens *scr
 
     if (WiFi.setHostname(config->getHostName().c_str()))
     {
-        log_println("HostName: " + config->getHostName());
+        log_print("HostName: ");
+        log_println(config->getHostName().c_str());
         screens->addBootStatusLine("HostName: " + config->getHostName());
     }
     else
     {
-        log_println("Could not set HostName: " + config->getHostName());
+        log_print("Could not set HostName: ");
+        log_println(config->getHostName().c_str());
         screens->addBootStatusLine("Could not set HostName: " + config->getHostName());
     }
 
     if (config->getStaSsid() != "" && config->getStaPassword() != "")
     {
-        log_println("Connecting to STA " + config->getStaSsid() + "...");
+        log_print("Connecting to STA ");
+        log_println(config->getStaSsid().c_str());
         screens->addBootStatusLine("Connecting to STA " + config->getStaSsid() + "...");
         wl_status_t status = WiFi.begin(config->getStaSsid().c_str(), config->getStaPassword().c_str());
         if (WL_CONNECTED == status)
         {
-            log_println("STA " + config->getStaSsid() + ", IP " + WiFi.localIP().toString());
+            log_print("STA ");
+            log_print(config->getStaSsid().c_str());
+            log_print(", IP ");
+            log_println(WiFi.localIP().toString().c_str());
             screens->addBootStatusLine("STA " + config->getStaSsid() + ", IP " + WiFi.localIP().toString());
         }
         else
         {
-            log_println("Could not connect STA " + config->getStaSsid() + "!");
+            log_print("Could not connect STA ");
+            log_println(config->getStaSsid().c_str());
             screens->addBootStatusLine("Could not connect STA " + config->getStaSsid() + "!");
         }
     }
