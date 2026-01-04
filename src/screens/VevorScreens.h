@@ -19,7 +19,7 @@ public:
     VevorScreens(VevorST7735 *tft, Timer<> *timer, VevorButtons *buttons, VevorConfig *config, GrblSender *sender, GrblReceiver *receiver);
     void showBootScreen();
     void showMenuScreen();
-    void addBootStatusLine(String line);
+    void addBootStatusLine(const String &line);
 
 private:
     void switchToScreen(AScreen *screen);

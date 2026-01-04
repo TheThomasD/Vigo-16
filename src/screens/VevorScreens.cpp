@@ -61,7 +61,7 @@ void VevorScreens::switchToScreen(AScreen *screen)
     screen->show();
 }
 
-void VevorScreens::addBootStatusLine(String line)
+void VevorScreens::addBootStatusLine(const String &line)
 {
     if (bootScreen->isActive())
         bootScreen->addStatusLine(line);

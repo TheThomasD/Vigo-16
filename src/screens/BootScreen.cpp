@@ -7,7 +7,7 @@ void BootScreen::showHook()
     tft->drawRGBBitmap(0, 18, image_data_Vevor, 160, 60);
 }
 
-void BootScreen::addStatusLine(String line)
+void BootScreen::addStatusLine(const String &line)
 {
     int16_t currentY = tft->height() - 5 * 9;
     tft->fillRect(0, currentY, tft->width(), 5 * 9, ST7735_BLACK);
@@ -26,7 +26,7 @@ void BootScreen::addStatusLine(String line)
     if (line.length() > 26)
     {
         status[0] = line.substring(0, 25);
-        addStatusLine(" " + line.substring(25));
+        addStatusLine(String(" ") + line.substring(25));
     }
     else
     {

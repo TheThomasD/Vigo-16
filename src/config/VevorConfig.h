@@ -29,16 +29,16 @@ public:
     void print();
 
     // Inline getters and setters for better performance
-    void setApSsid(String ssid) { apSsid = ssid; }
-    String getApSsid() { return apSsid; }
-    void setApPassword(String password) { apPassword = password; }
-    String getApPassword() { return apPassword; }
-    void setStaSsid(String ssid) { staSsid = ssid; }
-    String getStaSsid() { return staSsid; }
-    void setStaPassword(String password) { staPassword = password; }
-    String getStaPassword() { return staPassword; }
-    void setHostName(String hostname) { hostName = hostname; }
-    String getHostName() { return hostName; }
+    void setApSsid(const String &ssid) { apSsid = ssid; }
+    const String &getApSsid() { return apSsid; }
+    void setApPassword(const String &password) { apPassword = password; }
+    const String &getApPassword() { return apPassword; }
+    void setStaSsid(const String &ssid) { staSsid = ssid; }
+    const String &getStaSsid() { return staSsid; }
+    void setStaPassword(const String &password) { staPassword = password; }
+    const String &getStaPassword() { return staPassword; }
+    void setHostName(const String &hostname) { hostName = hostname; }
+    const String &getHostName() { return hostName; }
     void setBaudRate(BaudRate baudRate) { this->baudRate = baudRate; }
     BaudRate getBaudRate() { return baudRate; }
     uint32_t toValue(BaudRate rate);
@@ -50,7 +50,7 @@ public:
 protected:
     Preferences prefs;
 
-    void printPair(const char *name, String value);
+    void printPair(const char *name, const String &value);
     BaudRate fromValue(uint32_t value);
 
 private:

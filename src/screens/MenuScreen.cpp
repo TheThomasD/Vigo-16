@@ -53,7 +53,7 @@ void MenuScreen::changeMenuEntry(bool up)
     redraw();
 }
 
-void MenuScreen::createMenuItem(uint8_t y, String caption, bool selected)
+void MenuScreen::createMenuItem(uint8_t y, const char* caption, bool selected)
 {
 #define ITEM_HEIGHT 20
 #define ITEM_WIDTH 140
@@ -67,6 +67,6 @@ void MenuScreen::createMenuItem(uint8_t y, String caption, bool selected)
         tft->drawRoundRect(x, y, ITEM_WIDTH, ITEM_HEIGHT, 12, ST7735_VEVOR_YELLOW);
     tft->setTextColor(selected ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
     tft->setTextSize(1);
-    tft->setCursor(x + (ITEM_WIDTH - caption.length() * TEXT_WIDTH) / 2, y + (ITEM_HEIGHT - TEXT_HEIGHT) / 2);
+    tft->setCursor(x + (ITEM_WIDTH - strlen(caption) * TEXT_WIDTH) / 2, y + (ITEM_HEIGHT - TEXT_HEIGHT) / 2);
     tft->print(caption);
 }

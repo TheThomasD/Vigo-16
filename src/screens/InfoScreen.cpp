@@ -49,7 +49,7 @@ void InfoScreen::redraw(bool onlyValues)
     printLine("Grbl:", GrblReceiver::getGrblVersion(), onlyValues);
 }
 
-void InfoScreen::printLine(String label, String value, bool onlyValues)
+void InfoScreen::printLine(const char *label, const String &value, bool onlyValues)
 {
     tft->setCursor(2, tft->getCursorY() + Y_DISTANCE);
     if (!onlyValues)
@@ -70,12 +70,13 @@ void InfoScreen::printLine(String label, String value, bool onlyValues)
     }
 }
 
-bool InfoScreen::valueChanged(String label, String value)
+bool InfoScreen::valueChanged(const char *label, const String &value)
 {
-    auto a = values.find(label);
+    String key(label);
+    auto a = values.find(key);
     if (a == values.end())
     {
-        values.insert(std::pair<String, String>(label, value));
+        values.insert(std::pair<String, String>(key, value));
         return true;
     }
     else if (a->second == value)

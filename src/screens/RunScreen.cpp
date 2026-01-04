@@ -16,10 +16,10 @@ void RunScreen::showHook()
 
     tft->setCursor(2, 17);
     tft->setTextColor(ST7735_WHITE);
-    tft->print("File: ");
+    tft->print(F("File: "));
     tft->print(fileToRun.name());
     tft->setCursor(2, 27);
-    tft->print("Size: ");
+    tft->print(F("Size: "));
     tft->printf("%.3f KB", (float)fileToRun.size() / 1024.0);
 
     showProgress();

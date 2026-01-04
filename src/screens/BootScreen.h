@@ -10,7 +10,7 @@ public:
             status[i] = "";
     };
     void showHook();
-    void addStatusLine(String line);
+    void addStatusLine(const String &line);
 
 private:
     String status[5];

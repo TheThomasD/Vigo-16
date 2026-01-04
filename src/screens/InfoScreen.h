@@ -10,9 +10,9 @@ public:
     void showHook();
 
 protected:
-    void printLine(String label, String value, bool onlyValues);
+    void printLine(const char *label, const String &value, bool onlyValues);
     void redraw(bool onlyValues);
     String getWifiStatus();
     std::map<String, String> values;
-    bool valueChanged(String label, String value);
+    bool valueChanged(const char *label, const String &value);
 };

@@ -16,7 +16,7 @@ void VevorST7735::init()
     setRotation(1);
 }
 
-void VevorST7735::setTitle(String title)
+void VevorST7735::setTitle(const String &title)
 {
     fillRect(0, 0, 99, 10, ST7735_BLACK);
     setTextColor(ST7735_WHITE);
@@ -77,12 +77,12 @@ void VevorST7735::redrawStatus()
     setTextColor(ST7735_BLACK);
 
     setCursor(101, 1);
-    print("STA");
+    print(F("STA"));
     setCursor(X_TEXT_1, 1);
-    print("AP");
+    print(F("AP"));
     print(apClients);
     setCursor(X_TEXT_2, 1);
-    print("SER");
+    print(F("SER"));
     
     #undef STATUS_WIDTH
     #undef OFFSET_1

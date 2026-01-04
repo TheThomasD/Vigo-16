@@ -18,7 +18,7 @@ protected:
 
     void redraw(bool onlyValues);
     void drawLine(const char* label, const char* value, uint16_t y, bool editable, bool isMin, bool isMax, bool onlyValues);
-    void drawButton(String label, uint16_t y, bool selected);
+    void drawButton(const char* label, uint16_t y, bool selected);
     void switchSetting(bool up);
     void editSetting(bool left);
     void editBaudRate(bool left);

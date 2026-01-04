@@ -28,10 +28,10 @@ void VevorConfig::save()
     prefs.end();
 }
 
-void VevorConfig::printPair(const char *name, String value)
+void VevorConfig::printPair(const char *name, const String &value)
 {
     Serial.print(name);
-    Serial.print(": ");
+    Serial.print(F(": "));
     Serial.println(value);
 }
 

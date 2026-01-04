@@ -85,24 +85,37 @@ void GrblStatusParser::parsePositions(const char *field, GrblStatus &result)
 {
     // example: MPos:0.000,-10.000,5.000
     const char* str = field + 5;  // skip "MPos:"
-    char buffer[8];
+    char buffer[12];  // Increased size for safety (e.g., "-123.456" = 8 chars + null)
     
     // Parse X (until first comma)
     int i = 0;
-    while (str[i] && str[i] != ',') buffer[i] = str[i++];
-    if (i > 0) buffer[i-1] = '\0';  // remove last digit to save space
+    while (str[i] && str[i] != ',' && i < sizeof(buffer) - 1) {
+        buffer[i] = str[i];
+        i++;
+    }
+    buffer[i] = '\0';  // Proper null termination AFTER last character
     result.x = buffer;
     
     str += i + 1;  // move past comma
+    
+    // Parse Y (until second comma)
     i = 0;
-    while (str[i] && str[i] != ',') buffer[i] = str[i++];
-    if (i > 0) buffer[i-1] = '\0';  // remove last digit
+    while (str[i] && str[i] != ',' && i < sizeof(buffer) - 1) {
+        buffer[i] = str[i];
+        i++;
+    }
+    buffer[i] = '\0';  // Proper null termination
     result.y = buffer;
     
     str += i + 1;  // move past comma
+    
+    // Parse Z (until end of field)
     i = 0;
-    while (str[i] && str[i] != '|' && str[i] != '\0') buffer[i] = str[i++];
-    if (i > 0) buffer[i-1] = '\0';  // remove last digit
+    while (str[i] && str[i] != '|' && str[i] != '\0' && i < sizeof(buffer) - 1) {
+        buffer[i] = str[i];
+        i++;
+    }
+    buffer[i] = '\0';  // Proper null termination
     result.z = buffer;
 }
 

@@ -8,7 +8,7 @@ public:
     void showHook();
 
 protected:
-    void createMenuItem(uint8_t y, String caption, bool selected);
+    void createMenuItem(uint8_t y, const char* caption, bool selected);
     void changeMenuEntry(bool up);
     void selectEntry();
     void redraw();

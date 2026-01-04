@@ -54,7 +54,7 @@ void SettingsScreen::redraw(bool onlyValues)
 
 #define X_OFFSET 12 * 6
 
-void SettingsScreen::drawButton(String label, uint16_t y, bool selected)
+void SettingsScreen::drawButton(const char* label, uint16_t y, bool selected)
 {
     tft->fillRoundRect(
         X_OFFSET, y,
@@ -68,7 +68,7 @@ void SettingsScreen::drawButton(String label, uint16_t y, bool selected)
             6,
             ST7735_VEVOR_YELLOW);
     tft->setTextColor(selected ? ST7735_BLACK : ST7735_VEVOR_YELLOW);
-    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - label.length() * 6) / 2;
+    const uint16_t xOffset = X_OFFSET + (tft->width() - X_OFFSET - strlen(label) * 6) / 2;
     tft->setCursor(xOffset, y + 2);
     tft->print(label);
 }

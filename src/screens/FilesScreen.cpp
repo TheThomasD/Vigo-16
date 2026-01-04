@@ -26,7 +26,7 @@ void FilesScreen::showHook()
                       });
     buttons->onButton(VevorButtons::BT_BUTTON_SET, VevorButtons::Press, [this]()
                       {
-                          String fileName = String(currentFile.name());
+                          const char *name = currentFile.name();
                           if (currentFile.isDirectory())
                           {
                               currentPath = currentFile;
@@ -34,11 +34,20 @@ void FilesScreen::showHook()
                               currentPathPosition = 0;
                               showFiles();
                           }
-                          else if (fileName.endsWith(".nc") || fileName.endsWith(".ngc"))
+                          else
                           {
-                              setFileToRunCb(currentFile);
-                              switchScreenCb(AScreen::Run);
-                          } //
+                              size_t len = strlen(name);
+                              bool ok = false;
+                              if (len > 3 && strcmp(name + len - 3, ".nc") == 0)
+                                  ok = true;
+                              if (len > 4 && strcmp(name + len - 4, ".ngc") == 0)
+                                  ok = true;
+                              if (ok)
+                              {
+                                  setFileToRunCb(currentFile);
+                                  switchScreenCb(AScreen::Run);
+                              }
+                          }
                       });
     buttons->onButton(VevorButtons::BT_BUTTON_ESC, VevorButtons::Press, [this]()
                       {
@@ -51,7 +60,7 @@ void FilesScreen::showHook()
                               if (!currentPath)
                                   currentPath = sdCard->getRoot();
                               showFiles();
-                          } //
+                          }
                       });
 
     tft->setTitle("Files");
@@ -118,13 +127,28 @@ void FilesScreen::showFiles()
             tft->printf("No files");
         else
             tft->printf("File %d/%d", currentPathPosition + 1, numberOfEntries);
-        if (currentFile.isDirectory() || String(currentFile.name()).endsWith(".nc"))
         {
+            bool showOpen = false;
+            if (currentFile.isDirectory())
+            {
+                showOpen = true;
+            }
+            else
+            {
+                const char *name = currentFile.name();
+                size_t len = strlen(name);
+                if ((len > 3 && strcmp(name + len - 3, ".nc") == 0) || (len > 4 && strcmp(name + len - 4, ".ngc") == 0))
+                    showOpen = true;
+            }
+
+            if (showOpen)
+            {
 #define OPEN_WIDTH (4 * 6 + 2)
-            tft->fillRect(tft->width() - OPEN_WIDTH, tft->height() - 10, OPEN_WIDTH, 10, ST7735_VEVOR_YELLOW);
-            tft->setTextColor(ST7735_BLACK);
-            tft->setCursor(tft->width() - OPEN_WIDTH + 1, tft->height() - 9);
-            tft->print("Open");
+                tft->fillRect(tft->width() - OPEN_WIDTH, tft->height() - 10, OPEN_WIDTH, 10, ST7735_VEVOR_YELLOW);
+                tft->setTextColor(ST7735_BLACK);
+                tft->setCursor(tft->width() - OPEN_WIDTH + 1, tft->height() - 9);
+                tft->print(F("Open"));
+            }
         }
     }
     else
@@ -132,7 +156,7 @@ void FilesScreen::showFiles()
         wasDisconnected = true;
         tft->setCursor(2, yIndex);
         tft->setTextColor(ST7735_WHITE);
-        tft->print("SD not mountable! ESC to remount...");
+        tft->print(F("SD not mountable! ESC to remount..."));
     }
 }
 
